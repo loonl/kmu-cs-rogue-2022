@@ -12,6 +12,8 @@ public class Player : MonoBehaviour {
     [HideInInspector]
     public bool dead;
 
+    [HideInInspector] public bool isDashing;
+
     // equipments => 0 : Weapon, 1 : Helmet, 2 : Armor, 3 : Pants, 4 : Shield
     [HideInInspector]
     public List<Item> equipment;
@@ -96,6 +98,7 @@ public class Player : MonoBehaviour {
 
         // player stat variables init
         dead = false;
+        isDashing = false;
         remainCool = -1f;
 
         // attack & skill range init
@@ -114,23 +117,27 @@ public class Player : MonoBehaviour {
 
         // get move-related input
         Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0).normalized;
-
-        // FLIP character depending on heading direction
-        if (moveInput.x > 0 && transform.localScale.x > 0)
+        
+        if (!isDashing)
         {
-            transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            // FLIP character depending on heading direction
+            if (moveInput.x > 0 && transform.localScale.x > 0)
+            {
+                transform.localScale =
+                    new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            }
+            else if (moveInput.x < 0 && transform.localScale.x < 0)
+            {
+                transform.localScale =
+                    new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            }
+
+            // change character's position
+            rig.velocity = moveInput * stat.speed;
+
+            // change animation depending on speed
+            anim.SetFloat("Speed", moveInput.magnitude * stat.speed);
         }
-        else if (moveInput.x < 0 && transform.localScale.x < 0)
-        {
-            transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-        }
-
-        // change character's position
-        rig.velocity = moveInput * stat.speed;
-
-        // change animation depending on speed
-        anim.SetFloat("Speed", moveInput.magnitude * stat.speed);
-
 
         /**
         * Input Handling
@@ -173,8 +180,12 @@ public class Player : MonoBehaviour {
             // 스킬 관련 구현
             playerAttack.SkillAttack(equipment[0].id);
         }
+        
+        // dash input - test TODO
+        if (Input.GetKeyDown(KeyCode.LeftShift) && moveInput.magnitude != 0)
+            StartCoroutine(Dash());
 
-        // test code - change equipments
+            // test code - change equipments
         if (Input.GetKeyDown(KeyCode.G)) // helmet
             Equip(ItemManager.Instance.GetItem(82));
 
@@ -214,7 +225,19 @@ public class Player : MonoBehaviour {
             this._interact.InteractEvent();
         }
     }
-
+    
+    // -------------------------------------------------------------
+    // Player Dash
+    // -------------------------------------------------------------
+    IEnumerator Dash()
+    {
+        isDashing = true;
+        rig.velocity *= 3;
+        yield return new WaitForSeconds(0.1f);
+        rig.velocity /= 3;
+        isDashing = false;
+    }
+    
     // -------------------------------------------------------------
     // Player 아이템 착용 / 해제
     // -------------------------------------------------------------
@@ -238,13 +261,14 @@ public class Player : MonoBehaviour {
         stat.SyncStat(itemStat);
 
 
-        // TO-DO 상의 필요 (근접 무기 -> 활 / 스태프로 무기 변경 시 방패 자동 장착 해제)
+        // TODO 상의 필요 (근접 무기 -> 활 / 스태프로 무기 변경 시 방패 자동 장착 해제)
+        // TODO 위와 같이 진행할 경우 방패도 추가로 드랍해줘야 함 
         if (partsIndex == 0)
         {
             if (equipment[0].itemType == 1 && (item.itemType == 2 || item.itemType == 3))
             {
                 UnEquip(equipment[4]);
-                equipment[4] = ItemManager.Instance.GetItem(94);
+                equipment[4] = ItemManager.Instance.GetItem(1);
             }
         }
 
