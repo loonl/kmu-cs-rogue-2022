@@ -14,7 +14,7 @@ public class RushZombie : Monster
         bool rushing = true;
         bool rushReady = true;
 
-        while (!dead && rushing)
+        while (action == Action.SkillCasting && rushing)
         {
             if (Time.time < lastRushTime + timeForRushReady) // 대기
             {
@@ -23,29 +23,24 @@ public class RushZombie : Monster
             else if (rushReady == true) // 돌진
             {
                 rigidbody2d.AddForce(direction * 300f);
-                damage = 40f;
                 rushReady = false;
                 animator.SetTrigger("Attack_Normal");
             }
             else if (Time.time >= lastRushTime + timeForRushReady + 0.5f) // 돌진 종료
             {
-                damage = 20f;
                 rushing = false;
             }
 
             yield return new WaitForSeconds(0.05f);
         }
 
-        action = Action.Moving;
-        StartCoroutine(Moving());
+        rigidbody2d.velocity = Vector2.zero;
+        action = Action.Tracing;
+        StartCoroutine(Tracing());
     }
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (dead)
-        {
-            return;
-        }
 
         // 목표가 가까워지면 돌진
         if (Time.time >= lastRushTime + rushCoolTime && rushing == false)

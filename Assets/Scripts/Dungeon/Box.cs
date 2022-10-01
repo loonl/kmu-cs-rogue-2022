@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Box : MonoBehaviour
+public class Boxes : MonoBehaviour
 {
     public void Set(int number, RoomDirect direct)
     {
