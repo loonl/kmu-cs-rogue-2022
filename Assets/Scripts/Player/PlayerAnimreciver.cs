@@ -7,6 +7,7 @@ public class PlayerAnimreciver : MonoBehaviour
     public System.Action onDieComplete;
     public System.Action onAttackComplete;
     public System.Action onSkillComplete;
+    public System.Action onStunComplete;
 
     // executed at the end of animation death
     public void OnDieComplete()
@@ -32,6 +33,15 @@ public class PlayerAnimreciver : MonoBehaviour
         if (onSkillComplete != null)
         {
             this.onSkillComplete();
+        }
+    }
+
+    // executed at the end of animation stun
+    public void OnStunComplete()
+    {
+        if (onStunComplete != null)
+        {
+            this.onStunComplete();
         }
     }
 }

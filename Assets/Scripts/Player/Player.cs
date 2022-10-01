@@ -11,8 +11,10 @@ public class Player : MonoBehaviour {
     public float remainCool;
     [HideInInspector]
     public bool dead;
-
-    [HideInInspector] public bool isDashing;
+    [HideInInspector] 
+    public bool isDashing;
+    [HideInInspector]
+    public bool isStunned;
 
     // equipments => 0 : Weapon, 1 : Helmet, 2 : Armor, 3 : Pants, 4 : Shield
     [HideInInspector]
@@ -96,6 +98,13 @@ public class Player : MonoBehaviour {
             remainCool = equipment[0].stat.coolTime;
         };
 
+        // used in animator end event - stun
+        anim.GetComponent<PlayerAnimreciver>().onStunComplete = () =>
+        {
+            // 무적 시간 측정 시작
+            StartCoroutine(Grace());
+        };
+
         // player stat variables init
         dead = false;
         isDashing = false;
@@ -104,6 +113,7 @@ public class Player : MonoBehaviour {
         // attack & skill range init
         wpnColl.SetAttackRange(equipment[0].stat.range);
     }
+
 
     void Update()
     {
@@ -231,13 +241,30 @@ public class Player : MonoBehaviour {
     // -------------------------------------------------------------
     IEnumerator Dash()
     {
+        // 속도 3배로
         isDashing = true;
         rig.velocity *= 3;
+
+        // 0.1초 유지
         yield return new WaitForSeconds(0.1f);
+
+        // 속도 원래대로
         rig.velocity /= 3;
         isDashing = false;
     }
-    
+
+    // -------------------------------------------------------------
+    // Player Grace - 무적 시간 측정
+    // -------------------------------------------------------------
+    IEnumerator Grace()
+    {
+        // TODO 무적 시간 조절하기 - 임시로 1초 설정
+        yield return new WaitForSeconds(1f);
+
+        // 다시 피격될 수 있게 설정
+        isStunned = false;
+    }
+
     // -------------------------------------------------------------
     // Player 아이템 착용 / 해제
     // -------------------------------------------------------------
@@ -346,6 +373,10 @@ public class Player : MonoBehaviour {
 
     public void OnDamage(float damage)
     {
+        // 이미 거나 무적 상태면 피격 불가
+        if (isStunned)
+            return;
+
         stat.Damaged(damage);
 
         // trigger die if health is below 0
@@ -354,6 +385,9 @@ public class Player : MonoBehaviour {
 
         // change animation to stunned
         anim.SetTrigger("Hit");
+
+        // 피격당했음
+        isStunned = true;
 
         // debug
         print("Player's health : " + stat.hp);
@@ -364,7 +398,6 @@ public class Player : MonoBehaviour {
         // change animation to death
         anim.SetTrigger("Die");
 
-        // TO-DO DEAD 로 TRUE 만들기
         dead = true;
     }
 
