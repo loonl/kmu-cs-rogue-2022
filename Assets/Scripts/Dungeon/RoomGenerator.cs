@@ -133,9 +133,9 @@ public class RoomGenerator : MonoBehaviour
     // -------------------------------------------------------------
     public void Generate(int maxCount, TileType type)
     {
-        shopIndex = Mathf.FloorToInt(maxCount / 2f);
+        shopIndex = Mathf.FloorToInt(maxCount * 0.2f);
         bossIndex = Mathf.FloorToInt(maxCount - 1);
-        Debug.Log("shopIndex: " + shopIndex);
+        Debug.Log($"shopindex: {shopIndex}");
 
         // 빈 방 생성
         CreateEmptyRoom(maxCount);
@@ -147,17 +147,17 @@ public class RoomGenerator : MonoBehaviour
 
         foreach (DungeonRoom room in rooms[1..shopIndex])
         {
-           DrawRoom(room, type, RoomSize.Medium);
+           DrawRoom(room, type, RoomSize.Medium, RoomType.Battle);
         }
 
         DrawRoom(rooms[shopIndex], type, RoomSize.Small);           // Shop
 
         foreach (DungeonRoom room in rooms[(shopIndex+1)..(rooms.Length - 1)])
         {
-           DrawRoom(room, type, RoomSize.Medium);
+           DrawRoom(room, type, RoomSize.Medium, RoomType.Battle);
         }
 
-        DrawRoom(rooms[rooms.Length - 1], type, RoomSize.Big);      // Boss
+        DrawRoom(rooms[rooms.Length - 1], type, RoomSize.Big, RoomType.Battle);      // Boss
 
         // 문 생성
         GenerateDoors(rooms, type);
@@ -281,7 +281,7 @@ public class RoomGenerator : MonoBehaviour
     // -------------------------------------------------------------
     // 방 생성 (room, door, object)
     // -------------------------------------------------------------
-    private void DrawRoom(DungeonRoom room, TileType type, RoomSize size = RoomSize.Small)
+    private void DrawRoom(DungeonRoom room, TileType type, RoomSize size = RoomSize.Small, RoomType rt = RoomType.Neutral)
     {
         // Default small size
         int rows = 7;
@@ -358,6 +358,7 @@ public class RoomGenerator : MonoBehaviour
         // 방 크기에 맞추어 정 가운데로 정렬
         Vector3 tileMapSize = new Vector3(room.WallLayer.size.x, room.WallLayer.size.y, 0f);
         room.TileMapParent.transform.localPosition -= tileMapSize * room.WallLayer.cellSize.x * 0.5f;
+        room.roomtype = rt;
     }
 
     private void GenerateDoors(DungeonRoom[] dungeonRooms, TileType type)
