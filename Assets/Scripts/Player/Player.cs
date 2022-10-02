@@ -24,8 +24,9 @@ public class Player : MonoBehaviour {
     public List<Item> equipment;
 
     Animator anim;
-    WeaponCollider wpnColl;
+    public WeaponCollider wpnColl;
     Rigidbody2D rig;
+    Transform effectTransform; // for changing attack effect size
     PlayerAttack playerAttack;
     [HideInInspector]
     public SPUM_SpriteList spumMgr;
@@ -48,6 +49,7 @@ public class Player : MonoBehaviour {
         wpnColl = transform.GetChild(0).gameObject.GetComponent<WeaponCollider>();
         spumMgr = transform.GetChild(0).GetChild(0).GetComponent<SPUM_SpriteList>();
         rig = GetComponent<Rigidbody2D>();
+        effectTransform = transform.GetChild(0).GetChild(2).GetComponent<Transform>();
 
         // player's first equipments (플레이어 첫 장비)
         equipment = new List<Item> { ItemManager.Instance.GetItem(0), // weapon
@@ -96,6 +98,9 @@ public class Player : MonoBehaviour {
         {
             // enable re-attack
             isAttacking = false;
+
+            //// disable attack collider
+            //wpnColl.poly.enabled = false;
 
             // reset elasped skill cool-time
             remainCool = equipment[0].stat.coolTime;
@@ -220,7 +225,10 @@ public class Player : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.M)) // staff
             Equip(ItemManager.Instance.GetItem(61));
-
+        if (Input.GetKeyDown(KeyCode.Alpha1)) // 1 - sword1
+            Equip(ItemManager.Instance.GetItem(2));
+        if (Input.GetKeyDown(KeyCode.Alpha2)) // 2 - sword2
+            Equip(ItemManager.Instance.GetItem(3));
         if (Input.GetKeyDown(KeyCode.P))
         {
             print("MaxHP : " + stat.maxHp + "\nHP : " + stat.hp + "\nAttackPower : " + stat.damage
@@ -272,6 +280,8 @@ public class Player : MonoBehaviour {
                 UnEquip(equipment[4]);
                 equipment[4] = ItemManager.Instance.GetItem(1);
             }
+            effectTransform.localScale = new Vector2(item.stat.range * 1.5f, item.stat.range * 3);
+            wpnColl.SetAttackRange(item.stat.range); // range setting
         }
 
         // 활 / 스태프 상태에서 방패 장착 시 활 / 스태프 자동 장착 해제
