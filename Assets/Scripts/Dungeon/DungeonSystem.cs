@@ -113,6 +113,7 @@ public class DungeonSystem : MonoBehaviour
     {
         // 아이템 5개 일렬 배치
         // !!! 중복 아이템에 대한 처리 X
+        // -2부터 하는 이유는 아이템 스폰 위치가 0이기 때문
         for (int i = -2; i < 3; i++)
         {
             // DroppedItem 생성
@@ -125,8 +126,8 @@ public class DungeonSystem : MonoBehaviour
             dropped.transform.position = new Vector3
             (
                 i + generator.Shop.transform.position.x,
-                generator.Shop.transform.position.y, 
-                -1f
+                generator.Shop.transform.position.y,
+                -.1f
             );
             // !!! 아이템 가격 표 필요 (아이템 가격 1000 고정)
             Item randomItem = GameManager.Instance.GetRandomDropItem();

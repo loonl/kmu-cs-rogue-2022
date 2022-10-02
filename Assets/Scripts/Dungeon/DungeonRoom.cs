@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+public enum RoomType
+{
+    Battle,
+    Neutral
+}
+
 public class DungeonRoom : MonoBehaviour
 {
     public GameObject TileMapParent;
@@ -30,20 +36,22 @@ public class DungeonRoom : MonoBehaviour
 
     private MonsterSpawner _spawner = null;
 
-    public bool IsClear { get; private set; }
+    public RoomType roomtype = RoomType.Neutral;
 
     public void Enter(ushort outDirect, GameObject player)
     {
         // 플레이어 입장
         Portals[(outDirect + 2) % 4].Enter(player);
-        _spawner.Spawn();
+        if(roomtype == RoomType.Neutral) this.Clear();
+        
+        else _spawner.Spawn();
         // this.Clear();      // !!! temp
     }
 
     public void Clear()
     {
         // 방 클리어
-        this.IsClear = true;
+        roomtype = RoomType.Neutral;
         foreach (Portal portal in Portals)
         {
             if (portal != null)
