@@ -6,12 +6,10 @@ public class Stat
 {
     public float hp { get; set; }
     public float maxHp { get; set; }
-
     public float damage { get; set; }
     public float range { get; set; }
     public float skillDamage { get; set; }
     public float coolTime { get; set; }
-
     public float speed { get; set; }
     public Stat(bool empty)
     {

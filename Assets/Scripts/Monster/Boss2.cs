@@ -7,12 +7,12 @@ public class Boss2 : Monster
     protected float timeBetSkill = 5f; // 스킬 대기시간
     protected float lastSkillTime; // 스킬 시작시간
 
-    protected override IEnumerator Moving()
+    protected override IEnumerator Tracing()
     {
         lastSkillTime = Time.time;
-        while (!dead && hasTarget && action == Action.Moving)
+        while (!isDead && action == Action.Tracing)
         {
-            rigidbody2d.velocity = direction * speed;
+            rigidbody2d.velocity = direction * stat.speed;
             if (Time.time >= lastSkillTime + timeBetSkill)
             {
                 lastSkillTime = Time.time;
@@ -29,7 +29,7 @@ public class Boss2 : Monster
     {
         MonsterSpawner spawner = transform.GetComponentInParent<MonsterSpawner>();
         foreach (Monster monster in spawner.monsters) {
-            if (monster.dead)
+            if (monster.isDead)
             {
                 monster.Revive();
             }
