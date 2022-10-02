@@ -238,10 +238,11 @@ public class Monster : MonoBehaviour
         {
             Player attackTarget = other.gameObject.GetComponent<Player>();
 
-            if (attackTarget == player)
+            if (attackTarget == player && !player.isInvincible)
             {
                 lastAttackTime = Time.time;
-                attackTarget.OnDamage(damage);
+                attackTarget.OnDamage(damage, 5f, 
+                    (other.gameObject.transform.position - transform.position).normalized);
                 animator.SetTrigger("Attack_Normal");
             }
         }

@@ -15,8 +15,11 @@ public class Player : MonoBehaviour {
     public bool isDashing;
     [HideInInspector]
     public bool isStunned;
+    [HideInInspector]
+    public bool isInvincible;
 
     // equipments => 0 : Weapon, 1 : Helmet, 2 : Armor, 3 : Pants, 4 : Shield
+    // TODO 코드 ENUM 적용해서 가독성 향상시키기
     [HideInInspector]
     public List<Item> equipment;
 
@@ -108,6 +111,7 @@ public class Player : MonoBehaviour {
         // player stat variables init
         dead = false;
         isDashing = false;
+        isInvincible = false;
         remainCool = -1f;
 
         // attack & skill range init
@@ -128,7 +132,7 @@ public class Player : MonoBehaviour {
         // get move-related input
         Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0).normalized;
         
-        if (!isDashing)
+        if (!isDashing && !isStunned)
         {
             // FLIP character depending on heading direction
             if (moveInput.x > 0 && transform.localScale.x > 0)
@@ -234,35 +238,6 @@ public class Player : MonoBehaviour {
 
             this._interact.InteractEvent();
         }
-    }
-    
-    // -------------------------------------------------------------
-    // Player Dash
-    // -------------------------------------------------------------
-    IEnumerator Dash()
-    {
-        // 속도 3배로
-        isDashing = true;
-        rig.velocity *= 3;
-
-        // 0.1초 유지
-        yield return new WaitForSeconds(0.1f);
-
-        // 속도 원래대로
-        rig.velocity /= 3;
-        isDashing = false;
-    }
-
-    // -------------------------------------------------------------
-    // Player Grace - 무적 시간 측정
-    // -------------------------------------------------------------
-    IEnumerator Grace()
-    {
-        // TODO 무적 시간 조절하기 - 임시로 1초 설정
-        yield return new WaitForSeconds(1f);
-
-        // 다시 피격될 수 있게 설정
-        isStunned = false;
     }
 
     // -------------------------------------------------------------
@@ -371,27 +346,38 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public void OnDamage(float damage)
-    {
-        // 이미 거나 무적 상태면 피격 불가
-        if (isStunned)
-            return;
+    // -------------------------------------------------------------
+    // Player 피격
+    // -------------------------------------------------------------
 
+    public void OnDamage(float damage, float knockBackForce, Vector2 direction)
+    {
         stat.Damaged(damage);
 
         // trigger die if health is below 0
         if (stat.hp == 0)
             Die();
+        else
+        {
+            // TODO - Hit Sound 
+            
+            // change animation to stunned
+            anim.SetTrigger("Hit");
 
-        // change animation to stunned
-        anim.SetTrigger("Hit");
+            // 피격당했음
+            isStunned = true;
 
-        // 피격당했음
-        isStunned = true;
+            // 넉백
+            StartCoroutine(KnockBack(knockBackForce, direction));
 
-        // debug
-        print("Player's health : " + stat.hp);
+            // debug
+            print("Player's health : " + stat.hp);
+        }
     }
+    
+    // -------------------------------------------------------------
+    // Player 사망
+    // -------------------------------------------------------------
 
     public void Die()
     {
@@ -417,5 +403,64 @@ public class Player : MonoBehaviour {
     public void RemoveInteractEvent()
     {
         this._interact = null;
+    }
+    
+    
+    /*
+     *   Coroutine 함수
+    */
+    
+    // -------------------------------------------------------------
+    // Player 넉백
+    // -------------------------------------------------------------
+    IEnumerator KnockBack(float knockBackForce, Vector2 direction)
+    {
+        rig.velocity = Vector2.zero;
+        rig.AddForce(direction * knockBackForce, ForceMode2D.Impulse);
+        Vector2 orig = rig.velocity;
+
+        // 속도가 0일 때까지 0.05초마다 힘 가해서 감속
+        while (((orig.x > 0 && rig.velocity.x > 0) || (orig.x < 0 && rig.velocity.x < 0))
+               && ((orig.y > 0 && rig.velocity.y > 0) || (orig.y < 0 && rig.velocity.y < 0)))
+        {
+            rig.AddForce(-7 * direction * knockBackForce, ForceMode2D.Force);
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        rig.velocity = Vector2.zero;
+
+    }
+    
+    // -------------------------------------------------------------
+    // Player Dash 대시
+    // -------------------------------------------------------------
+    IEnumerator Dash()
+    {
+        // 속도 3배로
+        isDashing = true;
+        rig.velocity *= 3;
+
+        // 0.1초 유지
+        yield return new WaitForSeconds(0.1f);
+
+        // 속도 원래대로
+        rig.velocity /= 3;
+        isDashing = false;
+    }
+
+    // -------------------------------------------------------------
+    // Player Grace - 무적 시간 측정
+    // -------------------------------------------------------------
+    IEnumerator Grace()
+    {
+        // 스턴 종료 & 무적 시간 시작
+        isStunned = false;
+        isInvincible = true;
+        
+        // TODO 무적 시간 조절하기 - 임시로 1초 설정
+        yield return new WaitForSeconds(1f);
+        
+        // 다시 피격 가능하게 조정
+        isInvincible = false;
     }
 }

@@ -15,7 +15,6 @@ public class WeaponCollider : MonoBehaviour
         playerUnit = transform.GetComponentInParent<Player>();
         arc = GetComponent<ArcCollider2D>();
         poly = GetComponent<PolygonCollider2D>();
-
         poly.enabled = false;
     }
 
