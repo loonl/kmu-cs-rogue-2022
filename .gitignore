@@ -84,3 +84,6 @@ Assets/Sources/
 Assets/Resources/SPUM
 .vscode/
 .idea/
+
+ProjectSettings/BurstAotSettings_StandaloneWindows.json
+ProjectSettings/CommonBurstAotSettings.json

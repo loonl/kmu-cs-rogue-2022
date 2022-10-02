@@ -1,10 +1,10 @@
 id,name,type,rarity,dmg,range,skilldmg,cooltime,hp,speed,path
 0,none,1,N,0,1,0,0,0,0,
 1,none,7,N,0,0,0,0,0,0,
-2,sword1,1,N,5,3,10,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_1.png
-3,sword2,1,N,10,3,13,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_2.png
-4,sword6,1,N,15,3,25,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_6.png
-5,sword8,1,N,17,3,31,7,0,0,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_05.png
+2,sword1,1,N,5,2,10,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_1.png
+3,sword2,1,N,10,1,13,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_2.png
+4,sword6,1,N,15,1,25,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_6.png
+5,sword8,1,N,17,1,31,7,0,0,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_05.png
 6,bow1,2,N,5,2,20,10,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Bow_1.png
 7,helmet1,4,N,0,0,0,0,10,0,Assets/Resources/SPUM/SPUM_Sprites/Items/4_Helmet/Helmet_1.png
 8,helmet2,4,N,0,0,0,0,20,0,Assets/Resources/SPUM/SPUM_Sprites/Items/4_Helmet/Helmet_2.png

@@ -7,7 +7,7 @@ public class WeaponCollider : MonoBehaviour
     Player playerUnit;
     ArcCollider2D arc;
     public PolygonCollider2D poly;
-    public List<GameObject> monsters;
+    public List<Monster> monsters;
 
     // Start is called before the first frame update
     void Start()
@@ -15,7 +15,6 @@ public class WeaponCollider : MonoBehaviour
         playerUnit = transform.GetComponentInParent<Player>();
         arc = GetComponent<ArcCollider2D>();
         poly = GetComponent<PolygonCollider2D>();
-
         poly.enabled = false;
     }
 
@@ -26,12 +25,13 @@ public class WeaponCollider : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Monster" && playerUnit.isAttacking && !monsters.Contains(collision.gameObject))
+        Monster target;
+        target = collision.GetComponent<Monster>();
+        if (target != null  && !monsters.Contains(target) && playerUnit.isAttacking)
         {
-            monsters.Add(collision.gameObject);
+            monsters.Add(target);
             // execute ondamage function when monster is in range
-            Monster attackTarget = collision.gameObject.GetComponent<Monster>();
-            attackTarget.OnDamage(playerUnit.stat.damage, 5f, (collision.gameObject.transform.position - transform.position).normalized);
+            target.OnDamage(playerUnit.stat.damage, 5f, (collision.gameObject.transform.position - transform.position).normalized);
         }
 
         if (collision.gameObject.tag == "MapObject")
