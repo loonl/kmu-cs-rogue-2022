@@ -9,7 +9,7 @@ public class Boss1 : RushZombie
     {
         bool rushing = true;
         bool rushReady = true;
-        while (!dead && rushing)
+        while (action == Action.SkillCasting && rushing)
         {
             if (Time.time < lastRushTime + timeForRushReady) // 대기
             {
@@ -19,14 +19,12 @@ public class Boss1 : RushZombie
             else if (rushReady == true) // 돌진
             {
                 rigidbody2d.AddForce(direction * 300f);
-                damage = 40f;
                 rushReady = false;
                 animator.SetTrigger("Attack_Normal");
             }
             else if (Time.time >= lastRushTime + timeForRushReady + 0.7f) // 돌진 종료
             {
                 lastRushTime = Time.time;
-                damage = 20f;
                 if (rushStep <= 2)
                 {
                     rushStep++;
@@ -45,7 +43,7 @@ public class Boss1 : RushZombie
             yield return new WaitForSeconds(0.05f);
         }
 
-        action = Action.Moving;
-        StartCoroutine(Moving());
+        action = Action.Tracing;
+        StartCoroutine(Tracing());
     }
 }

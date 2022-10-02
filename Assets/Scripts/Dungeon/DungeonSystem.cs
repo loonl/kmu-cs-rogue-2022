@@ -69,6 +69,7 @@ public class DungeonSystem : MonoBehaviour
     {
         int MonsterSpawnerId;
         List<Dictionary<string, object>> monsterSpawnerData = CSVReader.Read("Datas/MonsterSpawner");
+        //List<Dictionary<string, object>> monsterSpawnerData = CSVReader.Read("Datas/TestMonsterSpawner"); // 테스트 코드
         List<Dictionary<string, object>> monsterData = CSVReader.Read("Datas/Monster");
 
         // 몬스터스포너 확률 리스트 생성
