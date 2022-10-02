@@ -250,10 +250,11 @@ public class Monster : MonoBehaviour
             randomDirection = new Vector2(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f));
             lastRandomDirectionUpdate = Time.time;
         }
-        else if(Time.time >= lastAttackTime + attackCoolTime)
+        else if (Time.time >= lastAttackTime + attackCoolTime)
         {
             lastAttackTime = Time.time;
-            attackTarget.OnDamage(stat.damage);
+            attackTarget.OnDamage(stat.damage, 5f, 
+                (other.gameObject.transform.position - transform.position).normalized);
             animator.SetTrigger("Attack_Normal");
         }
     }
