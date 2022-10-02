@@ -12,9 +12,9 @@ public class RevivalZombie : Monster
     {
         startReviveTime = Time.time;
 
-        while (dead)
+        while (isDead)
         {
-            //rigidbody2d.velocity = Vector2.zero;
+            rigidbody2d.velocity = Vector2.zero;
 
             if (Time.time >= startReviveTime + timeBetRevive && !revived)
             {
