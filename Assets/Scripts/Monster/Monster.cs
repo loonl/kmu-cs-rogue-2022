@@ -142,7 +142,7 @@ public class Monster : MonoBehaviour
         rigidbody2d.velocity = Vector2.zero;
         rigidbody2d.AddForce(diff * knockBackForce, ForceMode2D.Impulse);
         Vector2 startWay = rigidbody2d.velocity;
-        Debug.Log(rigidbody2d.velocity.x);
+        //Debug.Log(rigidbody2d.velocity.x);
 
         while ((startWay.x > 0 && rigidbody2d.velocity.x > 0) || (startWay.x < 0 && rigidbody2d.velocity.x < 0)
             && (startWay.y > 0 && rigidbody2d.velocity.y > 0) || (startWay.y < 0 && rigidbody2d.velocity.y < 0))
@@ -168,7 +168,7 @@ public class Monster : MonoBehaviour
     // 피격 시 실행
     public void OnDamage(float damage, float knockBackForce, Vector2 diff)
     {
-
+        Debug.Log($"id {this.name} got damage {damage}");
         health -= damage;
 
         if (health <= 0)
@@ -190,7 +190,7 @@ public class Monster : MonoBehaviour
             onDamageCoroutine = StartCoroutine(OnDamaging(knockBackForce, diff));
         }
 
-        Debug.Log("Monster Health: " + health);
+        //Debug.Log("Monster Health: " + health);
     }
 
     // 사망 시 실행
