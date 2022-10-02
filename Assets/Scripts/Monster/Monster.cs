@@ -182,8 +182,9 @@ public class Monster : MonoBehaviour
     // 피격 시 실행
     public void OnDamage(float damage, float knockBackForce, Vector2 diff)
     {
-
+        Debug.Log($"id {this.name} got damage {damage}");
         stat.OnDamage(damage);
+
 
         if (stat.health <= 0)
         {
@@ -204,7 +205,8 @@ public class Monster : MonoBehaviour
             onDamageCoroutine = StartCoroutine(OnDamaging(knockBackForce, diff));
         }
 
-        Debug.Log("Monster Health: " + stat.health);
+        //Debug.Log("Monster Health: " + stat.health);
+
     }
 
     // 사망 시 실행
