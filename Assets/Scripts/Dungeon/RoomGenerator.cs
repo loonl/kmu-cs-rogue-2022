@@ -135,7 +135,7 @@ public class RoomGenerator : MonoBehaviour
     {
         shopIndex = Mathf.FloorToInt(maxCount / 2f);
         bossIndex = Mathf.FloorToInt(maxCount - 1);
-        Debug.Log(shopIndex);
+        Debug.Log("shopIndex: " + shopIndex);
 
         // 빈 방 생성
         CreateEmptyRoom(maxCount);
