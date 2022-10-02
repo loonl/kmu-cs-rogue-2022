@@ -245,17 +245,15 @@ public class Monster : MonoBehaviour
         // 충돌한 게임 오브젝트가 추적 대상이라면 공격
         if (attackTarget != player)
         {
-            Player attackTarget = other.gameObject.GetComponent<Player>();
-
-            if (attackTarget == player && !player.isInvincible)
-            {
-                lastAttackTime = Time.time;
-                attackTarget.OnDamage(damage, 5f, 
-                    (other.gameObject.transform.position - transform.position).normalized);
-                animator.SetTrigger("Attack_Normal");
-            }
             randomDirection = new Vector2(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f));
             lastRandomDirectionUpdate = Time.time;
+        }
+        else if (Time.time >= lastAttackTime + attackCoolTime)
+        {
+            lastAttackTime = Time.time;
+            attackTarget.OnDamage(stat.damage, 5f, 
+                (other.gameObject.transform.position - transform.position).normalized);
+            animator.SetTrigger("Attack_Normal");
         }
     }
 }
