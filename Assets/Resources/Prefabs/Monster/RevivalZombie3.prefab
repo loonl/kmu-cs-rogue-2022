@@ -3640,7 +3640,7 @@ RectTransform:
   m_GameObject: {fileID: 8507430747940278551}
   m_LocalRotation: {x: -0, y: 0.008726558, z: -0, w: 0.999962}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8850935436061319338}
@@ -3741,8 +3741,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathSound: {fileID: 0}
   hitSound: {fileID: 0}
-  idNumber: 8
-  dead: 0
+  id: 0
+  isDead: 0
 --- !u!1 &8676123046885223690
 GameObject:
   m_ObjectHideFlags: 0

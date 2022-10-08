@@ -122,7 +122,7 @@ public class Monster : MonoBehaviour
     protected virtual IEnumerator Tracing()
     {      
         lastRandomDirectionUpdate = Time.time;
-        randomDirection = new Vector2(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1.0f, 1.0f));
+        randomDirection = new Vector2(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1.0f, 1.0f)).normalized;
 
         float randomDirectionCoolTime = UnityEngine.Random.Range(1f, 3f);
         while (player != null && !player.dead && !isDead && action == Action.Tracing)
@@ -135,7 +135,7 @@ public class Monster : MonoBehaviour
                     lastRandomDirectionUpdate = Time.time;
                 }
                 stat.ChangeSpeed(1);
-                rigidbody2d.velocity = randomDirection.normalized * stat.speed;
+                rigidbody2d.velocity = randomDirection * stat.speed;
                 UpdateEyes(randomDirection.x);
             }
             else
