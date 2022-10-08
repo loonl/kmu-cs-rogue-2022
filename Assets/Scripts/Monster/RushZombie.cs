@@ -8,6 +8,37 @@ public class RushZombie : Monster
     protected float lastRushTime = -4f; // 마지막 돌진 시점
     protected float timeForRushReady = 1f; // 돌진 준비시간
 
+    // 추적 수행
+    protected override IEnumerator Tracing()
+    {
+        lastRandomDirectionUpdate = Time.time;
+        randomDirection = new Vector2(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1.0f, 1.0f)).normalized;
+
+        float randomDirectionCoolTime = UnityEngine.Random.Range(1f, 3f);
+        while (player != null && !player.dead && !isDead && action == Action.Tracing)
+        {
+            if (distance < sight)
+            {
+                stat.ChangeSpeed(2);
+                rigidbody2d.velocity = direction * stat.speed;
+                UpdateEyes(direction.x);
+            } 
+            else
+            {
+                if (Time.time >= lastRandomDirectionUpdate + randomDirectionCoolTime)
+                {
+                    randomDirection = new Vector2(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f));
+                    lastRandomDirectionUpdate = Time.time;
+                }
+                stat.ChangeSpeed(1);
+                rigidbody2d.velocity = randomDirection * stat.speed;
+                UpdateEyes(randomDirection.x);
+            }
+
+            yield return new WaitForSeconds(0.05f);
+        }
+    }
+
     // 스킬 수행
     protected virtual IEnumerator SkillCasting()
     {

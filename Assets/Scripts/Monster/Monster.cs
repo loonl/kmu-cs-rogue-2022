@@ -37,7 +37,6 @@ public class Monster : MonoBehaviour
     // 행동 목록
     public enum Action
     {
-        Standing, // 휴식 중
         //Wandering, // 방황 중
         Tracing, // 추적 중
         SkillCasting, // 스킬 캐스팅 중
@@ -67,13 +66,13 @@ public class Monster : MonoBehaviour
         capsuleCollider2d.enabled = true;
         circleCollider2d.enabled = true;
         StartCoroutine(UpdatePath());
+        action = Action.Tracing;
+        StartCoroutine(Tracing());
     }
 
     // 경로 갱신
     protected IEnumerator UpdatePath()
     {
-        StartCoroutine(Standing());
-
         while (!isDead)
         {
             
@@ -85,8 +84,7 @@ public class Monster : MonoBehaviour
             else
             {
                 player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-                action = Action.Tracing;
-                StartCoroutine(Tracing());
+                
             }
 
             animator.SetBool("HasTarget", true);
@@ -104,17 +102,6 @@ public class Monster : MonoBehaviour
         else
         {
             transform.localScale = new Vector3(stat.scale, stat.scale, 1);
-        }
-    }
-
-    // 휴식 수행
-    protected IEnumerator Standing()
-    {
-        while (!isDead && action == Action.Standing)
-        {
-            rigidbody2d.velocity = Vector2.zero;
-
-            yield return new WaitForSeconds(0.05f);
         }
     }
 
@@ -159,7 +146,7 @@ public class Monster : MonoBehaviour
         while ((startWay.x > 0 && rigidbody2d.velocity.x > 0) || (startWay.x < 0 && rigidbody2d.velocity.x < 0)
             && (startWay.y > 0 && rigidbody2d.velocity.y > 0) || (startWay.y < 0 && rigidbody2d.velocity.y < 0))
         {
-            rigidbody2d.AddForce(-diff * knockBackForce * 7f, ForceMode2D.Force);
+            rigidbody2d.AddForce(-diff * knockBackForce * 12f, ForceMode2D.Force);
             yield return new WaitForSeconds(0.05f);
         }
 
