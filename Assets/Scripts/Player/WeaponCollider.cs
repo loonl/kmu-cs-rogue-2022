@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.Image;
 
 public class WeaponCollider : MonoBehaviour
 {
@@ -18,9 +19,10 @@ public class WeaponCollider : MonoBehaviour
         poly.enabled = false;
     }
 
-    public void SetAttackRange(float value)
+    public void SetAttackRange(float value = 1)
     {
         arc.radius = value;
+        poly.points = arc.getPoints(poly.offset);
     } 
 
     private void OnTriggerStay2D(Collider2D collision)
