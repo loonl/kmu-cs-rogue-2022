@@ -19,7 +19,6 @@ public class Player : MonoBehaviour {
     Animator anim;
     public WeaponCollider wpnColl;
     Rigidbody2D rig;
-    Transform effectTransform; // for changing attack effect size
     PlayerAttack playerAttack;
     [HideInInspector]
     public SPUM_SpriteList spumMgr;
@@ -42,7 +41,6 @@ public class Player : MonoBehaviour {
         wpnColl = transform.GetChild(0).gameObject.GetComponent<WeaponCollider>();
         spumMgr = transform.GetChild(0).GetChild(0).GetComponent<SPUM_SpriteList>();
         rig = GetComponent<Rigidbody2D>();
-        effectTransform = transform.GetChild(0).GetChild(2).GetComponent<Transform>();
 
         // player's first equipments (플레이어 첫 장비)
         equipment = new List<Item> { ItemManager.Instance.GetItem(0), // weapon
@@ -75,10 +73,9 @@ public class Player : MonoBehaviour {
         {
             // enable re-attack
             isAttacking = false;
-
             // disable attack collider
             wpnColl.poly.enabled = false;
-
+            
             // clear attack collider monster list
             if (wpnColl.monsters.Count > 0)
             {
@@ -91,7 +88,6 @@ public class Player : MonoBehaviour {
         {
             // enable re-attack
             isAttacking = false;
-
             //// disable attack collider
             //wpnColl.poly.enabled = false;
 
@@ -204,6 +200,12 @@ public class Player : MonoBehaviour {
             Equip(ItemManager.Instance.GetItem(2));
         if (Input.GetKeyDown(KeyCode.Alpha2)) // 2 - sword2
             Equip(ItemManager.Instance.GetItem(3));
+        if (Input.GetKeyDown(KeyCode.Alpha3)) // 3 - sword6
+            Equip(ItemManager.Instance.GetItem(4));
+        if (Input.GetKeyDown(KeyCode.Alpha4)) // 4 - sword8
+            Equip(ItemManager.Instance.GetItem(5));
+        if (Input.GetKeyDown(KeyCode.Alpha5)) // 5 - sword3 (rare)
+            Equip(ItemManager.Instance.GetItem(22));
         if (Input.GetKeyDown(KeyCode.P))
         {
             print("MaxHP : " + stat.maxHp + "\nHP : " + stat.hp + "\nAttackPower : " + stat.damage
@@ -254,8 +256,7 @@ public class Player : MonoBehaviour {
                 UnEquip(equipment[4]);
                 equipment[4] = ItemManager.Instance.GetItem(94);
             }
-            effectTransform.localScale = new Vector2(item.stat.range * 1.5f, item.stat.range * 3);
-            wpnColl.SetAttackRange(item.stat.range); // range setting
+            playerAttack.SetUpEffect(item: item);// effect setting
         }
 
         // 활 / 스태프 상태에서 방패 장착 시 활 / 스태프 자동 장착 해제
