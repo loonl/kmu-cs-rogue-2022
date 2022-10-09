@@ -107,4 +107,15 @@ public class Stat
             return false;
         return true;
     }
+
+    public void Clear()
+    {
+        maxHp = 0f;
+        hp = 0f;
+        damage = 0f;
+        range = 0f;
+        skillDamage = 0f;
+        coolTime = 0f;
+        speed = 0f;
+    }
 }
