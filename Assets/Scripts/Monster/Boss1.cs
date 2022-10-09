@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 public class Boss1 : RushZombie
@@ -40,6 +40,7 @@ public class Boss1 : RushZombie
                 }
             }
 
+            UpdateEyes();
             yield return new WaitForSeconds(0.05f);
         }
 

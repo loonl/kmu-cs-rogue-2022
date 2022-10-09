@@ -3453,7 +3453,6 @@ GameObject:
   - component: {fileID: 3398698916308705011}
   - component: {fileID: 9180507872523455787}
   - component: {fileID: 2166359156374381060}
-  - component: {fileID: 109063502661760227}
   - component: {fileID: 1235897264516950016}
   m_Layer: 0
   m_Name: FastZombie1
@@ -3542,22 +3541,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.2}
   m_Size: {x: 0.4, y: 0.4}
   m_Direction: 0
---- !u!58 &109063502661760227
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8263396745831196224}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.25}
-  serializedVersion: 2
-  m_Radius: 1.5
 --- !u!114 &1235897264516950016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3572,8 +3555,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathSound: {fileID: 0}
   hitSound: {fileID: 0}
-  idNumber: 3
-  dead: 0
+  id: 0
+  isDead: 0
 --- !u!1 &8319551356578775651
 GameObject:
   m_ObjectHideFlags: 0

@@ -2385,7 +2385,6 @@ GameObject:
   - component: {fileID: 972566707407003045}
   - component: {fileID: 4706216179588143795}
   - component: {fileID: 6046919220545250175}
-  - component: {fileID: 4731493313919945}
   - component: {fileID: 3239233423485168244}
   m_Layer: 0
   m_Name: Zombie3
@@ -2474,22 +2473,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.2}
   m_Size: {x: 0.4, y: 0.4}
   m_Direction: 0
---- !u!58 &4731493313919945
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5834590764489467158}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.25}
-  serializedVersion: 2
-  m_Radius: 1.3
 --- !u!114 &3239233423485168244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2504,8 +2487,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathSound: {fileID: 0}
   hitSound: {fileID: 0}
-  idNumber: 2
-  dead: 0
+  id: 0
+  isDead: 0
 --- !u!1 &5970336023921155747
 GameObject:
   m_ObjectHideFlags: 0

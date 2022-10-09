@@ -3647,7 +3647,6 @@ GameObject:
   - component: {fileID: 2790789253454855095}
   - component: {fileID: 1307915663471740454}
   - component: {fileID: 1307915663471740449}
-  - component: {fileID: 1160680774473721952}
   - component: {fileID: 1307915663471740448}
   m_Layer: 0
   m_Name: RushZombie2
@@ -3736,22 +3735,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.2}
   m_Size: {x: 0.4, y: 0.4}
   m_Direction: 0
---- !u!58 &1160680774473721952
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8880255334964364036}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.25}
-  serializedVersion: 2
-  m_Radius: 2
 --- !u!114 &1307915663471740448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3766,8 +3749,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathSound: {fileID: 0}
   hitSound: {fileID: 0}
-  idNumber: 10
-  dead: 0
+  id: 0
+  isDead: 0
 --- !u!1 &9111163243811118920
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,8 +21,7 @@ public class Monster : MonoBehaviour
     protected Animator animator;
     protected AudioSource audioPlayer;
     protected Rigidbody2D rigidbody2d;
-    protected CapsuleCollider2D capsuleCollider2d;
-    protected CircleCollider2D circleCollider2d;
+    protected CapsuleCollider2D capsuleCollider2D;
 
     public int id; // 몬스터 Id
     protected MonsterStat stat; // 몬스터 스텟
@@ -61,14 +60,13 @@ public class Monster : MonoBehaviour
     public event Action onDie; // 사망 시 발동 이벤트
     public event Action onRevive; // 부활 시 발동 이벤트
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         // 컴포넌트 초기화
         rigidbody2d = GetComponent<Rigidbody2D>();
         animator = GetComponentInChildren<Animator>();
         audioPlayer = GetComponent<AudioSource>();
-        capsuleCollider2d = GetComponent<CapsuleCollider2D>();
-        circleCollider2d = GetComponent<CircleCollider2D>();
+        capsuleCollider2D = GetComponent<CapsuleCollider2D>();
     }
 
     protected void Start()
@@ -80,8 +78,7 @@ public class Monster : MonoBehaviour
     // 몬스터 활성화
     protected virtual void Generate()
     {
-        capsuleCollider2d.enabled = true;
-        circleCollider2d.enabled = true;
+        capsuleCollider2D.enabled = true;
         isDead = false;
         actionChanged = true;
         actionFinished = true;
@@ -177,7 +174,7 @@ public class Monster : MonoBehaviour
             }
 
             rigidbody2d.velocity = randomDirection * stat.speed;
-            UpdateEyes(randomDirection.x);
+            UpdateEyes();
             yield return new WaitForSeconds(0.05f);
         }
 
@@ -192,7 +189,7 @@ public class Monster : MonoBehaviour
         while (!isDead && Action == ActionList.SkillCasting1 && distance < stat.sight)
         {
             rigidbody2d.velocity = direction * stat.speed;
-            UpdateEyes(direction.x);
+            UpdateEyes();
             yield return new WaitForSeconds(0.05f);
         }
 
@@ -269,8 +266,7 @@ public class Monster : MonoBehaviour
     // 사망 시 실행
     public virtual void Die()
     {
-        capsuleCollider2d.enabled = false;
-        circleCollider2d.enabled = false;
+        capsuleCollider2D.enabled = false;
         isDead = true;
         player = null;
 
@@ -298,13 +294,13 @@ public class Monster : MonoBehaviour
     }
 
     // 시야 방향 갱신
-    protected void UpdateEyes(float x)
+    protected void UpdateEyes()
     {
-        if (x > 0)
+        if (rigidbody2d.velocity.x > 0)
         {
             transform.localScale = new Vector3(-stat.scale, stat.scale, 1);
         }
-        else
+        else if (rigidbody2d.velocity.x < 0)
         {
             transform.localScale = new Vector3(stat.scale, stat.scale, 1);
         }

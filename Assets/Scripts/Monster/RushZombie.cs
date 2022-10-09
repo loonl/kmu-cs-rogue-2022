@@ -1,12 +1,21 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 public class RushZombie : Monster
 {
+    CircleCollider2D circleCollider2D;
+
     bool rushing = false; // 돌진 중 여부
     protected float rushCoolTime = 5f; // 돌진 쿨타임
     protected float lastRushTime = -4f; // 마지막 돌진 시점
     protected float timeForRushReady = 1f; // 돌진 준비시간
+
+    protected override void Awake()
+    {
+        // 컴포넌트 초기화
+        base.Awake();
+        circleCollider2D = GetComponentInChildren<CircleCollider2D>();
+    }
 
     // 스킬 수행
     protected override IEnumerator SkillCasting2()
@@ -31,6 +40,7 @@ public class RushZombie : Monster
                 rushing = false;
             }
 
+            UpdateEyes();
             yield return new WaitForSeconds(0.05f);
         }
 
