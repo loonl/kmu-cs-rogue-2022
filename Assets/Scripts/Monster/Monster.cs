@@ -236,8 +236,9 @@ public class Monster : MonoBehaviour
     // 피격 시 실행
     public void OnDamage(float damage, float _knockBackForce, Vector2 _knockBackDirection)
     {
-
+        Debug.Log($"id {this.name} got damage {damage}");
         stat.OnDamage(damage);
+
 
         if (stat.health <= 0)
         {
@@ -260,7 +261,8 @@ public class Monster : MonoBehaviour
             //audioPlayer.PlayOneShot(hitSound);
         }
 
-        Debug.Log("Monster Health: " + stat.health);
+        //Debug.Log("Monster Health: " + stat.health);
+
     }
 
     // 사망 시 실행
@@ -316,10 +318,11 @@ public class Monster : MonoBehaviour
             randomDirection = new Vector2(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f));
             lastRandomDirectionUpdate = Time.time;
         }
-        else if(Time.time >= lastAttackTime + attackCoolTime)
+        else if (Time.time >= lastAttackTime + attackCoolTime)
         {
             lastAttackTime = Time.time;
-            attackTarget.OnDamage(stat.damage);
+            attackTarget.OnDamage(stat.damage, 5f, 
+                (other.gameObject.transform.position - transform.position).normalized);
             animator.SetTrigger("Attack_Normal");
         }
     }
