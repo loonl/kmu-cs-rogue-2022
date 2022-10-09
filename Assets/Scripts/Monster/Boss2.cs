@@ -7,10 +7,10 @@ public class Boss2 : Monster
     protected float timeBetSkill = 5f; // 스킬 대기시간
     protected float lastSkillTime; // 스킬 시작시간
 
-    protected override IEnumerator Tracing()
+    protected override IEnumerator Wandering()
     {
         lastSkillTime = Time.time;
-        while (!isDead && action == Action.Tracing)
+        while (!isDead && Action == ActionList.Wandering)
         {
             rigidbody2d.velocity = direction * stat.speed;
             if (Time.time >= lastSkillTime + timeBetSkill)
