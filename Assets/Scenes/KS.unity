@@ -2911,7 +2911,7 @@ GameObject:
   - component: {fileID: 2022256109}
   - component: {fileID: 2022256108}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Fade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2950,7 +2950,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3179,6 +3179,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dungeon System
       objectReference: {fileID: 0}
+    - target: {fileID: 7798428690168941556, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
+      propertyPath: fadeimg
+      value: 
+      objectReference: {fileID: 2022256108}
     - target: {fileID: 7798428690168941558, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
       propertyPath: Floor
       value: 4
