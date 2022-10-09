@@ -321,8 +321,7 @@ public class Monster : MonoBehaviour
         else if (Time.time >= lastAttackTime + attackCoolTime)
         {
             lastAttackTime = Time.time;
-            attackTarget.OnDamage(stat.damage, 5f, 
-                (other.gameObject.transform.position - transform.position).normalized);
+            attackTarget.OnDamage(stat.damage, 5f, (attackTarget.transform.position - transform.position).normalized);
             animator.SetTrigger("Attack_Normal");
         }
     }

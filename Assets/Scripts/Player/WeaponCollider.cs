@@ -35,8 +35,7 @@ public class WeaponCollider : MonoBehaviour
             // execute ondamage function when monster is in range
             Monster attackTarget = collision.gameObject.GetComponent<Monster>();
 
-            // !! �˹� ����ġ ���
-            attackTarget.OnDamage(playerUnit.stat.damage, 5f, (collision.gameObject.transform.position - transform.position).normalized); 
+            attackTarget.OnDamage(playerUnit.stat.damage, 5f, (attackTarget.transform.position - transform.position).normalized); 
         }
 
         if (collision.gameObject.tag == "MapObject")
