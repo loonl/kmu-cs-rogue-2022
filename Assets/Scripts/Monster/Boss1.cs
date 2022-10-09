@@ -5,11 +5,11 @@ public class Boss1 : RushZombie
 {
     int rushStep = 0;
     // 스킬 수행
-    protected override IEnumerator SkillCasting()
+    protected override IEnumerator SkillCasting2()
     {
         bool rushing = true;
         bool rushReady = true;
-        while (action == Action.SkillCasting && rushing)
+        while (!isDead && Action == ActionList.SkillCasting2 && rushing)
         {
             if (Time.time < lastRushTime + timeForRushReady) // 대기
             {
@@ -43,7 +43,6 @@ public class Boss1 : RushZombie
             yield return new WaitForSeconds(0.05f);
         }
 
-        action = Action.Tracing;
-        StartCoroutine(Tracing());
+        actionFinished = true;
     }
 }

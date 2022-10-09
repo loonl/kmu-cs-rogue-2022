@@ -1,21 +1,22 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MonsterStat
 {
-    public List<Dictionary<string, object>> monsterData; // ¸ó½ºÅÍ µ¥ÀÌÅÍ
+    public List<Dictionary<string, object>> monsterData; // ëª¬ìŠ¤í„° ë°ì´í„°
 
-    public float scale { get; private set; } // Å©±â
-    public int gold { get; private set; } //µå¶ø °ñµå
-    public float maxHealth { get; private set; } // ÃÖ´ë Ã¼·Â
-    public float health { get; private set; } // ÇöÀç Ã¼·Â
-    public float damage { get; private set; } // °ø°İ·Â
-    public float speed1 { get; private set; } // ¼Óµµ1
-    public float speed2 { get; private set; } // ¼Óµµ2
-    public float speed { get; private set; } // ÇöÀç ¼Óµµ
+    public float scale { get; private set; } // í¬ê¸°
+    public int gold { get; private set; } //ë“œë ê³¨ë“œ
+    public float maxHealth { get; private set; } // ìµœëŒ€ ì²´ë ¥
+    public float health { get; private set; } // í˜„ì¬ ì²´ë ¥
+    public float damage { get; private set; } // ê³µê²©ë ¥
+    public float speed1 { get; private set; } // ì†ë„1
+    public float speed2 { get; private set; } // ì†ë„2
+    public float speed { get; private set; } // í˜„ì¬ ì†ë„
+    public float sight { get; private set; } // ì‹œì•¼
 
-    // csvÆÄÀÏÀ» ÀÌ¿ëÇÏ¿© ¸ó½ºÅÍ ÃÊ±âÈ­
+    // csvíŒŒì¼ì„ ì´ìš©í•˜ì—¬ ëª¬ìŠ¤í„° ì´ˆê¸°í™”
     public MonsterStat(List<Dictionary<string, object>> _monsterData, int id)
     {
         monsterData = _monsterData;
@@ -26,6 +27,7 @@ public class MonsterStat
         damage = float.Parse(monsterData[id]["Damage"].ToString());
         speed1 = float.Parse(monsterData[id]["Speed1"].ToString());
         speed2 = float.Parse(monsterData[id]["Speed2"].ToString());
+        sight = float.Parse(monsterData[id]["Sight"].ToString());
     }
 
     public void OnDamage(float amount)
