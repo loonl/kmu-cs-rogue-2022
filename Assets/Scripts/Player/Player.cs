@@ -50,8 +50,16 @@ public class Player : MonoBehaviour {
         rig = GetComponent<Rigidbody2D>();
 
         // player's first equipments (플레이어 첫 장비)
-        EquipInit();
-
+        equipment = new List<Item> { ItemManager.Instance.GetItem(0), // weapon
+                                     ItemManager.Instance.GetItem(7), // helmet
+                                     ItemManager.Instance.GetItem(10), // armor
+                                     ItemManager.Instance.GetItem(15), // pants
+                                     ItemManager.Instance.GetItem(1)  // shield
+                                    };
+        List<Stat> temp = new List<Stat>();
+        for (int i = 0; i < equipment.Count; i++)
+            temp.Add(equipment[i].stat);
+        stat.SyncStat(temp);
         // used in animator end event - death
         anim.GetComponent<PlayerAnimreciver>().onDieComplete = () =>
         {
@@ -256,10 +264,6 @@ public class Player : MonoBehaviour {
                                     };
         for (int i = 0; i < equipment.Count; i++)
             Equip(equipment[i]);
-        //List<Stat> temp = new List<Stat>();
-        //for (int i = 0; i < equipment.Count; i++)
-        //    temp.Add(equipment[i].stat);
-        //stat.SyncStat(temp);
     }
 
     // -------------------------------------------------------------
