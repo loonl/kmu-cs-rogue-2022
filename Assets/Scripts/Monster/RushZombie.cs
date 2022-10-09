@@ -46,7 +46,7 @@ public class RushZombie : Monster
         if (Time.time >= lastRushTime + rushCoolTime && rushing == false)
         {
             Player attackTarget = other.gameObject.GetComponent<Player>();
-            Debug.Log("a");
+            //Debug.Log("a");
             if (player == attackTarget)
             {
                 lastRushTime = Time.time;

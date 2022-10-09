@@ -135,7 +135,6 @@ public class RoomGenerator : MonoBehaviour
     {
         shopIndex = Mathf.FloorToInt(maxCount * 0.2f);
         bossIndex = Mathf.FloorToInt(maxCount - 1);
-        Debug.Log($"shopindex: {shopIndex}");
 
         // 빈 방 생성
         CreateEmptyRoom(maxCount);
@@ -143,7 +142,7 @@ public class RoomGenerator : MonoBehaviour
         // Room 타일 그리기
         DungeonRoom[] rooms = roomParent.GetComponentsInChildren<DungeonRoom>();
 
-        DrawRoom(rooms[0], type, RoomSize.Small);           // Start           
+        DrawRoom(rooms[0], type, RoomSize.Small);           // Start
 
         foreach (DungeonRoom room in rooms[1..shopIndex])
         {

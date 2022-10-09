@@ -58,6 +58,7 @@ public class MonsterSpawner : MonoBehaviour
         if (monsters.Count < 1)
         {
             DungeonSystem.Instance.Rooms[roomIndex].Clear();
+            SoundManager.Instance.SoundPlay(SoundType.DoorOpen);
         }
     }
 }
