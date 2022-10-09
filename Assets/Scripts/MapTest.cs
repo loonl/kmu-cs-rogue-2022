@@ -14,6 +14,8 @@ public class MapTest : MonoBehaviour
         {
             DungeonSystem.Instance.ClearDungeon();
             DungeonSystem.Instance.CreateDungeon();
+            GameManager.Instance.Player.transform.position = Vector3.zero;
+            DungeonSystem.Instance.Rooms[0].Clear();
         }
     }
 }

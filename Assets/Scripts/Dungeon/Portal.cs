@@ -7,17 +7,21 @@ public class Portal : MonoBehaviour
     private BoxCollider2D _collider;
 
     private Portal connetecPortal = null;
+    [SerializeField]
     private bool _isActivated;
+    [SerializeField]
     private ushort _outDirect;       // 내 포탈의 방향
+    [SerializeField]
     private int _connectedRoomId;
+    [SerializeField]
     private Vector3 offset;
 
+    [SerializeField]
     private bool entered = true;
 
     private void Awake()
     {
         _collider = this.GetComponent<BoxCollider2D>();
-
         DeActivate();
     }
 
@@ -30,34 +34,20 @@ public class Portal : MonoBehaviour
 
         if (direct == 0)
         {
-            offset = new Vector3(0, -.5f, 0);
+            offset = new Vector3(0, -1f, 0);
         }
         else if (direct == 1)
         {
-            offset = new Vector3(-.5f, 0, 0);
+            offset = new Vector3(-.75f, 0, 0);
         }
         else if (direct == 2)
         {
-            offset = new Vector3(0, .5f, 0);
+            offset = new Vector3(0, .75f, 0);
         }
         else
         {
-            offset = new Vector3(.5f, 0, 0);
+            offset = new Vector3(.75f, 0, 0);
         }
-
-        // return generator.Rooms[dungeonRoomIndex].Portals[(direct + 2) % 4].transform.position + offset * 0.5f;
-
-        
-
-        // 방향 지정 및 문 방향으로 scale 조정
-        // if (direct == 0 || direct == 2)
-        // {
-        //     this.transform.localScale = new Vector3(1f, 1.1f, 1f);
-        // }
-        // else
-        // {
-        //     this.transform.localScale = new Vector3(1.1f, 1f, 1f);
-        // }
     }
 
     // -------------------------------------------------------------
@@ -67,7 +57,7 @@ public class Portal : MonoBehaviour
     {
         // connetecPortal
         entering.transform.position = this.transform.position + offset;
-        this.entered = false;
+        //this.entered = false;
     }
 
     public void Exit(GameObject exiting)
