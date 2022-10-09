@@ -49,7 +49,6 @@ public class Boxes : MonoBehaviour
                 box.transform.rotation = Quaternion.Euler(0, 0, 270);
                 break;
         }
-
         return box;
     }
 }

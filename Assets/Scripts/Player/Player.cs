@@ -56,12 +56,10 @@ public class Player : MonoBehaviour {
                                      ItemManager.Instance.GetItem(15), // pants
                                      ItemManager.Instance.GetItem(1)  // shield
                                     };
-
         List<Stat> temp = new List<Stat>();
         for (int i = 0; i < equipment.Count; i++)
             temp.Add(equipment[i].stat);
         stat.SyncStat(temp);
-
         // used in animator end event - death
         anim.GetComponent<PlayerAnimreciver>().onDieComplete = () =>
         {
@@ -248,6 +246,24 @@ public class Player : MonoBehaviour {
 
             this._interact.InteractEvent();
         }
+    }
+
+    // -------------------------------------------------------------
+    // Player 아이템 초기화
+    // -------------------------------------------------------------
+    public void EquipInit()
+    {
+        for(int i = 0; i < equipment.Count; i++)
+            UnEquip(equipment[i]);
+        equipment.Clear();
+        equipment = new List<Item> { ItemManager.Instance.GetItem(0), // weapon
+                                     ItemManager.Instance.GetItem(7), // helmet
+                                     ItemManager.Instance.GetItem(10), // armor
+                                     ItemManager.Instance.GetItem(15), // pants
+                                     ItemManager.Instance.GetItem(1)  // shield
+                                    };
+        for (int i = 0; i < equipment.Count; i++)
+            Equip(equipment[i]);
     }
 
     // -------------------------------------------------------------

@@ -42,10 +42,11 @@ public class DungeonRoom : MonoBehaviour
     {
         // 플레이어 입장
         Portals[(outDirect + 2) % 4].Enter(player);
-        if(roomtype == RoomType.Neutral) this.Clear();
-        
-        else _spawner.Spawn();
-        // this.Clear();      // !!! temp
+        if (roomtype == RoomType.Battle)
+        {
+            _spawner.Spawn();
+            SoundManager.Instance.SoundPlay(SoundType.DoorClose);
+        }
     }
 
     public void Clear()

@@ -7,6 +7,7 @@ public class MapObject : MonoBehaviour
     public void OnDamage()
     {
         // !!! SOUND 상자 부숴지는 소리
+        SoundManager.Instance.SoundPlay(SoundType.Box);
 
         GameObject droppedItem;
 
@@ -16,7 +17,7 @@ public class MapObject : MonoBehaviour
             droppedItem = GameManager.Instance.CreateGO
             (
                 "Prefabs/Dungeon/Dropped",
-                DungeonSystem.Instance.DroppedItems
+                DungeonSystem.Instance.DroppedItems.transform
             );
 
             // 드랍 확률에 따라 아이템 할당
@@ -28,12 +29,11 @@ public class MapObject : MonoBehaviour
             droppedItem = GameManager.Instance.CreateGO
             (
                 "Prefabs/Dungeon/Portion",
-                DungeonSystem.Instance.DroppedItems
+                DungeonSystem.Instance.DroppedItems.transform
             );
         }
 
         droppedItem.transform.position = this.transform.position;
-
         Destroy(this.gameObject);
     }
 }
