@@ -6,7 +6,6 @@ TagManager:
   tags:
   - Monster
   - Spawner
-  - MapObject
   layers:
   - Default
   - TransparentFX
@@ -14,8 +13,8 @@ TagManager:
   - 
   - Water
   - UI
-  - Fade
-  - 
+  - MonsterSkill
+  - Player
   - 
   - 
   - 

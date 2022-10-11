@@ -2427,7 +2427,6 @@ GameObject:
   - component: {fileID: 2001506001738307300}
   - component: {fileID: 3412181836526054261}
   - component: {fileID: 3412181836526054260}
-  - component: {fileID: -7226670058140397525}
   - component: {fileID: 3412181836526054263}
   m_Layer: 0
   m_Name: Boss2
@@ -2516,22 +2515,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.2}
   m_Size: {x: 0.4, y: 0.4}
   m_Direction: 0
---- !u!58 &-7226670058140397525
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5062369503688158807}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.25}
-  serializedVersion: 2
-  m_Radius: 1.3
 --- !u!114 &3412181836526054263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2546,8 +2529,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathSound: {fileID: 0}
   hitSound: {fileID: 0}
-  idNumber: 13
-  dead: 0
+  id: 0
+  isDead: 0
 --- !u!1 &5203512430596018762
 GameObject:
   m_ObjectHideFlags: 0

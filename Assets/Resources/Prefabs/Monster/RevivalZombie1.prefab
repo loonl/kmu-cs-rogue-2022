@@ -2663,7 +2663,6 @@ GameObject:
   - component: {fileID: 406671186142567069}
   - component: {fileID: 6892658632812109695}
   - component: {fileID: 1035388520005135013}
-  - component: {fileID: -6621959316632805167}
   - component: {fileID: 4477130827722195137}
   m_Layer: 0
   m_Name: RevivalZombie1
@@ -2681,7 +2680,7 @@ RectTransform:
   m_GameObject: {fileID: 6350964349650919982}
   m_LocalRotation: {x: 0, y: 0.008726558, z: 0, w: 0.999962}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6118010073251943315}
@@ -2752,22 +2751,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.2}
   m_Size: {x: 0.4, y: 0.4}
   m_Direction: 0
---- !u!58 &-6621959316632805167
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6350964349650919982}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.25}
-  serializedVersion: 2
-  m_Radius: 1.3
 --- !u!114 &4477130827722195137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2782,8 +2765,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathSound: {fileID: 0}
   hitSound: {fileID: 0}
-  idNumber: 6
-  dead: 0
+  id: 0
+  isDead: 0
 --- !u!1 &6485585838410193307
 GameObject:
   m_ObjectHideFlags: 0

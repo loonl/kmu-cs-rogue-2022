@@ -21,7 +21,7 @@ id,name,type,rarity,dmg,range,skilldmg,cooltime,hp,speed,path
 19,shield1,7,N,0,0,0,0,200,0,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/6_Weapons/WoodShield1.png
 20,shield2,7,N,0,0,0,0,210,0,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/6_Weapons/WoodShield2.png
 21,shield3,7,N,0,0,0,0,220,0,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/6_Weapons/WoodShield3.png
-22,sword3,1,R,12,3,16,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_3.png
+22,sword3,1,R,12,2,16,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_3.png
 23,sword4,1,R,13,3,19,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_4.png
 24,sword9,1,R,18,3,34,10,0,0,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_06.png
 25,sword10,1,R,19,3,37,10,0,0,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_11.png
