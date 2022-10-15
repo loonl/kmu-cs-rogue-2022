@@ -3,12 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public enum RoomType
-{
-    Battle,
-    Neutral
-}
-
 public class DungeonRoom : MonoBehaviour
 {
     public GameObject TileMapParent;
@@ -36,13 +30,15 @@ public class DungeonRoom : MonoBehaviour
 
     private MonsterSpawner _spawner = null;
 
-    public RoomType roomtype = RoomType.Neutral;
+    //전투방인지 아닌지 체크를 위한 용도
+    public bool IsClear = false;
 
     public void Enter(ushort outDirect, GameObject player)
     {
         // 플레이어 입장
         Portals[(outDirect + 2) % 4].Enter(player);
-        if (roomtype == RoomType.Battle)
+        
+        if (!IsClear)
         {
             _spawner.Spawn();
             SoundManager.Instance.SoundPlay(SoundType.DoorClose);
@@ -52,7 +48,7 @@ public class DungeonRoom : MonoBehaviour
     public void Clear()
     {
         // 방 클리어
-        roomtype = RoomType.Neutral;
+        IsClear = true;
         foreach (Portal portal in Portals)
         {
             if (portal != null)
@@ -72,6 +68,12 @@ public class DungeonRoom : MonoBehaviour
         float verticalRange = (float)(this.WallLayer.size.y - 2) * 0.5f;
 
         _spawner.Set(roomIndex, this.transform.position, horizontalRange, verticalRange, monsterData);
-        //_spawner.CreateEnemy
+    }
+
+    private void Update()
+    {
+        if(Input.GetKey(KeyCode.K))
+            foreach (Monster monster in _spawner.monsters)
+                monster.Die();
     }
 }

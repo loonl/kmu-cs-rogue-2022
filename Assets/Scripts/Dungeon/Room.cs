@@ -23,7 +23,6 @@ public class Room
     public List<RoomDirect> ExistDirects { get { return existDirects; } }
 
     public GameObject RoomObject { get { return roomObject; } }
-
     // -------------------------------------------------------------
     // Room 초기화 및 연결(검색)
     // -------------------------------------------------------------
