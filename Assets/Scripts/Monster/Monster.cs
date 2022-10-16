@@ -36,6 +36,7 @@ public class Monster : MonoBehaviour
     protected float lastRandomDirectionUpdate; // 마지막 랜덤 방향 업데이트 시점
     protected float knockBackForce;
     protected Vector2 knockBackDirection;
+    protected string Monstertype;
 
     public bool isDead; // 사망 여부
     protected bool actionChanged; // 행동 변경 여부
@@ -73,6 +74,7 @@ public class Monster : MonoBehaviour
     {
         stat = new MonsterStat(monsterData, id); // !! 고칠 코드
         Generate(); // 몬스터 생성
+        Monstertype = this.GetType().Name;
     }
 
     // 몬스터 활성화
