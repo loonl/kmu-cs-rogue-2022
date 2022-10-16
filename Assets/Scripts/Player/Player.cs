@@ -18,6 +18,8 @@ public class Player : MonoBehaviour {
     [HideInInspector]
     public bool isInvincible;
 
+    [HideInInspector] public bool isMovable;
+
     // equipments => 0 : Weapon, 1 : Helmet, 2 : Armor, 3 : Pants, 4 : Shield
     // TODO 코드 ENUM 적용해서 가독성 향상시키기
     [HideInInspector]
@@ -80,6 +82,8 @@ public class Player : MonoBehaviour {
             isAttacking = false;
             // disable attack collider
             wpnColl.poly.enabled = false;
+            // enable move
+            isMovable = true;
             
             // clear attack collider monster list
             if (wpnColl.monsters.Count > 0)
@@ -95,6 +99,9 @@ public class Player : MonoBehaviour {
             isAttacking = false;
             //// disable attack collider
             //wpnColl.poly.enabled = false;
+            
+            // enable move
+            isMovable = true;
 
             // reset elasped skill cool-time
             remainCool = equipment[0].stat.coolTime;
@@ -111,6 +118,7 @@ public class Player : MonoBehaviour {
         dead = false;
         isDashing = false;
         isInvincible = false;
+        isMovable = true;
         remainCool = -1f;
 
         // attack & skill range init
@@ -131,7 +139,7 @@ public class Player : MonoBehaviour {
         // get move-related input
         Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0).normalized;
         
-        if (!isDashing && !isStunned)
+        if (!isDashing && !isStunned && isMovable)
         {
             // FLIP character depending on heading direction
             if (moveInput.x > 0 && transform.localScale.x > 0)
@@ -165,13 +173,17 @@ public class Player : MonoBehaviour {
             // change animation to attack
             anim.SetTrigger("Attack");
             isAttacking = true;
+            
+            // cannot move - freeze
+            rig.velocity = Vector2.zero;
+            isMovable = false;
 
             playerAttack.Attack(equipment[0].id);
 
             // enable weapon collider
             wpnColl.poly.enabled = true;
         }
-
+        
         // test debugging skill cool-time
         if (Input.GetButtonDown("Fire2"))
         {
@@ -189,6 +201,10 @@ public class Player : MonoBehaviour {
 
             // do not let attack and use skill at the same time
             isAttacking = true;
+            
+            // cannot move - freeze
+            rig.velocity = Vector2.zero;
+            isMovable = false;
 
             // 스킬 관련 구현
             playerAttack.SkillAttack(equipment[0].id);
@@ -379,6 +395,9 @@ public class Player : MonoBehaviour {
 
     public void OnDamage(float damage, float knockBackForce, Vector2 direction)
     {
+        if (isInvincible || isStunned)
+            return;
+        
         stat.Damaged(damage);
 
         // trigger die if health is below 0
