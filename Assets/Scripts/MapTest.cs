@@ -21,23 +21,23 @@ public class MapTest : MonoBehaviour
 
     private IEnumerator Restart()
     {
-        while(fade < 1.0f)
-        {
-            fade += 0.01f;
-            yield return wfs1;
-            fadeimg.color = new Color(0, 0, 0, fade);
-        }
+        //while (fade < 1.0f)
+        //{
+        //    fade += 0.01f;
+        //    yield return wfs1;
+        //    fadeimg.color = new Color(0, 0, 0, fade);
+        //}
         DungeonSystem.Instance.ClearDungeon();
         yield return wfs20;
         DungeonSystem.Instance.CreateDungeon();
         GameManager.Instance.Player.transform.position = Vector3.zero;
         DungeonSystem.Instance.Rooms[0].Clear();
         //GameManager.Instance.Player.EquipInit();
-        while (fade > 0.0f)
-        {
-            fade -= 0.01f;
-            yield return wfs1;
-            fadeimg.color = new Color(0, 0, 0, fade);
-        }
+        //while (fade > 0.0f)
+        //{
+        //    fade -= 0.01f;
+        //    yield return wfs1;
+        //    fadeimg.color = new Color(0, 0, 0, fade);
+        //}
     }
 }

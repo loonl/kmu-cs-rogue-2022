@@ -5,7 +5,7 @@ using UnityEngine;
 public class Portal : MonoBehaviour
 {
     private BoxCollider2D _collider;
-
+    [SerializeField]
     private Portal connetecPortal = null;
     [SerializeField]
     private bool _isActivated;
