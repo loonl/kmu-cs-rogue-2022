@@ -72,8 +72,10 @@ public class DungeonRoom : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKey(KeyCode.K))
-            foreach (Monster monster in _spawner.monsters)
-                monster.Die();
+        //테스트 코드 수정 필요
+        //if (Input.GetKey(KeyCode.K))
+        //    if (_spawner != null)
+        //        foreach (Monster monster in _spawner.monsters)
+        //            monster.Die();
     }
 }
