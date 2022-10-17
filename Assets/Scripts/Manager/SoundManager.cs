@@ -13,7 +13,12 @@ public enum SoundType
     Box,
     DoorClose,
     DoorOpen,
-    Monster,
+    Zombie,
+    RushZombie,
+    RevivalZombie,
+    Portion,
+    Coin,
+    PlayerDash,
     Boss
 }
 
@@ -28,10 +33,29 @@ public class SoundManager : MonoBehaviour
     [SerializeField]
     private List<AudioClip> _Doorclips = new List<AudioClip>();
 
-    Dictionary<string, AudioClip> _clips = new Dictionary<string, AudioClip>();
+    [SerializeField]
+    private List<AudioClip> _Zombieclips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> _RushZombieclips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> _RevivalZombieclips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> _Portionclips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> _Coinclips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> _PlayerDashclips = new List<AudioClip>();
+
+    private int i;
     public float bgmvolume, effectvolume, totalvolume;
 
     private static SoundManager _instance = null;
+
     public static SoundManager Instance { get { return _instance; } }
 
     private void Awake()
@@ -70,7 +94,25 @@ public class SoundManager : MonoBehaviour
             }
 
             _audioSources[(int)Sound.Bgm].loop = true;
+            if (_Boxclips == null)
+                BoxClip();
+            if(_Doorclips == null)
+                DoorClip();
         }
+    }
+
+    //만약 박스 클립이 할당되지 않을 경우
+    private void BoxClip()
+    {
+        for (i = 1; i < 6; i++)
+            _Boxclips.Add(Resources.Load<AudioClip>($"Sounds/Effect/Box/Box {i}"));
+    }
+
+    //만약 도어 클립이 할당되지 않을 경우
+    private void DoorClip()
+    {
+        _Doorclips.Add(Resources.Load<AudioClip>("Sounds/Effect/Door/Door 1 Close"));
+        _Doorclips.Add(Resources.Load<AudioClip>("Sounds/Effect/Door/Door 3 Open"));
     }
 
     public void SoundPlay(SoundType st, Sound type = Sound.Effect, float pitch = 1.0f)
@@ -89,7 +131,7 @@ public class SoundManager : MonoBehaviour
                 Play(_Doorclips[1]);
                 break;
 
-            case SoundType.Monster:
+            case SoundType.Zombie:
                 break;
         }
     }
@@ -115,48 +157,6 @@ public class SoundManager : MonoBehaviour
             audioSource.volume = effectvolume * totalvolume;
             audioSource.PlayOneShot(audioClip);
         }
-    }
-
-    //public void Play(string path, Sound type = Sound.Effect, float pitch = 1.0f)
-    //{
-    //    if (path.Contains("Sounds/") == false)
-    //        path = $"Sounds/{path}";
-
-    //    AudioClip audioClip = GetOrAddAudioClip(path);
-    //    if (audioClip == null)
-    //        return;
-
-    //    if (type == Sound.Bgm)
-    //    {
-    //        AudioSource audioSource = _audioSources[(int)Sound.Bgm];
-    //        if (audioSource.isPlaying)
-    //            audioSource.Stop();
-
-    //        audioSource.pitch = pitch;
-    //        audioSource.clip = audioClip;
-    //        audioSource.volume = bgmvolume * totalvolume;
-    //        audioSource.Play();
-    //    }
-
-    //    else
-    //    {
-    //        AudioSource audioSource = _audioSources[(int)Sound.Effect];
-    //        audioSource.pitch = pitch;
-    //        audioSource.volume = effectvolume * totalvolume;
-    //        audioSource.PlayOneShot(audioClip);
-    //    }
-    //}
-
-    AudioClip GetOrAddAudioClip(string path)
-    {
-        AudioClip audioClip = null;
-        if (!_clips.TryGetValue(path, out audioClip))
-        {
-            audioClip = Resources.Load<AudioClip>(path);
-            _clips.Add(path, audioClip);
-        }
-
-        return audioClip;
     }
 
     public void SetBgmVolume()

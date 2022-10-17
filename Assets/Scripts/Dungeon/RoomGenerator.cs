@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Linq;
 
 public enum TileType
 {
@@ -106,13 +107,20 @@ public class RoomGenerator : MonoBehaviour
     private List<Room> rooms;            // 모든 방 리스트
     private Stack<Room> visitedRooms;
     private List<DungeonRoom> dungeonRooms;
-
     public List<DungeonRoom> Rooms { get { return dungeonRooms; } }
+    [SerializeField]
+    private int[] distance; //첫 방과 n번째 방의 거리
+    private int specialroom; //보스방, 상점방 등 특수한 방의 개수
+    private int[] dx = new int[] { 1, 0, -1, 0 };
+    private int[] dy = new int[] { 0, 1, 0, -1 };
+    private int[,] roomlocal;//지도
 
+    private Queue<int> currentcheckroom = new Queue<int>();
     private int shopIndex;
     private int bossIndex;
 
     public DungeonRoom Shop { get { return dungeonRooms[shopIndex]; } private set { value = dungeonRooms[shopIndex]; } }
+    public DungeonRoom Boss { get { return dungeonRooms[bossIndex]; } private set { value = dungeonRooms[bossIndex]; } }
     public int ShopIndex { get { return shopIndex; } }
     public int BossIndex { get { return bossIndex; } }
 
@@ -133,30 +141,17 @@ public class RoomGenerator : MonoBehaviour
     // -------------------------------------------------------------
     public void Generate(int maxCount, TileType type)
     {
-        shopIndex = Mathf.FloorToInt(maxCount * 0.2f);
-        bossIndex = Mathf.FloorToInt(maxCount - 1);
-
         // 빈 방 생성
         CreateEmptyRoom(maxCount);
-
+        Distance();
+        CreateSpecialRoom();
         // Room 타일 그리기
         DungeonRoom[] rooms = roomParent.GetComponentsInChildren<DungeonRoom>();
 
-        DrawRoom(rooms[0], type, RoomSize.Small);           // Start
-
-        foreach (DungeonRoom room in rooms[1..shopIndex])
+        for(int i = 0; i < rooms.Length; i++)
         {
-           DrawRoom(room, type, RoomSize.Medium, RoomType.Battle);
+           DrawRoom(rooms[i], type, i);
         }
-
-        DrawRoom(rooms[shopIndex], type, RoomSize.Small);           // Shop
-
-        foreach (DungeonRoom room in rooms[(shopIndex+1)..(rooms.Length - 1)])
-        {
-           DrawRoom(room, type, RoomSize.Medium, RoomType.Battle);
-        }
-
-        DrawRoom(rooms[rooms.Length - 1], type, RoomSize.Big, RoomType.Battle);      // Boss
 
         // 문 생성
         GenerateDoors(rooms, type);
@@ -178,6 +173,8 @@ public class RoomGenerator : MonoBehaviour
         roomCount = 0;
         rooms.Clear();
         visitedRooms.Clear();
+        currentcheckroom.Clear();
+        distance.Initialize();
     }
 
     // -------------------------------------------------------------
@@ -187,7 +184,9 @@ public class RoomGenerator : MonoBehaviour
     {
         roomCount = 0;
         maxRoomCount = maxCount;
-
+        bossIndex = maxRoomCount - 2;
+        shopIndex = maxRoomCount - 1;
+        roomlocal = new int[maxRoomCount * 2 - 1, maxRoomCount * 2 - 1];
         Room selectRoom = new Room();       // 시작 방 생성
         rooms.Add(selectRoom);
         visitedRooms.Push(selectRoom);
@@ -196,9 +195,10 @@ public class RoomGenerator : MonoBehaviour
         initRoomObj.transform.parent = roomParent.transform;
         initRoomObj.name = roomCount.ToString();
         selectRoom.SetRoomObject(initRoomObj);
+        roomlocal[maxRoomCount - 1 + selectRoom.X, maxRoomCount - 1 + selectRoom.Y] = roomCount;
         roomCount += 1;
 
-        while (roomCount < maxRoomCount)
+        while (roomCount < maxRoomCount - 2)
         {
             if (selectRoom.EmptyDirects.Count == 0)
             {
@@ -226,12 +226,146 @@ public class RoomGenerator : MonoBehaviour
                 newRoomObj.transform.parent = roomParent.transform;
                 newRoomObj.name = roomCount.ToString();
                 newRoom.SetRoomObject(newRoomObj);
-
                 selectRoom = newRoom;
                 rooms.Add(selectRoom);
                 visitedRooms.Push(selectRoom);
+                roomlocal[maxRoomCount - 1 + newRoom.X, maxRoomCount - 1 + newRoom.Y] = roomCount;
                 roomCount += 1;
             }
+        }
+    }
+
+    // -------------------------------------------------------------
+    // room 거리 계산
+    // -------------------------------------------------------------
+    private void Distance()
+    {
+        int currentnum, current, num = 0;
+        int x, y, tempx, tempy;
+        distance = new int[roomCount];
+        currentcheckroom.Enqueue(0);
+
+        while (roomCount > 0)
+        {
+            currentnum = currentcheckroom.Count;
+            roomCount -= currentnum;
+            for (int i = 0; i < currentnum; i++)
+            {
+                current = currentcheckroom.Dequeue();
+                x = rooms[current].X;
+                y = rooms[current].Y;
+                for (int j = 0; j < rooms[current].ExistDirects.Count; j++)
+                {
+                    tempx = x;
+                    tempy = y;
+                    switch (rooms[current].ExistDirects[j])
+                    {
+                        case RoomDirect.Top:
+                            tempy++;
+                            break;
+                        case RoomDirect.Right:
+                            tempx++;
+                            break;
+                        case RoomDirect.Down:
+                            tempy--;
+                            break;
+                        case RoomDirect.Left:
+                            tempx--;
+                            break;
+                    }
+
+                    for (int k = 1; k < distance.Length; k++)
+                    {
+                        if (rooms[k].X == tempx && rooms[k].Y == tempy)
+                        {
+                            if (distance[k] == 0 && !currentcheckroom.Contains(k))
+                                currentcheckroom.Enqueue(k);
+                            break;
+                        }
+                    }
+                }
+                distance[current] = num;
+            }
+            num++;
+        }
+    }
+
+    // -------------------------------------------------------------
+    // 방을 생성할 곳 주변에 방이 있는지(막다른 방이 될 수 있는지)
+    // -------------------------------------------------------------
+    private bool Searchroom(int x, int y, RoomDirect roomDirect)
+    {
+        int flag = 0;
+        int tempx = x + maxRoomCount - 1, tempy = y + maxRoomCount - 1;
+        switch (roomDirect)
+        {
+            case RoomDirect.Top:
+                tempy++;
+                break;
+
+            case RoomDirect.Right:
+                tempx++;
+                break;
+
+            case RoomDirect.Left:
+                tempx--;
+                break;
+
+            case RoomDirect.Down:
+                tempy--;
+                break;
+        }
+
+        for(int i = 0; i < 4; i++)
+        {
+            if (roomlocal[tempx + dx[i], tempy + dy[i]] != 0)
+                flag++;
+            //방 하나와는 연결되어 있어야 하므로
+            if (flag == 2)
+                return false;
+        }
+        return true;
+    }
+
+    // -------------------------------------------------------------
+    // 특수 방 제작(상점, 보스방)
+    // -------------------------------------------------------------
+    private void CreateSpecialRoom()
+    {
+        //특수 방이 현재 두 개이므로
+        int count = maxRoomCount - 3;
+        while (count < maxRoomCount - 1)
+        {
+            //구해놓은 distance에서 가장 먼 값을 빼온다
+            Room farthestroom = rooms[distance.ToList().IndexOf(distance.Max())];
+            //가장 먼 방의 주변에 자리가 있을 경우 방을 만들 수 있다
+            if (farthestroom.EmptyDirects.Count != 0)
+            {
+                for (int i = 0; i < farthestroom.EmptyDirects.Count; i++)
+                {
+                    //방 하나만 연결될 수 있을 때(막다른 방이 될 수 있을 때)
+                    if (Searchroom(farthestroom.X, farthestroom.Y, farthestroom.EmptyDirects[i]))
+                    {
+                        count++;
+                        Room specialroom = new Room(farthestroom.X, farthestroom.Y, count);
+                        RoomDirect selected = farthestroom.EmptyDirects[i];
+                        farthestroom.InterconnectRoom(specialroom, selected);
+                        specialroom.UpdateCoorinate(selected);
+                        Vector3 roomPos = new Vector3(specialroom.X, specialroom.Y, 0f) * roomWidth;
+
+                        GameObject newRoomObj = Instantiate(emptyRoomPref, roomPos, Quaternion.identity);
+                        dungeonRooms.Add(newRoomObj.GetComponent<DungeonRoom>());
+                        newRoomObj.transform.parent = roomParent.transform;
+                        newRoomObj.name = count.ToString();
+                        specialroom.SetRoomObject(newRoomObj);
+                        rooms.Add(specialroom);
+                        roomlocal[maxRoomCount - 1 + specialroom.X, maxRoomCount - 1 + specialroom.Y] = count;
+                        distance[distance.ToList().IndexOf(distance.Max())] = 0;
+                        break;
+                    }
+                }
+            }
+            distance[distance.ToList().IndexOf(distance.Max())] = 0;
         }
     }
 
@@ -280,8 +414,17 @@ public class RoomGenerator : MonoBehaviour
     // -------------------------------------------------------------
     // 방 생성 (room, door, object)
     // -------------------------------------------------------------
-    private void DrawRoom(DungeonRoom room, TileType type, RoomSize size = RoomSize.Small, RoomType rt = RoomType.Neutral)
+    private void DrawRoom(DungeonRoom room, TileType type, int num)
     {
+        RoomSize size = RoomSize.Small;
+        bool Clear = false;
+        if (num == 0 || num == shopIndex)
+            Clear = true;
+        else if (num != bossIndex)
+            size = RoomSize.Medium;
+        else
+            size = RoomSize.Big;
+        
         // Default small size
         int rows = 7;
         int cols = 7;
@@ -357,7 +500,7 @@ public class RoomGenerator : MonoBehaviour
         // 방 크기에 맞추어 정 가운데로 정렬
         Vector3 tileMapSize = new Vector3(room.WallLayer.size.x, room.WallLayer.size.y, 0f);
         room.TileMapParent.transform.localPosition -= tileMapSize * room.WallLayer.cellSize.x * 0.5f;
-        room.roomtype = rt;
+        room.IsClear = Clear;
     }
 
     private void GenerateDoors(DungeonRoom[] dungeonRooms, TileType type)

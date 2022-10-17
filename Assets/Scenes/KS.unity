@@ -619,8 +619,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c71e1a9eeef440c4687d23acb848151f, type: 3}
   - {fileID: 8300000, guid: b97fbacd584abd241a16f338a031b7f0, type: 3}
   _Doorclips:
-  - {fileID: 8300000, guid: e866c6b520f4643438b2dca82e5dd27a, type: 3}
-  - {fileID: 8300000, guid: 6383f5eb51fb9b34ba0150bdbb789f47, type: 3}
+  - {fileID: 8300000, guid: 98671ea8d8d97884089dfc2c7e56a3dc, type: 3}
+  - {fileID: 8300000, guid: 389c8254c18009a488f1011b2f03a166, type: 3}
   bgmvolume: 0
   effectvolume: 0
   totalvolume: 0
