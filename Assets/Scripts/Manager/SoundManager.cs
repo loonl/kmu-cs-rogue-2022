@@ -13,7 +13,12 @@ public enum SoundType
     Box,
     DoorClose,
     DoorOpen,
-    Monster,
+    Zombie,
+    RushZombie,
+    RevivalZombie,
+    Portion,
+    Coin,
+    PlayerDash,
     Boss
 }
 
@@ -27,6 +32,24 @@ public class SoundManager : MonoBehaviour
 
     [SerializeField]
     private List<AudioClip> _Doorclips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> _Zombieclips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> _RushZombieclips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> _RevivalZombieclips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> _Portionclips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> _Coinclips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> _PlayerDashclips = new List<AudioClip>();
 
     private int i;
     public float bgmvolume, effectvolume, totalvolume;
@@ -108,7 +131,7 @@ public class SoundManager : MonoBehaviour
                 Play(_Doorclips[1]);
                 break;
 
-            case SoundType.Monster:
+            case SoundType.Zombie:
                 break;
         }
     }

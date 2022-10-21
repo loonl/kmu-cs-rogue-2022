@@ -360,13 +360,11 @@ public class RoomGenerator : MonoBehaviour
                         specialroom.SetRoomObject(newRoomObj);
                         rooms.Add(specialroom);
                         roomlocal[maxRoomCount - 1 + specialroom.X, maxRoomCount - 1 + specialroom.Y] = count;
-                        Debug.Log(distance.ToList().IndexOf(distance.Max()));
                         distance[distance.ToList().IndexOf(distance.Max())] = 0;
                         break;
                     }
                 }
             }
-            Debug.Log(distance.ToList().IndexOf(distance.Max()));
             distance[distance.ToList().IndexOf(distance.Max())] = 0;
         }
     }
