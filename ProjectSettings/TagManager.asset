@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Monster
   - Spawner
+  - MapObject
+  - HPCanvas
   layers:
   - Default
   - TransparentFX
