@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Mime;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -17,6 +19,7 @@ public class Monster : MonoBehaviour
 {
     public GameObject hpBar; // 체력바
     public GameObject hpBarPrefab; // 체력바 프리팹
+    public GameObject goldTxt; // 골드 텍스트
     public GameObject canvas; // 캔버스
 
     public List<Dictionary<string, object>> monsterData; // 몬스터 데이터 !!고칠 코드
@@ -75,6 +78,7 @@ public class Monster : MonoBehaviour
         
         // 몬스터 HP바 생성
         hpBarPrefab = Resources.Load<GameObject>("Prefabs/UI/MonsterHp");
+        goldTxt = Resources.Load<GameObject>("Prefabs/UI/CoinTxt");
         canvas = GameObject.FindGameObjectWithTag("HPCanvas");
     }
 
@@ -294,6 +298,12 @@ public class Monster : MonoBehaviour
     public void DropGold()
     {
         GameManager.Instance.Player.Inventory.UpdateGold(stat.gold);
+        //UI 골드 추가
+        GameObject temp = Instantiate(goldTxt, canvas.transform);
+        temp.transform.position = GameManager.Instance.Player.transform.position + Vector3.up * 0.5f;
+        
+        temp.GetComponent<TextMeshProUGUI>().text = $"+{stat.gold}G";
+
     }
 
     // 부활 시 실행
