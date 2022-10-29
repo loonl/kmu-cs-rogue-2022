@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -47,16 +50,38 @@ public class GameManager : MonoBehaviour
     {
         List<Item> itemList = new List<Item>();
         List<int> indexList = new List<int>();
-
-        if (N == 0f && R == 0f && SR == 0f && SSR == 0f)
+        
+        // 확률을 직접 지정해줬다면 그것에 맞춰서 생성
+        if (!(N == 0f && R == 0f && SR == 0f && SSR == 0f))
         {
-            // TO-DO floor에 따라 확률식 조절하기
-            N = 0.25f;
+            R += N;
+            SR += R;
+            SSR += SR;
         }
-
-        R = N + 0.25f;
-        SR = SR + 0.25f;
-        SSR = SSR + 0.25f;
+        else // floor만 지정해줬다면 사전 설정한 값에 의해 설정
+        {
+            switch (floor)
+            {
+                case 1:
+                    N = 0.7f;
+                    R = N + 0.2f;
+                    SR = R + 0.1f;
+                    SSR = SR + 0.0f;
+                    break;
+                case 2:
+                    N = 0.45f;
+                    R = N + 0.3f;
+                    SR = R + 0.2f;
+                    SSR = SR + 0.05f;
+                    break;
+                case 3:
+                    N = 0.0f;
+                    R = N + 0.5f;
+                    SR = R + 0.4f;
+                    SSR = SR + 0.1f;
+                    break;
+            }
+        }
 
         int number = UnityEngine.Random.Range(3, 6);
         for (int i = 0; i < number; i++)

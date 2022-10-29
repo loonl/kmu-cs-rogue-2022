@@ -8,7 +8,7 @@ public class Item
 
     public Sprite image;
     public int id { get; set; }
-    public new string name { get; set; } // TODO 바꿔야 할 수도?
+    public new string name { get; set; }
     public int itemType { get; set; }
     public Stat stat { get; set; }
     public string path { get; set; }
