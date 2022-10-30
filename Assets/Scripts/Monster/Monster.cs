@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Mime;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 // 행동 목록
 public enum ActionList
@@ -14,6 +17,11 @@ public enum ActionList
 
 public class Monster : MonoBehaviour
 {
+    public GameObject hpBar; // 체력바
+    public GameObject hpBarPrefab; // 체력바 프리팹
+    public GameObject goldTxt; // 골드 텍스트
+    public GameObject canvas; // 캔버스
+
     public List<Dictionary<string, object>> monsterData; // 몬스터 데이터 !!고칠 코드
     public AudioClip deathSound; // 사망시 재생 소리
     public AudioClip hitSound; // 피격시 재생 소리
@@ -68,6 +76,11 @@ public class Monster : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         audioPlayer = GetComponent<AudioSource>();
         capsuleCollider2D = GetComponent<CapsuleCollider2D>();
+        
+        // 몬스터 HP바 생성
+        hpBarPrefab = Resources.Load<GameObject>("Prefabs/UI/MonsterHp");
+        goldTxt = Resources.Load<GameObject>("Prefabs/UI/CoinTxt");
+        canvas = GameObject.FindGameObjectWithTag("HPCanvas");
     }
 
     protected void Start()
@@ -86,6 +99,8 @@ public class Monster : MonoBehaviour
         actionFinished = true;
         Action = ActionList.Wandering;
 
+        hpBar = Instantiate(hpBarPrefab, canvas.transform); // 수정중
+        hpBar.GetComponent<MonsterHPbar>().CreateHPbar(stat,this);
         StartCoroutine(UpdatePath());
     }
 
@@ -285,6 +300,13 @@ public class Monster : MonoBehaviour
     public void DropGold()
     {
         GameManager.Instance.Player.Inventory.UpdateGold(stat.gold);
+        //UI 골드 추가
+        if (stat.gold != 0)
+        {
+            GameObject temp = Instantiate(goldTxt, canvas.transform);
+            temp.transform.position = GameManager.Instance.Player.transform.position + Vector3.up * 0.5f;
+            temp.GetComponent<TextMeshProUGUI>().text = $"+{stat.gold}G";
+        }
     }
 
     // 부활 시 실행

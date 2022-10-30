@@ -70,7 +70,7 @@ public class StageUIManager : MonoBehaviour
             playerstat.text = "HP : " + player.stat.hp + "\n\n" + "SPEED : " + player.stat.speed + "\n\n" + "ATK : " + player.stat.damage + "\n\n" + "SKILL DAMAGE : " + player.stat.skillDamage;
         }
         
-        //goldTxt.text = player.Inventory.Gold.ToString();
+        goldTxt.text = player.Inventory.Gold.ToString();
     }
 
     public void loadBossUI(Stat boss)
