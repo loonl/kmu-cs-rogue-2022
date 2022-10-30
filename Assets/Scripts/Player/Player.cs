@@ -487,6 +487,7 @@ public class Player : MonoBehaviour {
         // 속도 3배로
         isDashing = true;
         rig.velocity *= 3;
+        SoundManager.Instance.SoundPlay(SoundType.PlayerDash);
 
         // 0.1초 유지
         yield return new WaitForSeconds(0.1f);

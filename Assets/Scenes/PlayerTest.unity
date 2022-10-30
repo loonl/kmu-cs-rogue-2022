@@ -240,12 +240,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 98671ea8d8d97884089dfc2c7e56a3dc, type: 3}
   - {fileID: 8300000, guid: 389c8254c18009a488f1011b2f03a166, type: 3}
   _Zombieclips:
-  - {fileID: 0}
   - {fileID: 8300000, guid: eaa564a4aca7ab644a2be5db67fff76a, type: 3}
   - {fileID: 8300000, guid: 2816e82591c4672458b60bfbc0dd31b5, type: 3}
-  - {fileID: 0}
   - {fileID: 8300000, guid: 7e20e0aaaa5630843af04323e1582e8e, type: 3}
-  - {fileID: 8300000, guid: 2816e82591c4672458b60bfbc0dd31b5, type: 3}
   _RushZombieclips:
   - {fileID: 8300000, guid: 35f1123f4cc95574e87c9bac654da670, type: 3}
   - {fileID: 8300000, guid: 107e63f89c6fe8d4186a00565729c1fc, type: 3}
@@ -275,7 +272,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 116057668}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -37.29975, y: -25.894545, z: 0.3710684}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

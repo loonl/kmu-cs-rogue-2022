@@ -17,6 +17,18 @@ public class RushZombie : Monster
         circleCollider2D = GetComponentInChildren<CircleCollider2D>();
     }
 
+    protected override void Init()
+    {
+        base.Init();
+        Monstertype = MonsterType.RushZombie;
+        Sound = SoundManager.Instance.ZombieClip(Monstertype);
+    }
+
+    private void Start()
+    {
+        Init();
+    }
+
     // 스킬 수행
     protected override IEnumerator SkillCasting2()
     {
@@ -31,6 +43,7 @@ public class RushZombie : Monster
             }
             else if (rushReady == true) // 돌진
             {
+                SoundPlay(Sound[0]);
                 rigidbody2d.AddForce(direction * 300f);
                 rushReady = false;
                 animator.SetTrigger("Attack_Normal");

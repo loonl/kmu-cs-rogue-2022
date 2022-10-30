@@ -13,17 +13,19 @@ public enum SoundType
     Box,
     DoorClose,
     DoorOpen,
-    Zombie,
-    RushZombie,
-    RevivalZombie,
     Portion,
-    Coin,
+    Cheap,
+    Expensive,
     PlayerDash,
     Boss
 }
 
 public class SoundManager : MonoBehaviour
 {
+    //테스트용 코드
+    Dictionary<int, WaitForSeconds> wfs = new Dictionary<int, WaitForSeconds>();
+    WaitForSeconds second;
+
     //Bgm, Effect 두 개를 source로 들고 있을 것
     private List<AudioSource> _audioSources = new List<AudioSource>();
     
@@ -98,7 +100,38 @@ public class SoundManager : MonoBehaviour
                 BoxClip();
             if(_Doorclips == null)
                 DoorClip();
+
+            totalvolume = bgmvolume = effectvolume = 50;
         }
+    }
+
+    //좀비 사운드를 넣어준다
+    public AudioClip[] ZombieClip(MonsterType type = MonsterType.Zombie)
+    {
+        AudioClip[] clip = new AudioClip[3];
+
+        switch (type)
+        {
+            case MonsterType.RushZombie:
+                int rand = Random.Range(0, 1) * 3;
+                clip[0] = _RushZombieclips[rand];
+                clip[1] = _RushZombieclips[rand + 1];
+                clip[2] = _RushZombieclips[rand + 2];
+                break;
+
+            case MonsterType.RevivalZombie:
+                clip[0] = _RevivalZombieclips[0];
+                clip[1] = _RevivalZombieclips[1];
+                clip[2] = _RevivalZombieclips[2];
+                break;
+
+            default:
+                clip[1] = _Zombieclips[Random.Range(0, 1) * 2];
+                clip[2] = _Zombieclips[1];
+                break;
+        }
+
+        return clip;
     }
 
     //만약 박스 클립이 할당되지 않을 경우
@@ -131,7 +164,20 @@ public class SoundManager : MonoBehaviour
                 Play(_Doorclips[1]);
                 break;
 
-            case SoundType.Zombie:
+            case SoundType.Portion:
+                Play(_Portionclips[0]);
+                break;
+
+            case SoundType.Cheap:
+                Play(_Coinclips[0]);
+                break;
+
+            case SoundType.Expensive:
+                Play(_Coinclips[1]);
+                break;
+
+            case SoundType.PlayerDash:
+                Play(_PlayerDashclips[0]);
                 break;
         }
     }
@@ -171,6 +217,18 @@ public class SoundManager : MonoBehaviour
         {
             audioSource.clip = null;
             audioSource.Stop();
+        }
+    }
+
+    public WaitForSeconds Setwfs(int time)
+    {
+        if(wfs.ContainsKey(time))
+            return wfs[time];
+        
+        else
+        {
+            wfs.Add(time, new WaitForSeconds((float)(time * 0.01)));
+            return wfs[time];
         }
     }
 }
