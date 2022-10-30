@@ -10,7 +10,6 @@ public class WeaponCollider : MonoBehaviour
     public PolygonCollider2D poly;
     public List<Monster> monsters;
 
-    // Start is called before the first frame update
     void Start()
     {
         playerUnit = transform.GetComponentInParent<Player>();
@@ -43,4 +42,5 @@ public class WeaponCollider : MonoBehaviour
             collision.gameObject.SendMessage("OnDamage");
         }
     }
+
 }

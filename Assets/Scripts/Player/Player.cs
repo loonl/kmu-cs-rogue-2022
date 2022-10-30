@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Player : MonoBehaviour {
     // player stat variables
@@ -57,6 +58,7 @@ public class Player : MonoBehaviour {
                                      ItemManager.Instance.GetItem(15), // pants
                                      ItemManager.Instance.GetItem(1)  // shield
                                     };
+        playerAttack.SetUpEffect("NormalSlash");// 첫 공격 effect
         List<Stat> temp = new List<Stat>();
         for (int i = 0; i < equipment.Count; i++)
             temp.Add(equipment[i].stat);
@@ -493,6 +495,7 @@ public class Player : MonoBehaviour {
         // 속도 3배로
         isDashing = true;
         rig.velocity *= 3;
+        SoundManager.Instance.SoundPlay(SoundType.PlayerDash);
 
         // 0.1초 유지
         yield return new WaitForSeconds(0.1f);

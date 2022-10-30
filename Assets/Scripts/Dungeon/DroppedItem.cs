@@ -56,11 +56,15 @@ public class DroppedItem : Interact
                 return;
             }
 
+            //일정 금액 이상이면 다른 사운드
+            if (this._price > 10)
+                SoundManager.Instance.SoundPlay(SoundType.Expensive);
+            else
+                SoundManager.Instance.SoundPlay(SoundType.Cheap);
+
             // price를 0으로 바꾸어 Get으로 바뀌게 만듬
             GameManager.Instance.Player.Inventory.UpdateGold(-1 * this._price);
             this._price = 0;
-
-            // !!! Sound (구매음 추가하기)
         }
     }
 }
