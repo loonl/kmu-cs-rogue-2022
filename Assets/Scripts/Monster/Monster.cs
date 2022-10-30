@@ -12,11 +12,19 @@ public enum ActionList
     OnDamaging, // 피격 중
 }
 
+//몬스터 종류
+public enum MonsterType{
+    Zombie,
+    RushZombie,
+    RevivalZombie,
+    FastZombie
+}
+
 public class Monster : MonoBehaviour
 {
     public List<Dictionary<string, object>> monsterData; // 몬스터 데이터 !!고칠 코드
-    public AudioClip deathSound; // 사망시 재생 소리
-    public AudioClip hitSound; // 피격시 재생 소리
+    // 0 공격 혹은 부활 시 재생소리(일반좀비는 null) 1 피격시 재생 소리 2 사망시 재생 소리
+    public AudioClip[] Sound;
 
     protected Animator animator;
     protected AudioSource audioPlayer;
@@ -36,7 +44,7 @@ public class Monster : MonoBehaviour
     protected float lastRandomDirectionUpdate; // 마지막 랜덤 방향 업데이트 시점
     protected float knockBackForce;
     protected Vector2 knockBackDirection;
-    protected string Monstertype;
+    protected MonsterType Monstertype;
 
     public bool isDead; // 사망 여부
     protected bool actionChanged; // 행동 변경 여부
@@ -67,14 +75,16 @@ public class Monster : MonoBehaviour
         rigidbody2d = GetComponent<Rigidbody2D>();
         animator = GetComponentInChildren<Animator>();
         audioPlayer = GetComponent<AudioSource>();
+        if (audioPlayer == null)
+            audioPlayer = gameObject.AddComponent<AudioSource>();
         capsuleCollider2D = GetComponent<CapsuleCollider2D>();
     }
 
-    protected void Start()
+    protected virtual void Init()
     {
         stat = new MonsterStat(monsterData, id); // !! 고칠 코드
         Generate(); // 몬스터 생성
-        Monstertype = this.GetType().Name;
+        Sound = new AudioClip[3];
     }
 
     // 몬스터 활성화
@@ -210,7 +220,7 @@ public class Monster : MonoBehaviour
 
     // 피격 수행
     protected virtual IEnumerator OnDamaging()
-    { 
+    {
         rigidbody2d.AddForce(knockBackDirection * knockBackForce, ForceMode2D.Impulse);
         Vector2 startWay = rigidbody2d.velocity;
 
@@ -241,13 +251,14 @@ public class Monster : MonoBehaviour
         Debug.Log($"id {this.name} got damage {damage}");
         stat.OnDamage(damage);
 
-
         if (stat.health <= 0)
         {
             Die();
         }
         else
         {
+            SoundPlay(Sound[1]);
+
             if (true) // !! 스킬시전 중 스턴가능 여부 추가
             {
                 if (Action == ActionList.OnDamaging)
@@ -270,6 +281,7 @@ public class Monster : MonoBehaviour
     // 사망 시 실행
     public virtual void Die()
     {
+        SoundPlay(Sound[2]);
         capsuleCollider2D.enabled = false;
         isDead = true;
         player = null;
@@ -289,7 +301,8 @@ public class Monster : MonoBehaviour
 
     // 부활 시 실행
     public void Revive()
-    {  
+    {
+        SoundPlay(Sound[0]);
         stat.Revive();
         Generate();
 
@@ -326,5 +339,15 @@ public class Monster : MonoBehaviour
             attackTarget.OnDamage(stat.damage, 5f, (attackTarget.transform.position - transform.position).normalized);
             animator.SetTrigger("Attack_Normal");
         }
+    }
+
+    protected void SoundPlay(AudioClip clip)
+    {
+        if (audioPlayer.isPlaying)
+            audioPlayer.Stop();
+
+        audioPlayer.clip = clip;
+        audioPlayer.volume = SoundManager.Instance.effectvolume * SoundManager.Instance.totalvolume;
+        audioPlayer.Play();
     }
 }

@@ -7,6 +7,18 @@ public class RevivalZombie : Monster
     protected float timeBetRevive = 5f; // 부활 대기시간
     protected float startReviveTime; // 부활 시작시간
 
+    protected override void Init()
+    {
+        base.Init();
+        Monstertype = MonsterType.RevivalZombie;
+        Sound = SoundManager.Instance.ZombieClip(Monstertype);
+    }
+
+    private void Start()
+    {
+        Init();
+    }
+
     // 시체 상태 수행 후 부활 처리
     protected override IEnumerator Dying()
     {

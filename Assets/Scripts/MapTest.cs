@@ -9,35 +9,74 @@ public class MapTest : MonoBehaviour
     WaitForSeconds wfs1 = new WaitForSeconds(0.01f);
     [SerializeField]
     private Image fadeimg;
-    float fade = 0.0f;
+    Color color = new Color(0, 0, 0, 0);
+    bool isrestart = false;
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && !isrestart)
         {
             StartCoroutine(Restart());
         }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            StartCoroutine(TestClear());
+        }
+        //테스트용 코드
+        if (Input.GetKeyDown(KeyCode.K))
+            DungeonSystem.Instance.KillAll();
     }
 
     private IEnumerator Restart()
     {
-        //while (fade < 1.0f)
-        //{
-        //    fade += 0.01f;
-        //    yield return wfs1;
-        //    fadeimg.color = new Color(0, 0, 0, fade);
-        //}
+        isrestart = true;
+        if(fadeimg != null)
+            while (color.a < 1.0f)
+            {
+                color.a += 0.01f;
+                yield return SoundManager.Instance.Setwfs(1);
+                fadeimg.color = color;
+            }
+
         DungeonSystem.Instance.ClearDungeon();
-        yield return wfs20;
+        yield return SoundManager.Instance.Setwfs(20);
         DungeonSystem.Instance.CreateDungeon();
         GameManager.Instance.Player.transform.position = Vector3.zero;
         DungeonSystem.Instance.Rooms[0].Clear();
-        //GameManager.Instance.Player.EquipInit();
-        //while (fade > 0.0f)
-        //{
-        //    fade -= 0.01f;
-        //    yield return wfs1;
-        //    fadeimg.color = new Color(0, 0, 0, fade);
-        //}
+
+        if (fadeimg != null)
+            while (color.a > 0.0f)
+            {
+                color.a -= 0.01f;
+                yield return SoundManager.Instance.Setwfs(1);
+                fadeimg.color = color;
+            }
+        isrestart = false;
+    }
+
+    private IEnumerator TestClear()
+    {
+        if (fadeimg != null)
+            while (color.a < 1.0f)
+            {
+                color.a += 0.01f;
+                yield return wfs1;
+                fadeimg.color = color;
+            }
+
+        DungeonSystem.Instance.ClearDungeon();
+        yield return wfs20;
+        DungeonSystem.Instance.Load();
+        GameManager.Instance.Player.transform.position = Vector3.zero;
+        DungeonSystem.Instance.Rooms[0].Clear();
+
+        if (fadeimg != null)
+            while (color.a > 0.0f)
+            {
+                color.a -= 0.01f;
+                yield return wfs1;
+                fadeimg.color = color;
+            }
     }
 }

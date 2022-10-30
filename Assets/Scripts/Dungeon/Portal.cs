@@ -18,6 +18,7 @@ public class Portal : MonoBehaviour
 
     [SerializeField]
     private bool entered = true;
+    private bool IsClearPortal = false;
 
     private void Awake()
     {
@@ -25,29 +26,35 @@ public class Portal : MonoBehaviour
         DeActivate();
     }
 
-    public void Connect(int roomId, ushort direct)
+    public void Connect(int roomId, ushort direct, bool ClearPortal = false)
     {
         // 포탈과 연결될 방 id 설정
-        _connectedRoomId = roomId;
-        _outDirect = direct;
+        if (!ClearPortal)
+        {
+            _connectedRoomId = roomId;
+            _outDirect = direct;
 
+            if (direct == 0)
+            {
+                offset = new Vector3(0, -1f, 0);
+            }
+            else if (direct == 1)
+            {
+                offset = new Vector3(-.75f, 0, 0);
+            }
+            else if (direct == 2)
+            {
+                offset = new Vector3(0, .75f, 0);
+            }
+            else
+            {
+                offset = new Vector3(.75f, 0, 0);
+            }
+        }
 
-        if (direct == 0)
-        {
-            offset = new Vector3(0, -1f, 0);
-        }
-        else if (direct == 1)
-        {
-            offset = new Vector3(-.75f, 0, 0);
-        }
-        else if (direct == 2)
-        {
-            offset = new Vector3(0, .75f, 0);
-        }
         else
-        {
-            offset = new Vector3(.75f, 0, 0);
-        }
+            IsClearPortal = true;
+
     }
 
     // -------------------------------------------------------------
@@ -55,18 +62,19 @@ public class Portal : MonoBehaviour
     // -------------------------------------------------------------
     public void Enter(GameObject entering)
     {
-        // connetecPortal
         entering.transform.position = this.transform.position + offset;
-        //this.entered = false;
     }
 
     public void Exit(GameObject exiting)
     {
-        DungeonSystem.Instance.Rooms[_connectedRoomId].Enter(_outDirect, exiting);
+        if (!IsClearPortal)
+        {
+            DungeonSystem.Instance.Rooms[_connectedRoomId].Enter(_outDirect, exiting);
+            DungeonSystem.Instance.Currentroom = _connectedRoomId;
+        }
 
-
-        // Debug.Log();
-        // DungeonSystem.Instance.GetConnetectedPortal(_connectedRoomId, _outDirect).Enter(exiting);
+        else
+            DungeonSystem.Instance.LevelClear();
     }
 
     // -------------------------------------------------------------
@@ -104,4 +112,29 @@ public class Portal : MonoBehaviour
             entered = true;
         }
     }
-}
+
+        //private IEnumerator Clear()
+        //{
+        //    if (fadeimg != null)
+        //        while (color.a < 1.0f)
+        //        {
+        //            color.a += 0.01f;
+        //            yield return wfs1;
+        //            fadeimg.color = color;
+        //        }
+
+        //    DungeonSystem.Instance.ClearDungeon();
+        //    yield return wfs20;
+        //    DungeonSystem.Instance.Load();
+        //    GameManager.Instance.Player.transform.position = Vector3.zero;
+        //    DungeonSystem.Instance.Rooms[0].Clear();
+
+        //    if (fadeimg != null)
+        //        while (color.a > 0.0f)
+        //        {
+        //            color.a -= 0.01f;
+        //            yield return wfs1;
+        //            fadeimg.color = color;
+        //        }
+        //}
+    }

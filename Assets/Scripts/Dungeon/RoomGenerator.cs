@@ -195,8 +195,8 @@ public class RoomGenerator : MonoBehaviour
         initRoomObj.transform.parent = roomParent.transform;
         initRoomObj.name = roomCount.ToString();
         selectRoom.SetRoomObject(initRoomObj);
-        roomlocal[maxRoomCount - 1 + selectRoom.X, maxRoomCount - 1 + selectRoom.Y] = roomCount;
         roomCount += 1;
+        roomlocal[maxRoomCount - 1 + selectRoom.X, maxRoomCount - 1 + selectRoom.Y] = roomCount;
 
         while (roomCount < maxRoomCount - 2)
         {
@@ -229,8 +229,8 @@ public class RoomGenerator : MonoBehaviour
                 selectRoom = newRoom;
                 rooms.Add(selectRoom);
                 visitedRooms.Push(selectRoom);
-                roomlocal[maxRoomCount - 1 + newRoom.X, maxRoomCount - 1 + newRoom.Y] = roomCount;
                 roomCount += 1;
+                roomlocal[maxRoomCount - 1 + newRoom.X, maxRoomCount - 1 + newRoom.Y] = roomCount;
             }
         }
     }
@@ -352,6 +352,8 @@ public class RoomGenerator : MonoBehaviour
                         farthestroom.InterconnectRoom(specialroom, selected);
                         specialroom.UpdateCoorinate(selected);
                         Vector3 roomPos = new Vector3(specialroom.X, specialroom.Y, 0f) * roomWidth;
+                        if(count == bossIndex)
+                            specialroom.ConnectClearRoom(selected);
 
                         GameObject newRoomObj = Instantiate(emptyRoomPref, roomPos, Quaternion.identity);
                         dungeonRooms.Add(newRoomObj.GetComponent<DungeonRoom>());
@@ -373,41 +375,31 @@ public class RoomGenerator : MonoBehaviour
     {
         // newRoom은 좌표 설정 및 이전 room과 연결되어 있어야 함
         List<RoomDirect> directs = newRoom.EmptyDirects.ConvertAll(d => d);
-        // !!! 안좋은 search
+        int checkX, checkY;
+
         foreach (RoomDirect direct in directs)
         {
-            int checkX = 0;
-            int checkY = 0;
+            checkX = newRoom.X + maxRoomCount - 1;
+            checkY = newRoom.Y + maxRoomCount - 1;
             // newRoom은 emptyDirects.Count는 무조건 3
             switch (direct)
             {
                 case RoomDirect.Top:
-                    checkX = newRoom.X + 0;
-                    checkY = newRoom.Y + 1;
+                    checkY += 1;
                     break;
                 case RoomDirect.Right:
-                    checkX = newRoom.X + 1;
-                    checkY = newRoom.Y + 0;
+                    checkX += 1;
                     break;
                 case RoomDirect.Down:
-                    checkX = newRoom.X + 0;
-                    checkY = newRoom.Y - 1;
+                    checkY -= 1;
                     break;
                 case RoomDirect.Left:
-                    checkX = newRoom.X - 1;
-                    checkY = newRoom.Y + 0;
+                    checkX -= 1;
                     break;
             }
 
-            foreach(Room existRoom in rooms)
-            {
-                if (existRoom.X == checkX && existRoom.Y == checkY)
-                {
-                    // newRoom 인접에 기존 room이 있는 경우
-                    newRoom.InterconnectRoom(existRoom, direct);
-                    break;
-                }
-            }
+            if (roomlocal[checkX, checkY] != 0)
+                newRoom.InterconnectRoom(rooms[roomlocal[checkX, checkY] - 1], direct);
         }
     }
 
@@ -564,7 +556,12 @@ public class RoomGenerator : MonoBehaviour
                     0f
                 );
                 Portal portal = portalObject.GetComponent<Portal>();
-                portal.Connect(rooms[roomIndex].GetConnectedRoomId((ushort)direct), (ushort)direct);
+                int connectedroomid = rooms[roomIndex].GetConnectedRoomId((ushort)direct);
+                if(connectedroomid != -1)
+                    portal.Connect(connectedroomid, (ushort)direct);
+                //보스 방 클리어 이후 나갈 문 그려주기
+                else
+                    portal.Connect(connectedroomid, (ushort)direct, true);
                 dungeonRooms[roomIndex].Portals[(ushort)direct] = portal;
             }
         }

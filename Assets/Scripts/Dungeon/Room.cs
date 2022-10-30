@@ -116,6 +116,29 @@ public class Room
         }
     }
 
+    public void ConnectClearRoom(RoomDirect direct)
+    {
+        switch (direct)
+        {
+            case RoomDirect.Top:
+                emptyDirects.Remove(RoomDirect.Top);
+                existDirects.Add(RoomDirect.Top);
+                break;
+            case RoomDirect.Right:
+                emptyDirects.Remove(RoomDirect.Right);
+                existDirects.Add(RoomDirect.Right);
+                break;
+            case RoomDirect.Down:
+                emptyDirects.Remove(RoomDirect.Down);
+                existDirects.Add(RoomDirect.Down);
+                break;
+            case RoomDirect.Left:
+                emptyDirects.Remove(RoomDirect.Left);
+                existDirects.Add(RoomDirect.Left);
+                break;
+        }
+    }
+
     // -------------------------------------------------------------
     // Room GameObject Set
     // -------------------------------------------------------------
@@ -126,21 +149,34 @@ public class Room
 
     public int GetConnectedRoomId(ushort roomDirect)
     {
-        if (roomDirect == 0)
+        switch (roomDirect)
         {
-            return top.Id;
-        }
-        else if (roomDirect == 1)
-        {
-            return right.Id;
-        }
-        else if (roomDirect == 2)
-        {
-            return down.Id;
-        }
-        else
-        {
-            return left.Id;
+            case 0:
+                if (top != null)
+                    return top.Id;
+                else
+                    return -1;
+
+            case 1:
+                if (right != null)
+                    return right.Id;
+                else
+                    return -1;
+
+            case 2:
+                if (down != null)
+                    return down.Id;
+                else
+                    return -1;
+
+            case 3:
+                if (left != null)
+                    return left.Id;
+                else
+                    return -1;
+
+            default:
+                return -1;
         }
     }
 }
