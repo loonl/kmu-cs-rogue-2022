@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class CoinEffect : MonoBehaviour
+public class GetEffect : MonoBehaviour
 {
     public TextMeshProUGUI coinText;
     private float aplpha = 1;
