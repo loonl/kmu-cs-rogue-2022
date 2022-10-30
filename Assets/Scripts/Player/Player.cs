@@ -22,7 +22,6 @@ public class Player : MonoBehaviour {
     [HideInInspector] public bool isMovable;
 
     // equipments => 0 : Weapon, 1 : Helmet, 2 : Armor, 3 : Pants, 4 : Shield
-    // TODO 코드 ENUM 적용해서 가독성 향상시키기
     [HideInInspector]
     public List<Item> equipment;
 
@@ -305,21 +304,30 @@ public class Player : MonoBehaviour {
         // 플레이어 스탯 수정
         List<Stat> itemStat = new List<Stat> { item.stat };
         stat.SyncStat(itemStat);
-
-
-        // TODO 상의 필요 (근접 무기 -> 활 / 스태프로 무기 변경 시 방패 자동 장착 해제)
-        // TODO 위와 같이 진행할 경우 방패도 추가로 드랍해줘야 함 
+        
+        // 근접 무기 -> 활 / 스태프로 무기 변경 시 방패 자동 장착 해제
         if (partsIndex == 0)
         {
             if (equipment[0].itemType == 1 && (item.itemType == 2 || item.itemType == 3))
             {
                 UnEquip(equipment[4]);
+                
+                // 끼던 방패를 DroppedItem으로 생성
+                var shieldDropped = GameManager.Instance.CreateGO
+                (
+                    "Prefabs/Dungeon/Dropped",
+                    DungeonSystem.Instance.DroppedItems.transform
+                );
+                
+                shieldDropped.transform.position = this.gameObject.transform.position;
+                shieldDropped.GetComponent<DroppedItem>().Set(equipment[4]);
+                
                 equipment[4] = ItemManager.Instance.GetItem(1);
             }
             playerAttack.SetUpEffect(item: item);// effect setting
         }
 
-        // 활 / 스태프 상태에서 방패 장착 시 활 / 스태프 자동 장착 해제
+        // 활 / 스태프 -> 방패 장착 시 활 / 스태프 자동 장착 해제
         else if (partsIndex == 4)
         {
             if (equipment[0].itemType == 2 || equipment[0].itemType == 3)
