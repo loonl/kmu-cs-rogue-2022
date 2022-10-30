@@ -22,9 +22,6 @@ public enum SoundType
 
 public class SoundManager : MonoBehaviour
 {
-    //테스트용 코드
-    Dictionary<int, WaitForSeconds> wfs = new Dictionary<int, WaitForSeconds>();
-    WaitForSeconds second;
 
     //Bgm, Effect 두 개를 source로 들고 있을 것
     private List<AudioSource> _audioSources = new List<AudioSource>();
@@ -217,18 +214,6 @@ public class SoundManager : MonoBehaviour
         {
             audioSource.clip = null;
             audioSource.Stop();
-        }
-    }
-
-    public WaitForSeconds Setwfs(int time)
-    {
-        if(wfs.ContainsKey(time))
-            return wfs[time];
-        
-        else
-        {
-            wfs.Add(time, new WaitForSeconds((float)(time * 0.01)));
-            return wfs[time];
         }
     }
 }
