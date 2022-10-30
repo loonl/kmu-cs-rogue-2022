@@ -17,6 +17,7 @@ public class DungeonSystem : MonoBehaviour
     public GameObject DroppedItems;        // 떨어진 아이템 parent
 
     public List<DungeonRoom> Rooms { get { return generator.Rooms; } }
+    public int Currentroom;
 
     private void Awake()
     {
@@ -28,11 +29,19 @@ public class DungeonSystem : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+        tempRoomCount = 13;
+    }
+
+    //테스트용 코드
+    public void KillAll()
+    {
+        Rooms[Currentroom].KillAll();
     }
 
     public void Load()
     {
         // 현재 Floor 기준으로 레벨 디자인
+        Floor++;
         CreateDungeon();
     }
 
@@ -50,7 +59,7 @@ public class DungeonSystem : MonoBehaviour
         };
 
         // 맵 생성
-        generator.Generate(tempRoomCount, tileSeqence[(Floor - 1) % 4]);
+        generator.Generate(tempRoomCount + 2 * Floor, tileSeqence[(Floor - 1) % 4]);
         CreateMonsterSpawner();   // 몬스터스포너 생성
         CreateShop();       // 상점 생성
         DroppedItems = new GameObject() { name = "DroppedItems" };
@@ -87,7 +96,6 @@ public class DungeonSystem : MonoBehaviour
         }
 
         for (int roomIndex = 1; roomIndex < generator.Rooms.Count; roomIndex++) // 0번 방에는 스포너를 안만듬
-        // foreach (DungeonRoom room in generator.Rooms)
         {
             if (generator.ShopIndex == roomIndex)
             {
@@ -109,8 +117,6 @@ public class DungeonSystem : MonoBehaviour
             generator.Rooms[roomIndex].SetSpawner(spawner, roomIndex, monsterData);
         }
     }
-
-
 
     // -------------------------------------------------------------
     // 상점 생성
@@ -169,5 +175,17 @@ public class DungeonSystem : MonoBehaviour
         }
 
         return list.Count - 2;
+    }
+    public void LevelClear()
+    {
+        StartCoroutine(Clear());
+    }
+    private IEnumerator Clear()
+    {
+        DungeonSystem.Instance.ClearDungeon();
+        yield return new WaitForSeconds(0.2f);
+        DungeonSystem.Instance.Load();
+        GameManager.Instance.Player.transform.position = Vector3.zero;
+        DungeonSystem.Instance.Rooms[0].Clear();
     }
 }

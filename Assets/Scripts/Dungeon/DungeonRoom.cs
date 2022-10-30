@@ -70,12 +70,11 @@ public class DungeonRoom : MonoBehaviour
         _spawner.Set(roomIndex, this.transform.position, horizontalRange, verticalRange, monsterData);
     }
 
-    private void Update()
+    //테스트용 코드
+    public void KillAll()
     {
-        //테스트 코드 수정 필요
-        //if (Input.GetKey(KeyCode.K))
-        //    if (_spawner != null)
-        //        foreach (Monster monster in _spawner.monsters)
-        //            monster.Die();
+        if (_spawner != null)
+            while(_spawner.monsters.Count > 0)
+                _spawner.monsters[0].OnDamage(200, 5f, (_spawner.monsters[0].transform.position - transform.position).normalized);
     }
 }

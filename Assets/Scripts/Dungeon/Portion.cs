@@ -10,5 +10,6 @@ public class Portion : Interact
         Destroy(this.gameObject);
 
         // !!! 포션 사운드 추가
+        SoundManager.Instance.SoundPlay(SoundType.Portion);
     }
 }
