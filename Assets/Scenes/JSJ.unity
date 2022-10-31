@@ -2554,7 +2554,7 @@ MonoBehaviour:
   hpbar: {fileID: 1247452809}
   playerstat: {fileID: 274418568}
   bossUI: {fileID: 790703717}
-  goldTxt: {fileID: 0}
+  goldTxt: {fileID: 528308281}
   backIMG: {fileID: 1179521767}
   statusFrame: {fileID: 575040631}
   playerHelmetImg: {fileID: 744207547}

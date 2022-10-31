@@ -13,6 +13,7 @@ public class Item
     public Stat stat { get; set; }
     public string path { get; set; }
 
+    public string effectName { get; set; }
     public Item(int itemId, Dictionary<string, object> data)
     {
         id = itemId;
@@ -21,6 +22,7 @@ public class Item
                         float.Parse(data["skilldmg"].ToString()), float.Parse(data["cooltime"].ToString()), float.Parse(data["speed"].ToString()));
         itemType = (int)data["type"];
         path = (string)data["path"];
+        effectName = (string)data["effectName"] == "" ? "NormalSlash2" : (string)data["effectName"];
         if (path != "")
             image = Resources.Load<Sprite>(path.Substring(17, path.Length - 21));
     }
