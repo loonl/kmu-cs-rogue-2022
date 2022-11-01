@@ -179,7 +179,7 @@ public class Player : MonoBehaviour {
             rig.velocity = Vector2.zero;
             isMovable = false;
 
-            playerAttack.Attack(equipment[0].id);
+            playerAttack.Attack(equipment[0].effectName);
 
             // enable weapon collider
             wpnColl.poly.enabled = true;

@@ -19,58 +19,10 @@ public class PlayerAttack : MonoBehaviour
         effectTransform = transform.GetChild(0).GetChild(2).GetComponent<Transform>();
     }
 
-    public void Attack(int itemId)
+    public void Attack(string effectname)
     {
-        switch (itemId)
-        {
-            case 2: // sword1 Normal
-                effectanim.SetTrigger("NormalSlash");
-                break;
-            case 3: // sword2 Normal
-                effectanim.SetTrigger("NormalSlash");
-                break;
-            case 4: // sword6 Nomral
-                effectanim.SetTrigger("NormalSlash");
-                break;
-            case 5: // sword8 Normal
-                effectanim.SetTrigger("NormalSlash2");
-                break;
-            case 22: // sword3 Rare
-                effectanim.SetTrigger("FireSlash");
-                break;
-            case 23:
-                effectanim.SetTrigger("NormalSlash3");
-                break;
-            case 24:
-                effectanim.SetTrigger("ElectricSlash");
-                break;
-            case 25:
-                effectanim.SetTrigger("FireClaw");
-                break;
-            case 26:
-                effectanim.SetTrigger("ElectricClaw");
-                break;
-            case 27:
-                effectanim.SetTrigger("NormalClaw");
-                break;
-            case 28:
-                effectanim.SetTrigger("ElectricSlash2");
-                break;
-            case 29:
-                effectanim.SetTrigger("ElectricSlash3");
-                break;
-            case 30:
-                effectanim.SetTrigger("FireSlash2");
-                break;
-            case 50:
-                effectanim.SetTrigger("FireSlash3");
-                break;
-            default:
-                effectanim.SetTrigger("NormalSlash");
-                break;
-        }
+        effectanim.SetTrigger(effectname);
     }
-
     public void SkillAttack(int itemId)
     {
         switch (itemId)
@@ -87,12 +39,12 @@ public class PlayerAttack : MonoBehaviour
     }
 
     // 무기 별 effect의 크기, flip 등 설정
-    public void SetUpEffect(string effectname = "None", Item item = null, float range = 1f)
+    public void SetUpEffect(string effectname = "NormalSlash2", Item item = null, float range = 1f)
     {   
         if (item != null) {
+            effectname = item.effectName;
             range = item.stat.range;
             player.wpnColl.SetAttackRange(range); // 범위 설정
-            effectname = IDtoEffectName(item.id); // 이펙트명 받아오기
         } 
         switch (effectname)
         {
@@ -148,39 +100,6 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    public string IDtoEffectName(int itemid)
-    {
-        switch (itemid) {
-            case 2:
-            case 3:
-            case 4:
-                return "NormalSlash";
-            case 5:
-                return "NormalSlash2";
-            case 22:
-                return "FireSlash";
-            case 23:
-                return "NormalSlash3";
-            case 24:
-                return "ElectricSlash";
-            case 25:
-                return "FireClaw";
-            case 26:
-                return "ElectricClaw";
-            case 27:
-                return "NormalClaw";
-            case 28:
-                return "ElectricSlash2";
-            case 29:
-                return "ElectricSlash3";
-            case 30:
-                return "FireSlash2";
-            case 50:
-                return "FireSlash3";
-            default:
-                return "None";
-        }
-    }
     IEnumerator DoubleFireSlash()
     {
         player.wpnColl.poly.enabled = true;
