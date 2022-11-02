@@ -208,7 +208,8 @@ public class Player : MonoBehaviour {
             isMovable = false;
 
             // 스킬 관련 구현
-            playerAttack.SkillAttack(equipment[0].id);
+            SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
+            //playerAttack.SkillAttack(equipment[0].id);
         }
         
         // dash input - test TODO
