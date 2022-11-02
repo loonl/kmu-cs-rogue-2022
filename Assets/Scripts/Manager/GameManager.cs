@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get { return _instance; } }
     public Player Player { get; private set; }
 
+    Dictionary<int, WaitForSeconds> wfs = new Dictionary<int, WaitForSeconds>();
+    WaitForSeconds second;
+
     public StageUIManager stageUIManager;
 
     private void Awake()
@@ -162,5 +165,20 @@ public class GameManager : MonoBehaviour
 
         int x = (int)Random.Range(0f, (float)randomList.Count);
         return randomList[x];
+    }
+
+    // -------------------------------------------------------------
+    // 코루틴 사용할 때 WaitForSeconds 사용하는 함수
+    // -------------------------------------------------------------
+    public WaitForSeconds Setwfs(int time)
+    {
+        if (wfs.ContainsKey(time))
+            return wfs[time];
+
+        else
+        {
+            wfs.Add(time, new WaitForSeconds((float)(time * 0.01)));
+            return wfs[time];
+        }
     }
 }
