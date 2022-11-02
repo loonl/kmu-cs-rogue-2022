@@ -3,23 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEditor.Progress;
 
+public enum PlayerState {
+    Normal = 0,
+    Attacking = 1,
+    Dashing = 2,
+    Stunned = 3,
+    Invincible = 4,
+    Dead = 5
+}
+
 public class Player : MonoBehaviour {
     // player stat variables
     public Stat stat = new Stat(false);
     [HideInInspector]
-    public bool isAttacking;
-    [HideInInspector]
     public float remainCool;
+        
+    // 현재 Player의 상태 enum
     [HideInInspector]
-    public bool dead;
-    [HideInInspector] 
-    public bool isDashing;
-    [HideInInspector]
-    public bool isStunned;
-    [HideInInspector]
-    public bool isInvincible;
-
-    [HideInInspector] public bool isMovable;
+    public PlayerState curState;
 
     // equipments => 0 : Weapon, 1 : Helmet, 2 : Armor, 3 : Pants, 4 : Shield
     [HideInInspector]
@@ -68,8 +69,7 @@ public class Player : MonoBehaviour {
         {
             // hide character
             //gameObject.SetActive(false);
-
-            // temporary code
+            
             // disable physics
             GetComponent<CapsuleCollider2D>().enabled = false;
             rig.velocity = new Vector2(0, 0);
@@ -79,13 +79,12 @@ public class Player : MonoBehaviour {
         // used in animator end event - attack
         anim.GetComponent<PlayerAnimreciver>().onAttackComplete = () =>
         {
-            // enable re-attack
-            isAttacking = false;
+            // update state
+            curState = PlayerState.Normal;
+            
             // disable attack collider
             wpnColl.poly.enabled = false;
-            // enable move
-            isMovable = true;
-            
+
             // clear attack collider monster list
             if (wpnColl.monsters.Count > 0)
             {
@@ -96,13 +95,11 @@ public class Player : MonoBehaviour {
         // used in animator end event - skill
         anim.GetComponent<PlayerAnimreciver>().onSkillComplete = () =>
         {
-            // enable re-attack
-            isAttacking = false;
+            // update state
+            curState = PlayerState.Normal;
+            
             //// disable attack collider
             //wpnColl.poly.enabled = false;
-            
-            // enable move
-            isMovable = true;
 
             // reset elasped skill cool-time
             remainCool = equipment[0].stat.coolTime;
@@ -116,11 +113,8 @@ public class Player : MonoBehaviour {
         };
 
         // player stat variables init
-        dead = false;
-        isDashing = false;
-        isInvincible = false;
-        isMovable = true;
         remainCool = -1f;
+        curState = PlayerState.Normal;
 
         // attack & skill range init
         wpnColl.SetAttackRange(equipment[0].stat.range);
@@ -134,13 +128,13 @@ public class Player : MonoBehaviour {
             remainCool = -1.0f;
 
         // should not work in dead condition
-        if (dead)
+        if (curState == PlayerState.Dead)
             return;
 
         // get move-related input
         Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0).normalized;
         
-        if (!isDashing && !isStunned && isMovable)
+        if (curState == PlayerState.Normal || curState == PlayerState.Invincible)
         {
             // FLIP character depending on heading direction
             if (moveInput.x > 0 && transform.localScale.x > 0)
@@ -166,18 +160,19 @@ public class Player : MonoBehaviour {
         */
 
         // Attack Input
-        if (Input.GetButtonDown("Fire1") && !isAttacking)
+        if (Input.GetButtonDown("Fire1") && curState != PlayerState.Attacking)
         {
             // update weapon state
             anim.SetInteger("WpnState", equipment[0].itemType);
 
             // change animation to attack
             anim.SetTrigger("Attack");
-            isAttacking = true;
             
+            // update current state to attacking
+            curState = PlayerState.Attacking;
+
             // cannot move - freeze
             rig.velocity = Vector2.zero;
-            isMovable = false;
 
             playerAttack.Attack(equipment[0].effectName);
 
@@ -192,7 +187,7 @@ public class Player : MonoBehaviour {
         }
 
         // test skill input
-        if (Input.GetButtonDown("Fire2") && remainCool <= 0.0f && !isAttacking)
+        if (Input.GetButtonDown("Fire2") && remainCool <= 0.0f && curState != PlayerState.Attacking)
         {
             // update weapon state
             anim.SetInteger("WpnState", equipment[0].itemType);
@@ -200,12 +195,11 @@ public class Player : MonoBehaviour {
             // change animation to skill
             anim.SetTrigger("Skill");
 
-            // do not let attack and use skill at the same time
-            isAttacking = true;
+            // update current state to attacking
+            curState = PlayerState.Attacking;
             
             // cannot move - freeze
             rig.velocity = Vector2.zero;
-            isMovable = false;
 
             // 스킬 관련 구현
             playerAttack.SkillAttack(equipment[0].id);
@@ -215,26 +209,10 @@ public class Player : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.LeftShift) && moveInput.magnitude != 0)
             StartCoroutine(Dash());
 
-            // test code - change equipments
-        if (Input.GetKeyDown(KeyCode.G)) // helmet
-            Equip(ItemManager.Instance.GetItem(82));
-
-        if (Input.GetKeyDown(KeyCode.H)) // armor
-            Equip(ItemManager.Instance.GetItem(86));
-
-        if (Input.GetKeyDown(KeyCode.J)) // pants
-            Equip(ItemManager.Instance.GetItem(87));
-
-        if (Input.GetKeyDown(KeyCode.K)) // shield
-            Equip(ItemManager.Instance.GetItem(89));
-
-        if (Input.GetKeyDown(KeyCode.B)) // sword
-            Equip(ItemManager.Instance.GetItem(77));
-
-        if (Input.GetKeyDown(KeyCode.N)) // bow
+        // test code - change equipments
+        if (Input.GetKeyDown(KeyCode.Alpha9)) // bow
             Equip(ItemManager.Instance.GetItem(81));
-
-        if (Input.GetKeyDown(KeyCode.M)) // staff
+        if (Input.GetKeyDown(KeyCode.Alpha0)) // staff
             Equip(ItemManager.Instance.GetItem(61));
         if (Input.GetKeyDown(KeyCode.Alpha1)) // 1 - sword1
             Equip(ItemManager.Instance.GetItem(2));
@@ -405,9 +383,9 @@ public class Player : MonoBehaviour {
 
     public void OnDamage(float damage, float knockBackForce, Vector2 direction)
     {
-        if (isInvincible || isStunned)
+        if (curState == PlayerState.Invincible || curState == PlayerState.Stunned || curState == PlayerState.Dead)
             return;
-        
+
         stat.Damaged(damage);
 
         // trigger die if health is below 0
@@ -421,7 +399,7 @@ public class Player : MonoBehaviour {
             anim.SetTrigger("Hit");
 
             // 피격당했음
-            isStunned = true;
+            curState = PlayerState.Stunned;
 
             // 넉백
             StartCoroutine(KnockBack(knockBackForce, direction));
@@ -437,10 +415,11 @@ public class Player : MonoBehaviour {
 
     public void Die()
     {
+        // update state
+        curState = PlayerState.Dead;
+        
         // change animation to death
         anim.SetTrigger("Die");
-
-        dead = true;
     }
 
     // -------------------------------------------------------------
@@ -476,6 +455,7 @@ public class Player : MonoBehaviour {
         Vector2 orig = rig.velocity;
 
         // 속도가 0일 때까지 0.05초마다 힘 가해서 감속
+        // TODO 버그 존재
         while (((orig.x > 0 && rig.velocity.x > 0) || (orig.x < 0 && rig.velocity.x < 0))
                && ((orig.y > 0 && rig.velocity.y > 0) || (orig.y < 0 && rig.velocity.y < 0)))
         {
@@ -493,7 +473,7 @@ public class Player : MonoBehaviour {
     IEnumerator Dash()
     {
         // 속도 3배로
-        isDashing = true;
+        curState = PlayerState.Dashing;
         rig.velocity *= 3;
         SoundManager.Instance.SoundPlay(SoundType.PlayerDash);
 
@@ -502,7 +482,7 @@ public class Player : MonoBehaviour {
 
         // 속도 원래대로
         rig.velocity /= 3;
-        isDashing = false;
+        curState = PlayerState.Normal;
     }
 
     // -------------------------------------------------------------
@@ -511,13 +491,12 @@ public class Player : MonoBehaviour {
     IEnumerator Grace()
     {
         // 스턴 종료 & 무적 시간 시작
-        isStunned = false;
-        isInvincible = true;
-        
+        curState = PlayerState.Invincible;
+
         // TODO 무적 시간 조절하기 - 임시로 1초 설정
         yield return new WaitForSeconds(1f);
         
         // 다시 피격 가능하게 조정
-        isInvincible = false;
+        curState = PlayerState.Normal;
     }
 }

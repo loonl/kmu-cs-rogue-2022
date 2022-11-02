@@ -28,7 +28,7 @@ public class WeaponCollider : MonoBehaviour
     {
         Monster target;
         target = collision.GetComponent<Monster>();
-        if (target != null  && !monsters.Contains(target) && playerUnit.isAttacking)
+        if (target != null  && !monsters.Contains(target) && playerUnit.curState == PlayerState.Attacking)
         {
             monsters.Add(target);
             // execute ondamage function when monster is in range

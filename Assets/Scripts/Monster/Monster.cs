@@ -119,7 +119,7 @@ public class Monster : MonoBehaviour
     {
         while (!isDead)
         {
-            if (player != null && !player.dead)
+            if (player != null)
             {
                 distance = Vector2.Distance(player.transform.position, transform.position);
                 direction = (player.transform.position - transform.position).normalized;
