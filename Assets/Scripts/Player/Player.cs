@@ -209,7 +209,8 @@ public class Player : MonoBehaviour {
             rig.velocity = Vector2.zero;
 
             // 스킬 관련 구현
-            playerAttack.SkillAttack(equipment[0].id);
+            SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
+            //playerAttack.SkillAttack(equipment[0].id);
         }
         
         // dash input

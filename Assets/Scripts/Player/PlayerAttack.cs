@@ -25,6 +25,7 @@ public class PlayerAttack : MonoBehaviour
     }
     public void SkillAttack(int itemId)
     {
+        
         switch (itemId)
         {
             case 2:
