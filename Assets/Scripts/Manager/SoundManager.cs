@@ -26,7 +26,7 @@ public enum SoundType
 public class SoundManager : MonoBehaviour
 {
 
-    //Bgm, Effect �� ���� source�� ��� ���� ��
+    //Bgm, Effect 두 개를 source로 들고 있을 것
     private List<AudioSource> _audioSources = new List<AudioSource>();
     
     [SerializeField]
@@ -108,7 +108,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    //���� ���带 �־��ش�
+    //좀비 사운드를 넣어준다
     public AudioClip[] ZombieClip(MonsterType type = MonsterType.Zombie)
     {
         AudioClip[] clip = new AudioClip[3];
@@ -136,15 +136,15 @@ public class SoundManager : MonoBehaviour
 
         return clip;
     }
-
-    //���� �ڽ� Ŭ���� �Ҵ���� ���� ���
+    
+    //만약 박스 클립이 할당되지 않을 경우
     private void BoxClip()
     {
         for (i = 1; i < 6; i++)
             _Boxclips.Add(Resources.Load<AudioClip>($"Sounds/Effect/Box/Box {i}"));
     }
 
-    //���� ���� Ŭ���� �Ҵ���� ���� ���
+    //만약 도어 클립이 할당되지 않을 경우
     private void DoorClip()
     {
         _Doorclips.Add(Resources.Load<AudioClip>("Sounds/Effect/Door/Door 1 Close"));
