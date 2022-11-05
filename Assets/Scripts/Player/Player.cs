@@ -17,7 +17,9 @@ public class Player : MonoBehaviour {
     public Stat stat = new Stat(false);
     [HideInInspector]
     public float remainCool;
-        
+
+    [HideInInspector] public float dashCool;
+
     // 현재 Player의 상태 enum
     [HideInInspector]
     public PlayerState curState;
@@ -114,6 +116,7 @@ public class Player : MonoBehaviour {
 
         // player stat variables init
         remainCool = -1f;
+        dashCool = -1f;
         curState = PlayerState.Normal;
 
         // attack & skill range init
@@ -126,6 +129,10 @@ public class Player : MonoBehaviour {
         remainCool -= Time.deltaTime;
         if (remainCool < -100.0f)
             remainCool = -1.0f;
+
+        dashCool -= Time.deltaTime;
+        if (dashCool < -100.0f)
+            dashCool = -1.0f;
 
         // should not work in dead condition
         if (curState == PlayerState.Dead)
@@ -205,11 +212,11 @@ public class Player : MonoBehaviour {
             playerAttack.SkillAttack(equipment[0].id);
         }
         
-        // dash input - test TODO
-        if (Input.GetKeyDown(KeyCode.LeftShift) && moveInput.magnitude != 0)
+        // dash input
+        if (Input.GetKeyDown(KeyCode.LeftShift) && dashCool <= 0.0f && moveInput.magnitude != 0 && curState == PlayerState.Normal)
             StartCoroutine(Dash());
 
-        // test code - change equipments
+            // test code - change equipments
         if (Input.GetKeyDown(KeyCode.Alpha9)) // bow
             Equip(ItemManager.Instance.GetItem(81));
         if (Input.GetKeyDown(KeyCode.Alpha0)) // staff
@@ -460,7 +467,7 @@ public class Player : MonoBehaviour {
                && ((orig.y > 0 && rig.velocity.y > 0) || (orig.y < 0 && rig.velocity.y < 0)))
         {
             rig.AddForce(-7 * direction * knockBackForce, ForceMode2D.Force);
-            yield return new WaitForSeconds(0.05f);
+            yield return GameManager.Instance.Setwfs(5);
         }
 
         rig.velocity = Vector2.zero;
@@ -478,7 +485,10 @@ public class Player : MonoBehaviour {
         SoundManager.Instance.SoundPlay(SoundType.PlayerDash);
 
         // 0.1초 유지
-        yield return new WaitForSeconds(0.1f);
+        yield return GameManager.Instance.Setwfs(10);
+        
+        // 쿨타임 부여 - 2초
+        dashCool = 2f;
 
         // 속도 원래대로
         rig.velocity /= 3;
@@ -493,8 +503,8 @@ public class Player : MonoBehaviour {
         // 스턴 종료 & 무적 시간 시작
         curState = PlayerState.Invincible;
 
-        // TODO 무적 시간 조절하기 - 임시로 1초 설정
-        yield return new WaitForSeconds(1f);
+        // 무적 시간 설정
+        yield return GameManager.Instance.Setwfs(50);
         
         // 다시 피격 가능하게 조정
         curState = PlayerState.Normal;
