@@ -347,7 +347,15 @@ public class Monster : MonoBehaviour
 
     protected void OnCollisionStay2D(Collision2D other)
     {
-        Player attackTarget = other.gameObject.GetComponent<Player>();
+        Player attackTarget = null;
+        try
+        {
+            attackTarget = other.gameObject.GetComponent<Player>();
+        }
+        catch (NullReferenceException)
+        {
+            return; 
+        }
 
         // 충돌한 게임 오브젝트가 추적 대상이라면 공격
         if (attackTarget != player)
@@ -355,7 +363,7 @@ public class Monster : MonoBehaviour
             randomDirection = new Vector2(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f));
             lastRandomDirectionUpdate = Time.time;
         }
-        else if (Time.time >= lastAttackTime + attackCoolTime)
+        else if (Time.time >= lastAttackTime + attackCoolTime && attackTarget != null)
         {
             lastAttackTime = Time.time;
             attackTarget.OnDamage(stat.damage, 5f, (attackTarget.transform.position - transform.position).normalized);

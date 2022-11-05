@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using static UnityEditor.Progress;
 
 public enum PlayerState {
@@ -61,11 +62,16 @@ public class Player : MonoBehaviour {
                                      ItemManager.Instance.GetItem(15), // pants
                                      ItemManager.Instance.GetItem(1)  // shield
                                     };
-        playerAttack.SetUpEffect("NormalSlash");// 첫 공격 effect
+        playerAttack.SetUpEffect(equipment[0].effectName); // 첫 공격 effect
+        
         List<Stat> temp = new List<Stat>();
         for (int i = 0; i < equipment.Count; i++)
             temp.Add(equipment[i].stat);
         stat.SyncStat(temp);
+
+        // start hp is max
+        stat.hp = stat.maxHp;
+        
         // used in animator end event - death
         anim.GetComponent<PlayerAnimreciver>().onDieComplete = () =>
         {
@@ -83,7 +89,7 @@ public class Player : MonoBehaviour {
         {
             // update state
             curState = PlayerState.Normal;
-            
+
             // disable attack collider
             wpnColl.poly.enabled = false;
 
@@ -180,8 +186,26 @@ public class Player : MonoBehaviour {
 
             // cannot move - freeze
             rig.velocity = Vector2.zero;
-
+            
+            // play effect
             playerAttack.Attack(equipment[0].effectName);
+            
+            // TODO - play sound => 이상하면 고쳐야 함
+            // string 검색 코스트가 굉장히 비싸서 앞글자만 따서 검색하는 형식으로 코딩
+            switch (equipment[0].effectName[0])
+            {
+                case 'N': // Normal
+                    SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Normal);
+                    break;
+                
+                case 'E':
+                    SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Electric);
+                    break;
+                
+                case 'F': // Fire
+                    SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Fire);
+                    break;
+            }
 
             // enable weapon collider
             wpnColl.poly.enabled = true;
@@ -209,7 +233,10 @@ public class Player : MonoBehaviour {
             rig.velocity = Vector2.zero;
 
             // 스킬 관련 구현
-            SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
+            if (equipment[0] != null)
+            {
+                SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
+            }
             //playerAttack.SkillAttack(equipment[0].id);
         }
         
@@ -236,7 +263,8 @@ public class Player : MonoBehaviour {
         {
             print("MaxHP : " + stat.maxHp + "\nHP : " + stat.hp + "\nAttackPower : " + stat.damage
                + "\nAttackRange : " + stat.range + "\nSkillPower : " + stat.skillDamage
-               + "\nSpeed : " + stat.speed + "\nCoolTime : " + stat.coolTime);
+               + "\nSpeed : " + stat.speed + "\nKnockBackForce : " + stat.knockBackForce 
+               + "\nCoolTime : " + stat.coolTime);
         }
 
         // 상호작용
@@ -401,8 +429,8 @@ public class Player : MonoBehaviour {
             Die();
         else
         {
-            // TODO - Hit Sound 
-            
+            // TODO - 피격 사운드 삽입
+
             // change animation to stunned
             anim.SetTrigger("Hit");
 
@@ -425,6 +453,8 @@ public class Player : MonoBehaviour {
     {
         // update state
         curState = PlayerState.Dead;
+        
+        // TODO Death 사운드 적용
         
         // change animation to death
         anim.SetTrigger("Die");
@@ -461,6 +491,8 @@ public class Player : MonoBehaviour {
         rig.velocity = Vector2.zero;
         rig.AddForce(direction * knockBackForce, ForceMode2D.Impulse);
         Vector2 orig = rig.velocity;
+        
+        // TODO 넉백 사운드 적용
 
         // 속도가 0일 때까지 0.05초마다 힘 가해서 감속
         // TODO 버그 존재
@@ -483,6 +515,8 @@ public class Player : MonoBehaviour {
         // 속도 3배로
         curState = PlayerState.Dashing;
         rig.velocity *= 3;
+        
+        // 사운드 출력
         SoundManager.Instance.SoundPlay(SoundType.PlayerDash);
 
         // 0.1초 유지

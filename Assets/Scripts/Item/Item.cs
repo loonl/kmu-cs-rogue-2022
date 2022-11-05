@@ -20,7 +20,8 @@ public class Item
         id = itemId;
         name = (string)data["name"];
         stat = new Stat(float.Parse(data["hp"].ToString()), float.Parse(data["dmg"].ToString()), float.Parse(data["range"].ToString()),
-                        float.Parse(data["skilldmg"].ToString()), float.Parse(data["cooltime"].ToString()), float.Parse(data["speed"].ToString()));
+                        float.Parse(data["skilldmg"].ToString()), float.Parse(data["cooltime"].ToString()), 
+                        float.Parse(data["knockbackforce"].ToString()), float.Parse(data["speed"].ToString()));
         itemType = (int)data["type"];
         path = (string)data["path"];
         effectName = (string)data["effectName"] == "" ? "NormalSlash2" : (string)data["effectName"];

@@ -11,6 +11,7 @@ public class Stat
     public float skillDamage { get; set; }
     public float coolTime { get; set; }
     public float speed { get; set; }
+    public float knockBackForce { get; set; }
     public Stat(bool empty)
     {
         if (!empty)
@@ -21,6 +22,7 @@ public class Stat
             range = 0;
             skillDamage = 0f;
             coolTime = 0f;
+            knockBackForce = 0f;
             speed = 2f;
         }
         else
@@ -31,11 +33,12 @@ public class Stat
             range = 0f;
             skillDamage = 0f;
             coolTime = 0f;
+            knockBackForce = 0f;
             speed = 0f;
         }
     }
 
-    public Stat(float _hp, float _damage, float _range, float _skillDamage, float _coolTime, float _speed)
+    public Stat(float _hp, float _damage, float _range, float _skillDamage, float _coolTime, float _knockBackForce, float _speed)
     {
         maxHp = _hp;
         hp = _hp;
@@ -43,6 +46,7 @@ public class Stat
         range = _range;
         skillDamage = _skillDamage;
         coolTime = _coolTime;
+        knockBackForce = _knockBackForce;
         speed = _speed;
     }
 
@@ -51,11 +55,12 @@ public class Stat
         foreach (var stat in stats)
         {
             maxHp += stat.maxHp;
-            hp += stat.hp;
+            hp = Mathf.Clamp(hp, 0f, maxHp);
             damage += stat.damage;
             range += stat.range;
             skillDamage += stat.skillDamage;
             coolTime += stat.coolTime;
+            knockBackForce += stat.knockBackForce;
             speed += stat.speed;
         }
     }
@@ -65,19 +70,13 @@ public class Stat
         foreach (var stat in stats) 
         {
             maxHp -= stat.maxHp;
-            hp -= stat.hp;
             damage -= stat.damage;
             range -= stat.range;
             skillDamage -= stat.skillDamage;
             coolTime -= stat.coolTime;
+            knockBackForce -= stat.knockBackForce;
             speed -= stat.speed;
         }
-    }
-
-    public void SyncHP(float _hp, float _maxHp)
-    {
-        hp = _hp;
-        maxHp = _maxHp;
     }
 
     public void Damaged(float amount)
@@ -94,7 +93,7 @@ public class Stat
     {
         if (a.hp == b.hp && a.maxHp == b.maxHp && a.damage == b.damage &&
             a.range == b.range && a.skillDamage == b.skillDamage && a.coolTime == b.coolTime &&
-            a.speed == b.speed)
+            a.speed == b.speed && a.knockBackForce == b.knockBackForce)
             return true;
         return false;
     }
@@ -103,7 +102,7 @@ public class Stat
     {
         if (a.hp == b.hp && a.maxHp == b.maxHp && a.damage == b.damage &&
     a.range == b.range && a.skillDamage == b.skillDamage && a.coolTime == b.coolTime &&
-    a.speed == b.speed)
+    a.speed == b.speed && a.knockBackForce == b.knockBackForce)
             return false;
         return true;
     }
@@ -116,6 +115,7 @@ public class Stat
         range = 0f;
         skillDamage = 0f;
         coolTime = 0f;
+        knockBackForce = 0f;
         speed = 0f;
     }
 }
