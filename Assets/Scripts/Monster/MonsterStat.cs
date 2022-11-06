@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,7 +38,6 @@ public class MonsterStat
     public void Revive()
     {
         health = maxHealth;
-        gold = 0;
     }
 
     public void ChangeSpeed(int speedNum)
