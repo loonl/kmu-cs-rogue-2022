@@ -17,13 +17,16 @@ public enum SoundType
     Cheap,
     Expensive,
     PlayerDash,
+    PlayerAttack_Normal,
+    PlayerAttack_Fire,
+    PlayerAttack_Electric,
     Boss
 }
 
 public class SoundManager : MonoBehaviour
 {
 
-    //Bgm, Effect µÎ °³¸¦ source·Î µé°í ÀÖÀ» °Í
+    //Bgm, Effect ë‘ ê°œë¥¼ sourceë¡œ ë“¤ê³  ìˆì„ ê²ƒ
     private List<AudioSource> _audioSources = new List<AudioSource>();
     
     [SerializeField]
@@ -49,6 +52,9 @@ public class SoundManager : MonoBehaviour
 
     [SerializeField]
     private List<AudioClip> _PlayerDashclips = new List<AudioClip>();
+
+    [SerializeField] 
+    private List<AudioClip> _PlayerAttackclips = new List<AudioClip>();
 
     private int i;
     public float bgmvolume, effectvolume, totalvolume;
@@ -102,7 +108,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    //Á»ºñ »ç¿îµå¸¦ ³Ö¾îÁØ´Ù
+    //ì¢€ë¹„ ì‚¬ìš´ë“œë¥¼ ë„£ì–´ì¤€ë‹¤
     public AudioClip[] ZombieClip(MonsterType type = MonsterType.Zombie)
     {
         AudioClip[] clip = new AudioClip[3];
@@ -130,15 +136,15 @@ public class SoundManager : MonoBehaviour
 
         return clip;
     }
-
-    //¸¸¾à ¹Ú½º Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾ÊÀ» °æ¿ì
+    
+    //ë§Œì•½ ë°•ìŠ¤ í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì„ ê²½ìš°
     private void BoxClip()
     {
         for (i = 1; i < 6; i++)
             _Boxclips.Add(Resources.Load<AudioClip>($"Sounds/Effect/Box/Box {i}"));
     }
 
-    //¸¸¾à µµ¾î Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾ÊÀ» °æ¿ì
+    //ë§Œì•½ ë„ì–´ í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì„ ê²½ìš°
     private void DoorClip()
     {
         _Doorclips.Add(Resources.Load<AudioClip>("Sounds/Effect/Door/Door 1 Close"));
@@ -175,6 +181,18 @@ public class SoundManager : MonoBehaviour
 
             case SoundType.PlayerDash:
                 Play(_PlayerDashclips[0]);
+                break;
+            
+            case SoundType.PlayerAttack_Normal:
+                Play(_PlayerAttackclips[0]);
+                break;
+            
+            case SoundType.PlayerAttack_Fire:
+                Play(_PlayerAttackclips[1]);
+                break;
+            
+            case SoundType.PlayerAttack_Electric:
+                Play(_PlayerAttackclips[2]);
                 break;
         }
     }

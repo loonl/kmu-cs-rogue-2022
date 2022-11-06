@@ -43,6 +43,7 @@ public class Monster : MonoBehaviour
     public int id; // 몬스터 Id
     protected MonsterStat stat; // 몬스터 스텟
     protected Player player; // 플레이어
+    protected MonsterSpawner spawner; // 부모 스포너 객체
 
     protected float distance; // 플레이어와의 거리
     protected Vector2 direction; // 플레이어 방향
@@ -51,18 +52,17 @@ public class Monster : MonoBehaviour
     protected float lastAttackTime; // 마지막 공격 시점
     protected float randomDirectionCoolTime = 3f; // 랜덤 경로 업데이트 쿨타임
     protected float lastRandomDirectionUpdate; // 마지막 랜덤 방향 업데이트 시점
-    protected float knockBackForce;
-    protected Vector2 knockBackDirection;
+    protected float knockBackForce; // 넉백 힘
+    protected Vector2 knockBackDirection; // 넉백 방향
     protected MonsterType Monstertype;
 
     public bool isDead; // 사망 여부
     protected bool actionChanged; // 행동 변경 여부
-    protected bool actionFinished;
-    private ActionList action; // 현재 행동
+    protected bool actionFinished; // 행동 종료 여부
     protected Coroutine currentActionCoroutine; // 현재 행동 코루틴
     public bool isInvulnerable; // 무적 여부
     public bool onDotdmg; // 도트 데미지 받고있는 여부
-
+    private ActionList action; // 현재 행동
     // action 프로퍼티
     public ActionList Action
     {
@@ -76,9 +76,6 @@ public class Monster : MonoBehaviour
             action = value;
         }
     }
-
-    public event Action onDie; // 사망 시 발동 이벤트
-    public event Action onRevive; // 부활 시 발동 이벤트
 
     protected virtual void Awake()
     {
@@ -96,10 +93,13 @@ public class Monster : MonoBehaviour
         canvas = GameObject.FindGameObjectWithTag("HPCanvas");
     }
 
+    // 몬스터 초기화
     protected virtual void Init()
     {
         stat = new MonsterStat(monsterData, id); // !! 고칠 코드
         Generate(); // 몬스터 생성
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        spawner = transform.GetComponentInParent<MonsterSpawner>();
         Sound = new AudioClip[3];
     }
 
@@ -112,6 +112,7 @@ public class Monster : MonoBehaviour
         actionFinished = true;
         isInvulnerable = false;
         Action = ActionList.Wandering;
+        Sound = new AudioClip[3];
 
         //hpBar = Instantiate(hpBarPrefab, canvas.transform); // 수정중
         //hpBar.GetComponent<MonsterHPbar>().CreateHPbar(stat,this);
@@ -121,19 +122,21 @@ public class Monster : MonoBehaviour
     // 경로 갱신
     protected IEnumerator UpdatePath()
     {
+        StartCoroutine(CheckAction());
+
         while (!isDead)
         {
-            if (player != null && !player.dead)
+            if (player != null)
             {
                 distance = Vector2.Distance(player.transform.position, transform.position);
                 direction = (player.transform.position - transform.position).normalized;
             }
             else
             {
-                player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-                distance = Vector2.Distance(player.transform.position, transform.position);
-                direction = (player.transform.position - transform.position).normalized;
-                StartCoroutine(CheckAction());
+                //player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+                //distance = Vector2.Distance(player.transform.position, transform.position);
+                //direction = (player.transform.position - transform.position).normalized;
+                //StartCoroutine(CheckAction());
             }
 
             animator.SetBool("HasTarget", true);
@@ -145,8 +148,6 @@ public class Monster : MonoBehaviour
     {
         while(!isDead)
         {
-            //Debug.Log(Action + " "+ currentActionCoroutine);
-
             if (actionChanged)
             {
                 actionChanged = false;
@@ -267,7 +268,6 @@ public class Monster : MonoBehaviour
     // 피격 시 실행
     public void OnDamage(float damage, float _knockBackForce, Vector2 _knockBackDirection, WaitForSeconds invulnerabletime = null)
     {
-        Debug.Log($"id {this.name} got damage {damage}");
         stat.OnDamage(damage);
         if(invulnerabletime != null) StartCoroutine(SetInvulnerable(invulnerabletime));
 
@@ -277,8 +277,6 @@ public class Monster : MonoBehaviour
         }
         else
         {
-            SoundPlay(Sound[1]);
-
             if (true) // !! 스킬시전 중 스턴가능 여부 추가
             {
                 if (Action == ActionList.OnDamaging)
@@ -291,32 +289,30 @@ public class Monster : MonoBehaviour
                 Action = ActionList.OnDamaging;
             }
 
-            //audioPlayer.PlayOneShot(hitSound);
+            SoundPlay(Sound[1]);
         }
-
-        //Debug.Log("Monster Health: " + stat.health);
-
     }
 
     // 사망 시 실행
     public virtual void Die()
     {
-        SoundPlay(Sound[2]);
         capsuleCollider2D.enabled = false;
         isDead = true;
-        player = null;
 
+        spawner.monsters.Remove(this);
+        spawner.deadMonsters.Add(this);
+        spawner.CheckRemainEnemy();
         DropGold();
-        
-        onDie();
+
         animator.SetTrigger("Die");
-        //audioPlayer.PlayOneShot(deathSound);
+        SoundPlay(Sound[2]);
     }
 
     // 소지금에 골드 추가
     public void DropGold()
     {
         GameManager.Instance.Player.Inventory.UpdateGold(stat.gold);
+
         //UI 골드 추가
         //if (stat.gold != 0)
         //{
@@ -327,14 +323,13 @@ public class Monster : MonoBehaviour
     }
 
     // 부활 시 실행
-    public void Revive()
+    public virtual void Revive()
     {
-        SoundPlay(Sound[0]);
         stat.Revive();
         Generate();
 
-        onRevive();
         animator.SetTrigger("Revive");
+        SoundPlay(Sound[0]);
     }
 
     // 시야 방향 갱신
@@ -352,7 +347,15 @@ public class Monster : MonoBehaviour
 
     protected void OnCollisionStay2D(Collision2D other)
     {
-        Player attackTarget = other.gameObject.GetComponent<Player>();
+        Player attackTarget = null;
+        try
+        {
+            attackTarget = other.gameObject.GetComponent<Player>();
+        }
+        catch (NullReferenceException)
+        {
+            return; 
+        }
 
         // 충돌한 게임 오브젝트가 추적 대상이라면 공격
         if (attackTarget != player)
@@ -360,7 +363,7 @@ public class Monster : MonoBehaviour
             randomDirection = new Vector2(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f));
             lastRandomDirectionUpdate = Time.time;
         }
-        else if (Time.time >= lastAttackTime + attackCoolTime)
+        else if (Time.time >= lastAttackTime + attackCoolTime && attackTarget != null)
         {
             lastAttackTime = Time.time;
             attackTarget.OnDamage(stat.damage, 5f, (attackTarget.transform.position - transform.position).normalized);

@@ -13,6 +13,7 @@ public class MonsterSpawner : MonoBehaviour
     private float horizontalRange;
     private float verticalRange;
 
+    // 스포너 초기화
     public void Set(int roomIndex, Vector3 roomPosition, float horizontalRange, float verticalRange, List<Dictionary<string, object>> monsterData)
     {
         this.roomIndex = roomIndex;
@@ -31,29 +32,18 @@ public class MonsterSpawner : MonoBehaviour
             monster.monsterData = monsterData;
             monster.transform.SetParent(gameObject.transform);
             Vector3 diff = new Vector3(
-                Random.Range(-1 * horizontalRange, horizontalRange),
-                Random.Range(-1 * verticalRange, verticalRange),
+                Random.Range(- 0.8f * horizontalRange, 0.8f * horizontalRange),
+                Random.Range(-0.8f * verticalRange, 0.8f * verticalRange),
                 0f
             );
             monster.transform.position = roomPosition + diff;
 
             monsters.Add(monster);
-            monster.onDie += () =>
-            {
-                monsters.Remove(monster);
-                deadMonsters.Add(monster);
-                CheckRemainEnemy();
-            };
-            monster.onRevive += () =>
-            {
-                deadMonsters.Remove(monster);
-                monsters.Add(monster);
-            };
         }
     }
 
     // 방에 남은 몬스터가 있는지 확인
-    private void CheckRemainEnemy()
+    public void CheckRemainEnemy()
     {
         if (monsters.Count < 1)
         {
