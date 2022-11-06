@@ -37,7 +37,7 @@ public class WeaponCollider : MonoBehaviour
             attackTarget.OnDamage(playerUnit.stat.damage, 5f, (attackTarget.transform.position - transform.position).normalized); 
         }
 
-        if (collision.gameObject.tag == "MapObject")
+        if (collision.gameObject.CompareTag("MapObject"))
         {
             collision.gameObject.SendMessage("OnDamage");
         }

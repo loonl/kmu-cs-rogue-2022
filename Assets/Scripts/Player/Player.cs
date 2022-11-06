@@ -105,7 +105,10 @@ public class Player : MonoBehaviour {
             isMovable = true;
 
             // reset elasped skill cool-time
-            remainCool = equipment[0].stat.coolTime;
+            //remainCool = equipment[0].stat.coolTime;
+
+            // !!!!!!!! 테스트용 코드 - 스킬 쿨타임 0 !!!!!!!!!
+            remainCool = 0;
         };
 
         // used in animator end event - stun

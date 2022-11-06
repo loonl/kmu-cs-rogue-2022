@@ -1,8 +1,8 @@
 id,name,type,rarity,dmg,range,skilldmg,cooltime,hp,speed,path,effectName,,skillName
 0,none,1,N,0,1,0,0,0,0,,NormalSlash,,
 1,none,7,N,0,0,0,0,0,0,,NormalSlash,,
-2,sword1,1,N,5,1,10,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_1.png,NormalSlash2,,
-3,sword2,1,N,10,1,13,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_2.png,NormalSlash2,,
+2,sword1,1,N,5,1,10,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_1.png,NormalSlash2,,FireSlash
+3,sword2,1,N,10,1,13,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_2.png,NormalSlash2,,BigNormalSlash
 4,sword6,1,N,15,1,25,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_6.png,NormalSlash2,,ExplosiveAttack
 5,sword8,1,N,17,1,31,7,0,0,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_05.png,NormalSlash2,,
 6,bow1,2,N,5,2,20,10,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Bow_1.png,,,
@@ -21,8 +21,8 @@ id,name,type,rarity,dmg,range,skilldmg,cooltime,hp,speed,path,effectName,,skillN
 19,shield1,7,N,0,0,0,0,200,0,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/6_Weapons/WoodShield1.png,,,
 20,shield2,7,N,0,0,0,0,210,0,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/6_Weapons/WoodShield2.png,,,
 21,shield3,7,N,0,0,0,0,220,0,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/6_Weapons/WoodShield3.png,,,
-22,sword3,1,R,12,1,16,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_3.png,FireSlash,,
-23,sword4,1,R,13,1,19,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_4.png,FireSlash,,
+22,sword3,1,R,12,1,16,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_3.png,FireSlash,,DoubleFireSlash
+23,sword4,1,R,13,1,19,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_4.png,FireSlash,,ChainExplosion
 24,sword9,1,R,18,1,34,10,0,0,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_06.png,ElectricSlash,,
 25,sword10,1,R,19,1,37,10,0,0,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_11.png,ElectricSlash,,
 26,axe1,1,R,8,1,15,5,0,0,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Axe_1.png,NormalClaw,,
