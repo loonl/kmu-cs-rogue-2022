@@ -1,12 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SkillManager : MonoBehaviour
 {
     Player player;
+    public enum SkillInfo // 현재 발동중인 스킬 정보가 될 수 있는 것
+    {
+        Name,
+        Direction
+    }
     private static SkillManager _instance = null;
     public static SkillManager Instance { get { return _instance; } }
+
+    public Dictionary<SkillInfo, object> onGoingSkillInfo = new Dictionary<SkillInfo, object>();
 
     private void Awake()
     {
@@ -27,11 +35,7 @@ public class SkillManager : MonoBehaviour
     public void InstantiateSkill(string skillname)
     {
         Debug.Log(skillname);
-        GameObject skill = Instantiate(Resources.Load($"Prefabs/Skill/{skillname}") as GameObject);
-        if (player.transform.localScale.x < 0)
-            skill.transform.position = player.transform.position + new Vector3(skill.transform.localScale.x / 2, 0.5f, -0.1f);
-        else
-            skill.transform.position = player.transform.position + new Vector3(-skill.transform.localScale.x / 2, 0.5f, -0.1f);
+        GameObject skill = Instantiate(Resources.Load($"Prefabs/Skill/{skillname}")) as GameObject;
     }
 
 }
