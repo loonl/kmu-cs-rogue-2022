@@ -418,35 +418,35 @@ public class RoomGenerator : MonoBehaviour
             size = RoomSize.Big;
         
         // Default small size
-        int rows = 7;
-        int cols = 7;
+        int rows = 5;
+        int cols = 5;
 
         if (size == RoomSize.Medium)
         {
             // 75% - (9, 9)
             if (Random.value < 0.75)
             {
-                rows = 9;
-                cols = 9;
+                rows = 7;
+                cols = 7;
             }
             else
             {
                 if (Random.value < 0.5)
                 {
-                    rows = 9;
-                    cols = 15;
+                    rows = 7;
+                    cols = 12;
                 }
                 else
                 {
-                    rows = 15;
-                    cols = 9;
+                    rows = 12;
+                    cols = 7;
                 }
             }
         }
         else if (size == RoomSize.Big)
         {
-            rows = 13;
-            cols = 13;
+            rows = 10;
+            cols = 10;
         }
 
         ushort indexTileType = (ushort)type;
