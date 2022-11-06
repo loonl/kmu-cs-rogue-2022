@@ -379,9 +379,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b30662998c504cf4ba067369edf8796c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathSound: {fileID: 0}
-  hitSound: {fileID: 0}
-  id: 0
+  hpBar: {fileID: 0}
+  hpBarPrefab: {fileID: 0}
+  goldTxt: {fileID: 0}
+  canvas: {fileID: 0}
+  Sound: []
+  id: 9
   isDead: 0
 --- !u!1 &444055369237554467
 GameObject:
