@@ -14,15 +14,18 @@ public class Item
     public string path { get; set; }
 
     public string effectName { get; set; }
+    public string skillName { get; set; }
     public Item(int itemId, Dictionary<string, object> data)
     {
         id = itemId;
         name = (string)data["name"];
         stat = new Stat(float.Parse(data["hp"].ToString()), float.Parse(data["dmg"].ToString()), float.Parse(data["range"].ToString()),
-                        float.Parse(data["skilldmg"].ToString()), float.Parse(data["cooltime"].ToString()), float.Parse(data["speed"].ToString()));
+                        float.Parse(data["skilldmg"].ToString()), float.Parse(data["cooltime"].ToString()), 
+                        float.Parse(data["knockbackforce"].ToString()), float.Parse(data["speed"].ToString()));
         itemType = (int)data["type"];
         path = (string)data["path"];
         effectName = (string)data["effectName"] == "" ? "NormalSlash2" : (string)data["effectName"];
+        skillName = (string)data["skillName"] == "" ? "ExplosiveAttack" : (string)data["skillName"];
         if (path != "")
             image = Resources.Load<Sprite>(path.Substring(17, path.Length - 21));
     }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.Mime;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -59,6 +60,8 @@ public class Monster : MonoBehaviour
     protected bool actionChanged; // 행동 변경 여부
     protected bool actionFinished; // 행동 종료 여부
     protected Coroutine currentActionCoroutine; // 현재 행동 코루틴
+    public bool isInvulnerable; // 무적 여부
+    public bool onDotdmg; // 도트 데미지 받고있는 여부
     private ActionList action; // 현재 행동
     // action 프로퍼티
     public ActionList Action
@@ -107,6 +110,7 @@ public class Monster : MonoBehaviour
         isDead = false;
         actionChanged = true;
         actionFinished = true;
+        isInvulnerable = false;
         Action = ActionList.Wandering;
         Sound = new AudioClip[3];
 
@@ -122,7 +126,7 @@ public class Monster : MonoBehaviour
 
         while (!isDead)
         {
-            if (player != null && !player.dead)
+            if (player != null)
             {
                 distance = Vector2.Distance(player.transform.position, transform.position);
                 direction = (player.transform.position - transform.position).normalized;
@@ -262,9 +266,10 @@ public class Monster : MonoBehaviour
     }
 
     // 피격 시 실행
-    public void OnDamage(float damage, float _knockBackForce, Vector2 _knockBackDirection)
+    public void OnDamage(float damage, float _knockBackForce, Vector2 _knockBackDirection, WaitForSeconds invulnerabletime = null)
     {
         stat.OnDamage(damage);
+        if(invulnerabletime != null) StartCoroutine(SetInvulnerable(invulnerabletime));
 
         if (stat.health <= 0)
         {
@@ -342,7 +347,15 @@ public class Monster : MonoBehaviour
 
     protected void OnCollisionStay2D(Collision2D other)
     {
-        Player attackTarget = other.gameObject.GetComponent<Player>();
+        Player attackTarget = null;
+        try
+        {
+            attackTarget = other.gameObject.GetComponent<Player>();
+        }
+        catch (NullReferenceException)
+        {
+            return; 
+        }
 
         // 충돌한 게임 오브젝트가 추적 대상이라면 공격
         if (attackTarget != player)
@@ -350,7 +363,7 @@ public class Monster : MonoBehaviour
             randomDirection = new Vector2(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f));
             lastRandomDirectionUpdate = Time.time;
         }
-        else if (Time.time >= lastAttackTime + attackCoolTime)
+        else if (Time.time >= lastAttackTime + attackCoolTime && attackTarget != null)
         {
             lastAttackTime = Time.time;
             attackTarget.OnDamage(stat.damage, 5f, (attackTarget.transform.position - transform.position).normalized);
@@ -366,5 +379,29 @@ public class Monster : MonoBehaviour
         audioPlayer.clip = clip;
         audioPlayer.volume = SoundManager.Instance.effectvolume * SoundManager.Instance.totalvolume;
         audioPlayer.Play();
+    }
+
+    private IEnumerator SetInvulnerable(WaitForSeconds timer)
+    {
+        isInvulnerable = true;
+        yield return timer;
+        isInvulnerable = false;
+    }
+
+    public void SetDotDmg(float prob, float dmg, float delay, float duration, string effectname = "") // 도트데미지 set, prob: 걸릴 확률 (0<prob<1)
+    {
+        if (onDotdmg) StopCoroutine("DoDotDmg");
+        if (UnityEngine.Random.Range(0.0f, 1.0f) <= prob) StartCoroutine(DoDotDmg(dmg, delay, GameManager.Instance.Setwfs((int)(delay * 100)), duration));
+        onDotdmg = true;
+    }
+
+    private IEnumerator DoDotDmg(float dmg, float delayf, WaitForSeconds delay, float duration) // 도트데미지 적용
+    {
+        if (isDead) { onDotdmg = false; yield break; } // 다음 도트데미지 받기 전에 플레이어의 공격으로 죽었을 수도 있음.
+        OnDamage(dmg, 0f, Vector2.zero);
+        duration -= delayf;
+        if (duration < 0f || isDead) { onDotdmg = false; yield break; }  // 5초 지속이며 1초마다 데미지 받는 상황일 시 정확히 5초 지난 시점에도 데미지를 받도록 함. 즉 총 5회의 데미지
+        yield return delay;
+        StartCoroutine(DoDotDmg(dmg, delayf, delay, duration));
     }
 }

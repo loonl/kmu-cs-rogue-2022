@@ -23,20 +23,6 @@ public class PlayerAttack : MonoBehaviour
     {
         effectanim.SetTrigger(effectname);
     }
-    public void SkillAttack(int itemId)
-    {
-        switch (itemId)
-        {
-            case 2:
-                StartCoroutine(BigNormalSlash());
-                break;
-            case 3:
-                StartCoroutine(FireSlash());
-                break;
-            default:
-                break;
-        }
-    }
 
     // 무기 별 effect의 크기, flip 등 설정
     public void SetUpEffect(string effectname = "NormalSlash2", Item item = null, float range = 1f)
@@ -98,68 +84,6 @@ public class PlayerAttack : MonoBehaviour
         {
             effectTransform.eulerAngles = new Vector3(0, 0, -effectTransform.eulerAngles.z); // 플레이어가 오른쪽 보고있으면 의도한대로 rotation이 저장이 안되서 수정해주는 코드
         }
-    }
-
-    IEnumerator DoubleFireSlash()
-    {
-        player.wpnColl.poly.enabled = true;
-        effectanim.SetTrigger("DoubleFireSlash");
-        yield return new WaitForSeconds(0.05f); // 대기 시간. 없을 시 collider 내의 몬스터 정보를 받아오질 못함...
-        List<Monster> monsters;        
-        monsters = player.wpnColl.monsters.ToList();
-        Debug.Log($"ds {monsters.Count}");
-        foreach (Monster monster in monsters)
-        {
-            monster.OnDamage(player.stat.skillDamage, 5f, (monster.transform.position - transform.position).normalized);
-        }
-        yield return new WaitForSeconds(0.2f);
-        foreach (Monster monster in monsters)
-        {
-            monster.OnDamage(player.stat.skillDamage, 5f, (monster.transform.position - transform.position).normalized);
-        }
-        player.wpnColl.poly.enabled = false;
-        if (player.wpnColl.monsters.Count > 0)
-        {
-            player.wpnColl.monsters.Clear();
-        }
-    }
-    IEnumerator FireSlash()
-    {
-        player.wpnColl.poly.enabled = true;
-        SetUpEffect("FireSlash", range:2);
-        effectanim.SetTrigger("FireSlash");
-        player.wpnColl.SetAttackRange(2); // 일반 공격 거리는 1이지만 스킬 공격에선 2로 잠시 변경
-        yield return new WaitForSeconds(0.05f);
-        List<Monster> monsters;
-        monsters = player.wpnColl.monsters.ToList();
-        Debug.Log($"monster in collider {monsters.Count}");
-        foreach (Monster monster in monsters)
-        {
-            monster.OnDamage(player.stat.skillDamage, 5f, (monster.transform.position - transform.position).normalized);
-        }
-        yield return new WaitForSeconds(0.4f); // 이펙트 애니메이션 지속시간
-        player.wpnColl.SetAttackRange(1); // 공격 거리 되돌림
-        player.wpnColl.poly.enabled = false;
-        SetUpEffect("NormalSlash");
-    }
-    IEnumerator BigNormalSlash()
-    {
-        player.wpnColl.poly.enabled = true;
-        SetUpEffect("NormalSlash", range: 2);
-        effectanim.SetTrigger("NormalSlash");
-        player.wpnColl.SetAttackRange(2); // 일반 공격 거리는 1이지만 스킬 공격에선 2로 잠시 변경
-        yield return new WaitForSeconds(0.05f);
-        List<Monster> monsters;
-        monsters = player.wpnColl.monsters.ToList();
-        Debug.Log($"monster in collider {monsters.Count}");
-        foreach (Monster monster in monsters)
-        {
-            monster.OnDamage(player.stat.skillDamage, 5f, (monster.transform.position - transform.position).normalized);
-        }
-        yield return new WaitForSeconds(0.2f); // 이펙트 애니메이션 지속시간
-        player.wpnColl.poly.enabled = false;
-        player.wpnColl.SetAttackRange(1); // 공격 거리 되돌림
-        SetUpEffect("NormalSlash");
     }
 
     // !! 편한 테스트를 위한 코드 !!

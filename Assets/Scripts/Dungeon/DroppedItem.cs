@@ -26,7 +26,7 @@ public class DroppedItem : Interact
 
     public override void InteractEvent()
     {
-        if (GameManager.Instance.Player.isAttacking) return; // 공격중엔 아이템 획득 x
+        if (GameManager.Instance.Player.curState == PlayerState.Attacking) return; // 공격중엔 아이템 획득 x
         if (this._price == 0)
         {
             int itemIndex;
