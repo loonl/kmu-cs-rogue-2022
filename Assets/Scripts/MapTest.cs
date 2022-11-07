@@ -35,12 +35,12 @@ public class MapTest : MonoBehaviour
             while (color.a < 1.0f)
             {
                 color.a += 0.01f;
-                yield return SoundManager.Instance.Setwfs(1);
+                yield return GameManager.Instance.Setwfs(1);
                 fadeimg.color = color;
             }
 
         DungeonSystem.Instance.ClearDungeon();
-        yield return SoundManager.Instance.Setwfs(20);
+        yield return GameManager.Instance.Setwfs(20);
         DungeonSystem.Instance.CreateDungeon();
         GameManager.Instance.Player.transform.position = Vector3.zero;
         DungeonSystem.Instance.Rooms[0].Clear();
@@ -49,7 +49,7 @@ public class MapTest : MonoBehaviour
             while (color.a > 0.0f)
             {
                 color.a -= 0.01f;
-                yield return SoundManager.Instance.Setwfs(1);
+                yield return GameManager.Instance.Setwfs(1);
                 fadeimg.color = color;
             }
         isrestart = false;
