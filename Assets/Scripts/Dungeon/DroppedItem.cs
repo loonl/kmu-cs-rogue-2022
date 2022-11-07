@@ -6,9 +6,11 @@ public class DroppedItem : Interact
 {
     [SerializeField]
     private SpriteRenderer _renderer;
+    
 
     private Item _item;
     public Item Item { get { return _item; } }
+    
 
     public int _price = 0;
     // private Image _sprite;
@@ -17,11 +19,22 @@ public class DroppedItem : Interact
     public void Set(Item item, int price = 0)
     {
         this._item = item;
-
+        
         // 이미지 할당
         this._renderer.sprite = item.image;
 
         this._price = price;
+        
+        canvas = Resources.Load<GameObject>("Prefabs/UI/MonsterHPCanvas");
+        tooltipPrefab = Resources.Load<GameObject>("Prefabs/UI/Tooltip");
+        canvas = Instantiate(canvas, transform.position, Quaternion.identity);
+        canvas.transform.localScale = new Vector3(1, 1, 1);
+        canvas.transform.SetParent(transform);
+        tooltip = Instantiate(tooltipPrefab, transform.position, Quaternion.identity);
+        tooltip.transform.SetParent(canvas.transform);
+        canvas.transform.localPosition = new Vector3(0, 2, 0);
+        tooltip.GetComponent<ItemTooltip>().HideTooltip();
+        tooltip.GetComponent<ItemTooltip>().SetTooltip(item);
     }
 
     public override void InteractEvent()
@@ -40,6 +53,7 @@ public class DroppedItem : Interact
 
             // Get
             GameManager.Instance.Player.Equip(this._item);
+            tooltip.GetComponent<ItemTooltip>().HideTooltip();
 
             // 만약 기존 장착한 아이템이 있으면
             if (!temp.isEmpty())

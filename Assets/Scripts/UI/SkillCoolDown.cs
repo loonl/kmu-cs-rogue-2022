@@ -7,8 +7,12 @@ using UnityEngine.UI;
 
 public class SkillCoolDown : MonoBehaviour
 {
+    private static SkillCoolDown instance = null;
+    public static SkillCoolDown Instance { get { return instance; } }
+    
     public TextMeshProUGUI textCoolTime;
     public Image imageFill;
+    
     private float timeCooltime = 0;
     private float timeCurrent;
     private float timeStart;
@@ -29,6 +33,7 @@ public class SkillCoolDown : MonoBehaviour
 
     private void InitUI()
     {
+        instance = this;
         imageFill.type = Image.Type.Filled;
         imageFill.fillMethod = Image.FillMethod.Radial360;
         imageFill.fillOrigin = (int)Image.Origin360.Top;
@@ -55,7 +60,7 @@ public class SkillCoolDown : MonoBehaviour
         textCoolTime.gameObject.SetActive(false);
     }
 
-    private void TriggerSkill()
+    public void TriggerSkill()
     {
         if(!isEnded)
         {

@@ -5,6 +5,10 @@ using UnityEngine;
 public class Interact : MonoBehaviour
 {
     private CircleCollider2D _collider;
+    
+    protected GameObject tooltipPrefab;
+    protected GameObject tooltip;
+    protected GameObject canvas;
 
     private void Start()
     {
@@ -21,6 +25,10 @@ public class Interact : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            if (tooltip != null)
+                tooltip.GetComponent<ItemTooltip>().ShowTooltip();
+            
+
             GameManager.Instance.Player.AddInteractEvent(this);
         }
     }
@@ -29,6 +37,8 @@ public class Interact : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            if (tooltip != null)
+                tooltip.GetComponent<ItemTooltip>().HideTooltip();
             GameManager.Instance.Player.RemoveInteractEvent();
         }
     }

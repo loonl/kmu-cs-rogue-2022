@@ -5,6 +5,7 @@ using System.Net.Mime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Slider = UnityEngine.UI.Slider;
 
 // 행동 목록
 public enum ActionList
@@ -90,7 +91,7 @@ public class Monster : MonoBehaviour
         // 몬스터 HP바 생성
         hpBarPrefab = Resources.Load<GameObject>("Prefabs/UI/MonsterHp");
         goldTxt = Resources.Load<GameObject>("Prefabs/UI/CoinTxt");
-        canvas = GameObject.FindGameObjectWithTag("HPCanvas");
+        canvas = Resources.Load<GameObject>("Prefabs/UI/MonsterHPCanvas");
     }
 
     protected virtual void Init()
@@ -108,9 +109,16 @@ public class Monster : MonoBehaviour
         actionChanged = true;
         actionFinished = true;
         Action = ActionList.Wandering;
-
-        hpBar = Instantiate(hpBarPrefab, canvas.transform); // 수정중
-        hpBar.GetComponent<MonsterHPbar>().CreateHPbar(stat,this);
+        
+        canvas = Instantiate(canvas, transform.position, Quaternion.identity);
+        canvas.transform.SetParent(transform);
+        canvas.transform.localPosition = new Vector3(0, 1f, 0);
+        canvas.transform.localScale = new Vector3(1, 1, 1);
+        hpBar = Instantiate(hpBarPrefab, transform.position, Quaternion.identity);
+        hpBar.transform.SetParent(canvas.transform);
+        hpBar.transform.localPosition = new Vector3(0, 0, 0);
+        hpBar.transform.localScale = new Vector3(0.01f, 0.01f,0);
+        hpBar.SetActive(false);
         StartCoroutine(UpdatePath());
     }
 
@@ -265,6 +273,12 @@ public class Monster : MonoBehaviour
     {
         Debug.Log($"id {this.name} got damage {damage}");
         stat.OnDamage(damage);
+        
+        hpBar.GetComponent<Slider>().value = stat.health / stat.maxHealth;
+        if (stat.health<stat.maxHealth)
+        {
+            hpBar.SetActive(true);
+        }
 
         if (stat.health <= 0)
         {
@@ -303,6 +317,8 @@ public class Monster : MonoBehaviour
 
         DropGold();
         
+        hpBar.SetActive(false);
+        
         onDie();
         animator.SetTrigger("Die");
         //audioPlayer.PlayOneShot(deathSound);
@@ -315,8 +331,12 @@ public class Monster : MonoBehaviour
         //UI 골드 추가
         if (stat.gold != 0)
         {
-            GameObject temp = Instantiate(goldTxt, canvas.transform);
-            temp.transform.position = GameManager.Instance.Player.transform.position + Vector3.up * 0.5f;
+            GameObject temp = Instantiate(goldTxt, transform.position, Quaternion.identity);
+            temp.transform.SetParent(canvas.transform);
+            if(this.transform.localScale.x<0)
+                temp.transform.localScale = new Vector3(-0.01f, 0.01f, 1);
+            else
+                temp.transform.localScale = new Vector3(0.01f, 0.01f, 1);
             temp.GetComponent<TextMeshProUGUI>().text = $"+{stat.gold}G";
         }
     }
@@ -338,9 +358,11 @@ public class Monster : MonoBehaviour
         if (rigidbody2d.velocity.x > 0)
         {
             transform.localScale = new Vector3(-stat.scale, stat.scale, 1);
+            hpBar.transform.localScale = new Vector3(-0.01f, 0.01f, 1);
         }
         else if (rigidbody2d.velocity.x < 0)
         {
+            hpBar.transform.localScale = new Vector3(0.01f, 0.01f, 1);
             transform.localScale = new Vector3(stat.scale, stat.scale, 1);
         }
     }
