@@ -40,7 +40,7 @@ public class ChainExplosion : BaseSkill
     }
     protected override void SetPosition()
     {
-        gameObject.transform.position = player.transform.position + new Vector3(gameObject.transform.localScale.x / 2 * direction.x, gameObject.transform.localScale.y / 2 * direction.y, 0); 
+        gameObject.transform.position = player.transform.position + new Vector3(gameObject.transform.localScale.x / 2 * direction.x, gameObject.transform.localScale.y / 2 * direction.y, -0.5f); 
     }
 
     protected override IEnumerator SkillAction()

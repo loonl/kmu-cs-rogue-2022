@@ -25,7 +25,6 @@ public abstract class BaseSkill : MonoBehaviour
         player = GameObject.Find("Player").GetComponent<Player>();
         weapon = player.equipment[0];
         animator = GetComponent<Animator>();
-        //if (animator != null) SetTimer(); // 파티클시스템으로 이펙트 구현 시 애니메이터가 없을 수도 있음.
         colliderValidTime = GameManager.Instance.Setwfs((int)(100 * colliderValidTimeF));
         collid = GetComponent<Collider2D>();
         collid.enabled = false;
