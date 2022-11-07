@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 public class RevivalZombie : Monster
@@ -17,6 +17,23 @@ public class RevivalZombie : Monster
     private void Start()
     {
         Init();
+    }
+    // 사망 시 실행
+    public override void Die()
+    {
+        capsuleCollider2D.enabled = false;
+        isDead = true;
+
+        if (revived)
+        {
+            spawner.monsters.Remove(this);
+            spawner.deadMonsters.Add(this);
+            spawner.CheckRemainEnemy();
+            DropGold();
+        }
+
+        animator.SetTrigger("Die");
+        SoundPlay(Sound[2]);
     }
 
     // 시체 상태 수행 후 부활 처리

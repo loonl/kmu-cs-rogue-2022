@@ -67,7 +67,8 @@ public class StageUIManager : MonoBehaviour
         {
             loadStatus();
             loadItem();
-            playerstat.text = "HP : " + player.stat.hp + "\n\n" + "SPEED : " + player.stat.speed + "\n\n" + "ATK : " + player.stat.damage + "\n\n" + "SKILL DAMAGE : " + player.stat.skillDamage;
+            playerstat.text = "HP : " + player.stat.hp + "\n\n" + "SPEED : " + player.stat.speed + "\n\n" + "ATK : " +
+                              player.stat.damage + "\n\n" + "SKILL DAMAGE : " + player.stat.skillDamage;
         }
         
         goldTxt.text = player.Inventory.Gold.ToString();

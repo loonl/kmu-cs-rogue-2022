@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class DungeonSystem : MonoBehaviour
@@ -82,7 +83,7 @@ public class DungeonSystem : MonoBehaviour
     {
         int MonsterSpawnerId;
         List<Dictionary<string, object>> monsterSpawnerData = CSVReader.Read("Datas/MonsterSpawner");
-        //List<Dictionary<string, object>> monsterSpawnerData = CSVReader.Read("Datas/TestMonsterSpawner"); // 테스트 코드
+        //List<Dictionary<string, object>> monsterSpawnerData = CSVReader.Read("Datas/TestMonsterSpawner"); // !!테스트 코드
         List<Dictionary<string, object>> monsterData = CSVReader.Read("Datas/Monster");
 
         // 몬스터스포너 확률 리스트 생성
@@ -132,7 +133,7 @@ public class DungeonSystem : MonoBehaviour
             GameObject dropped = GameManager.Instance.CreateGO
             (
                 "Prefabs/Dungeon/Dropped", 
-                generator.Shop.transform
+                generator.Shop.transform // ??
             );
 
             dropped.transform.position = new Vector3
@@ -144,6 +145,19 @@ public class DungeonSystem : MonoBehaviour
             // !!! 아이템 가격 표 필요 (아이템 가격 1000 고정)
             Item randomItem = GameManager.Instance.GetRandomDropItem();
             dropped.GetComponent<DroppedItem>().Set(randomItem, 0);
+            
+            // UI 함수화 필요(수정중)
+            GameObject canvas = Resources.Load<GameObject>("Prefabs/UI/MonsterHPCanvas");
+            canvas = Instantiate(canvas, dropped.transform.position, Quaternion.identity);
+            canvas.transform.SetParent(dropped.transform);
+            canvas.transform.localPosition = new Vector3(0, -1f, 0);
+            canvas.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            GameObject hpBarPrefab = Resources.Load<GameObject>("Prefabs/UI/ShopTxt");
+            GameObject hpBar = Instantiate(hpBarPrefab, transform.position, Quaternion.identity);
+            hpBar.GetComponent<TextMeshProUGUI>().text = dropped.GetComponent<DroppedItem>()._price.ToString();
+            hpBar.transform.SetParent(canvas.transform);
+            hpBar.transform.localPosition = new Vector3(0, 0, 0);
+            hpBar.transform.localScale = new Vector3(0.01f, 0.01f,0);
         }
     }
 
