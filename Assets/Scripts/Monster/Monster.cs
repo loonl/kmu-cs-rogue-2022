@@ -109,8 +109,8 @@ public class Monster : MonoBehaviour
         actionFinished = true;
         Action = ActionList.Wandering;
 
-        //hpBar = Instantiate(hpBarPrefab, canvas.transform); // 수정중
-        //hpBar.GetComponent<MonsterHPbar>().CreateHPbar(stat,this);
+        hpBar = Instantiate(hpBarPrefab, canvas.transform); // 수정중
+        hpBar.GetComponent<MonsterHPbar>().CreateHPbar(stat, this);
         StartCoroutine(UpdatePath());
     }
 
@@ -313,12 +313,12 @@ public class Monster : MonoBehaviour
     {
         GameManager.Instance.Player.Inventory.UpdateGold(stat.gold);
         //UI 골드 추가
-        //if (stat.gold != 0)
-        //{
-        //    GameObject temp = Instantiate(goldTxt, canvas.transform);
-        //    temp.transform.position = GameManager.Instance.Player.transform.position + Vector3.up * 0.5f;
-        //    temp.GetComponent<TextMeshProUGUI>().text = $"+{stat.gold}G";
-        //}
+        if (stat.gold != 0)
+        {
+            GameObject temp = Instantiate(goldTxt, canvas.transform);
+            temp.transform.position = GameManager.Instance.Player.transform.position + Vector3.up * 0.5f;
+            temp.GetComponent<TextMeshProUGUI>().text = $"+{stat.gold}G";
+        }
     }
 
     // 부활 시 실행
