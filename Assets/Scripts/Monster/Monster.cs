@@ -125,12 +125,6 @@ public class Monster : MonoBehaviour
         hpBar.SetActive(false);
 
         Sound = new AudioClip[3];
-
-<<<<<<< HEAD
-        hpBar = Instantiate(hpBarPrefab, canvas.transform); // 수정중
-        hpBar.GetComponent<MonsterHPbar>().CreateHPbar(stat, this);
-=======
->>>>>>> 081a7c1b82f98dabf9ad205e306a94c0032a7f06
         StartCoroutine(UpdatePath());
     }
 
@@ -330,8 +324,6 @@ public class Monster : MonoBehaviour
 
         
         hpBar.SetActive(false);
-        
-        onDie();
 
         animator.SetTrigger("Die");
         SoundPlay(Sound[2]);
@@ -343,15 +335,6 @@ public class Monster : MonoBehaviour
         GameManager.Instance.Player.Inventory.UpdateGold(stat.gold);
 
         //UI 골드 추가
-<<<<<<< HEAD
-        if (stat.gold != 0)
-        {
-            GameObject temp = Instantiate(goldTxt, canvas.transform);
-            temp.transform.position = GameManager.Instance.Player.transform.position + Vector3.up * 0.5f;
-            temp.GetComponent<TextMeshProUGUI>().text = $"+{stat.gold}G";
-        }
-=======
-
         if (stat.gold != 0)
         {
             GameObject temp = Instantiate(goldTxt, transform.position, Quaternion.identity);
@@ -362,9 +345,6 @@ public class Monster : MonoBehaviour
                 temp.transform.localScale = new Vector3(0.01f, 0.01f, 1);
             temp.GetComponent<TextMeshProUGUI>().text = $"+{stat.gold}G";
         }
-
-
->>>>>>> 081a7c1b82f98dabf9ad205e306a94c0032a7f06
     }
 
     // 부활 시 실행
