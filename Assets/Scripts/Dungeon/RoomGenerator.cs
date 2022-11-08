@@ -137,6 +137,8 @@ public class RoomGenerator : MonoBehaviour
         rooms = new List<Room>();
         visitedRooms = new Stack<Room>();
         dungeonRooms = new List<DungeonRoom>();
+        if (Firetorch == null)
+            Firetorch = Resources.Load<GameObject>("Prefabs/Dungeon/Firetorch");
     }
 
     // -------------------------------------------------------------

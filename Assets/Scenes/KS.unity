@@ -448,6 +448,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 81011289}
   m_CullTransparentMesh: 1
+--- !u!1 &162591355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 162591357}
+  - component: {fileID: 162591356}
+  m_Layer: 0
+  m_Name: SkillManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &162591356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 162591355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81b5e6182acf3e84aacf590e82540530, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &162591357
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 162591355}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.8668858, y: 0.7561912, z: -0.011292228}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &274418567
 GameObject:
   m_ObjectHideFlags: 0
@@ -795,6 +839,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2ca3d9ebed4976e4c9c25eb8f72ecbd6, type: 3}
   _PlayerDashclips:
   - {fileID: 8300000, guid: cbd656407bfccca44abd2255ee8d7a02, type: 3}
+  _PlayerAttackclips:
+  - {fileID: 8300000, guid: eed7e54a243a52743b8f5ccadf85b757, type: 3}
+  - {fileID: 8300000, guid: 61d020c4b43e04748b3347465eaa1a49, type: 3}
+  - {fileID: 8300000, guid: d7e24984f3e6ca0458d632dc2d1b2903, type: 3}
   bgmvolume: 0
   effectvolume: 0
   totalvolume: 0
@@ -3304,7 +3352,7 @@ PrefabInstance:
     - target: {fileID: 7798428689776333278, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
       propertyPath: Firetorch
       value: 
-      objectReference: {fileID: 6673026343859464302, guid: 2714d401f6e4a3e45bd01dbc372b8b4f, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 7798428689776333278, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
       propertyPath: boxesPref
       value: 
