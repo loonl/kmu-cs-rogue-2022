@@ -236,11 +236,15 @@ public class Player : MonoBehaviour {
             rig.velocity = Vector2.zero;
 
             // 스킬 관련 구현
+
+            SkillCoolDown.Instance.TriggerSkill();
+
             if (equipment[0] != null)
-            {
+            { 
+                SkillCoolDown.Instance.TriggerSkill();
                 SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
             }
-            //playerAttack.SkillAttack(equipment[0].id);
+
         }
         
         // dash input
@@ -518,6 +522,7 @@ public class Player : MonoBehaviour {
         // 속도 3배로
         curState = PlayerState.Dashing;
         rig.velocity *= 3;
+
         
         // 사운드 출력
         SoundManager.Instance.SoundPlay(SoundType.PlayerDash);

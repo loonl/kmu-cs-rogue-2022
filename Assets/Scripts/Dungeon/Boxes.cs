@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Box : MonoBehaviour
+public class Boxes : MonoBehaviour
 {
     public void Set(int number, RoomDirect direct)
     {
@@ -13,7 +13,7 @@ public class Box : MonoBehaviour
                 break;
             case 2:
                 CreateObject(direct).transform.localPosition = new Vector3(-.25f, .25f, -.1f);
-                if (Random.value < 0.5)
+                if (Random.value > 0.5)
                 {
                     CreateObject(direct).transform.localPosition = new Vector3(.25f, .25f, -.1f);
                 }
@@ -49,7 +49,6 @@ public class Box : MonoBehaviour
                 box.transform.rotation = Quaternion.Euler(0, 0, 270);
                 break;
         }
-
         return box;
     }
 }
