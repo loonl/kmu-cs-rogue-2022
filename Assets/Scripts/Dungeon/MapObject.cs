@@ -11,8 +11,7 @@ public class MapObject : MonoBehaviour
 
         GameObject droppedItem;
 
-        float itemPercent = 0.5f;
-        if (Random.Range(0f, 1f) <= itemPercent)  // 아이템 확률
+        if (Random.value < 0.05)  // 아이템 확률
         {
             droppedItem = GameManager.Instance.CreateGO
             (
@@ -23,17 +22,19 @@ public class MapObject : MonoBehaviour
             // 드랍 확률에 따라 아이템 할당
             Item item = GameManager.Instance.GetRandomDropItem();
             droppedItem.GetComponent<DroppedItem>().Set(item);
+            droppedItem.transform.position = this.transform.position;
         }
-        else
+
+        else if(Random.value < 0.3)
         {
             droppedItem = GameManager.Instance.CreateGO
             (
                 "Prefabs/Dungeon/Portion",
                 DungeonSystem.Instance.DroppedItems.transform
             );
+            droppedItem.transform.position = this.transform.position;
         }
 
-        droppedItem.transform.position = this.transform.position;
         Destroy(this.gameObject);
     }
 }
