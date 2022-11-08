@@ -44,7 +44,7 @@ public class MapTest : MonoBehaviour
         DungeonSystem.Instance.CreateDungeon();
         GameManager.Instance.Player.transform.position = Vector3.zero;
         DungeonSystem.Instance.Rooms[0].Clear();
-
+        
         if (fadeimg != null)
             while (color.a > 0.0f)
             {

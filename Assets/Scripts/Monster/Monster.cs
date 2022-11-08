@@ -125,7 +125,6 @@ public class Monster : MonoBehaviour
         hpBar.SetActive(false);
 
         Sound = new AudioClip[3];
-
         StartCoroutine(UpdatePath());
     }
 
@@ -325,8 +324,6 @@ public class Monster : MonoBehaviour
 
         
         hpBar.SetActive(false);
-        
-        onDie();
 
         animator.SetTrigger("Die");
         SoundPlay(Sound[2]);
@@ -338,7 +335,6 @@ public class Monster : MonoBehaviour
         GameManager.Instance.Player.Inventory.UpdateGold(stat.gold);
 
         //UI 골드 추가
-
         if (stat.gold != 0)
         {
             GameObject temp = Instantiate(goldTxt, transform.position, Quaternion.identity);
@@ -349,8 +345,6 @@ public class Monster : MonoBehaviour
                 temp.transform.localScale = new Vector3(0.01f, 0.01f, 1);
             temp.GetComponent<TextMeshProUGUI>().text = $"+{stat.gold}G";
         }
-
-
     }
 
     // 부활 시 실행

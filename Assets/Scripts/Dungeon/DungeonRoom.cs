@@ -73,8 +73,9 @@ public class DungeonRoom : MonoBehaviour
     //테스트용 코드
     public void KillAll()
     {
+        int cnt = _spawner.monsters.Count;
         if (_spawner != null)
-            while(_spawner.monsters.Count > 0)
-                _spawner.monsters[0].OnDamage(200, 5f, (_spawner.monsters[0].transform.position - transform.position).normalized);
+            for(int i = 0; i < cnt; i++)
+                _spawner.monsters[0].Die();
     }
 }
