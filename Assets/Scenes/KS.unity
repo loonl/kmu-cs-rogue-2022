@@ -3352,7 +3352,7 @@ PrefabInstance:
     - target: {fileID: 7798428689776333278, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
       propertyPath: Firetorch
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 6673026343859464302, guid: 2714d401f6e4a3e45bd01dbc372b8b4f, type: 3}
     - target: {fileID: 7798428689776333278, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
       propertyPath: boxesPref
       value: 
