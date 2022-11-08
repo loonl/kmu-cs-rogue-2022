@@ -266,6 +266,11 @@ public class Player : MonoBehaviour {
             Equip(ItemManager.Instance.GetItem(5));
         if (Input.GetKeyDown(KeyCode.Alpha5)) // 5 - sword3 (rare)
             Equip(ItemManager.Instance.GetItem(22));
+        if (Input.GetKeyDown(KeyCode.Alpha6)) // 6 - Cheat Weapon
+            Equip(ItemManager.Instance.GetItem(90));
+        if (Input.GetKeyDown(KeyCode.Equals))
+            stat.hp = stat.maxHp;
+        
         if (Input.GetKeyDown(KeyCode.P))
         {
             print("MaxHP : " + stat.maxHp + "\nHP : " + stat.hp + "\nAttackPower : " + stat.damage
