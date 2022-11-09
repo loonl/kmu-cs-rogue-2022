@@ -33,14 +33,14 @@ public enum TileType
     VineOpenDoor = 25,
     VineCloseDoor = 26,
     VineMossOpenDoor = 27,
-    VineMossCloseDoor = 28
+    VineMossCloseDoor = 28,
+    BossGround = 29
 }
 
 public enum RoomSize
 {
     Small,
-    Medium,
-    Big
+    Medium
 }
 
 public enum TileDirect
@@ -94,12 +94,15 @@ public class RoomGenerator : MonoBehaviour
     private List<Tile> vineMossWalls;
     [SerializeField]
     private List<Tile> vineMossEdges;
-
+    [SerializeField]
+    private List<Tile> BossGrounds;
     [SerializeField]
     private GameObject emptyRoomPref;
     [SerializeField]
     private GameObject portalPref;
-    
+    [SerializeField]
+    private GameObject Firetorch;
+
     [Header ("Object")]
     [SerializeField]
     private GameObject boxesPref;
@@ -134,6 +137,8 @@ public class RoomGenerator : MonoBehaviour
         rooms = new List<Room>();
         visitedRooms = new Stack<Room>();
         dungeonRooms = new List<DungeonRoom>();
+        if (Firetorch == null)
+            Firetorch = Resources.Load<GameObject>("Prefabs/Dungeon/Firetorch");
     }
 
     // -------------------------------------------------------------
@@ -146,18 +151,21 @@ public class RoomGenerator : MonoBehaviour
         Distance();
         CreateSpecialRoom();
         // Room 타일 그리기
-        DungeonRoom[] rooms = roomParent.GetComponentsInChildren<DungeonRoom>();
+        //DungeonRoom[] dungeonrooms = roomParent.GetComponentsInChildren<DungeonRoom>();
 
-        for(int i = 0; i < rooms.Length; i++)
+        for(int i = 0; i < dungeonRooms.Count; i++)
         {
-           DrawRoom(rooms[i], type, i);
+           DrawRoom(dungeonRooms[i], type, i);
         }
 
         // 문 생성
-        GenerateDoors(rooms, type);
+        GenerateDoors(type);
+
+        //보스 방과 연결된 포탈 근처에 보스 방이라는 것을 알려주는 표식을 새김 
+        NearBossRoomDraw();
 
         // 오브젝트 생성
-        GenerateObject(rooms);
+        GenerateObject();
     }
 
     public void Clear()
@@ -408,45 +416,30 @@ public class RoomGenerator : MonoBehaviour
     // -------------------------------------------------------------
     private void DrawRoom(DungeonRoom room, TileType type, int num)
     {
-        RoomSize size = RoomSize.Small;
+        RoomSize size = RoomSize.Medium;
         bool Clear = false;
         if (num == 0 || num == shopIndex)
             Clear = true;
-        else if (num != bossIndex)
-            size = RoomSize.Medium;
-        else
-            size = RoomSize.Big;
-        
-        // Default small size
-        int rows = 5;
-        int cols = 5;
 
-        if (size == RoomSize.Medium)
+        else if (num != bossIndex && !Clear)
+            size = RoomSize.Small;
+        
+        // Default Medium size
+        int rows = 7;
+        int cols = 7;
+
+        if (size == RoomSize.Small)
         {
-            // 75% - (9, 9)
-            if (Random.value < 0.75)
+            if (Random.value < 0.5)
             {
                 rows = 7;
-                cols = 7;
+                cols = 5;
             }
             else
             {
-                if (Random.value < 0.5)
-                {
-                    rows = 7;
-                    cols = 12;
-                }
-                else
-                {
-                    rows = 12;
-                    cols = 7;
-                }
+                rows = 5;
+                cols = 7;
             }
-        }
-        else if (size == RoomSize.Big)
-        {
-            rows = 10;
-            cols = 10;
         }
 
         ushort indexTileType = (ushort)type;
@@ -489,13 +482,89 @@ public class RoomGenerator : MonoBehaviour
             }
         }
 
+        //보스방 표식
+        if (num == bossIndex)
+        {
+            currentTile = new Vector3Int((int)(rows * 0.5f), (int)(cols * 0.5f), 0);
+            DrawTile(room.GroundLayer, TileType.BossGround, TileDirect.Default, currentTile);
+        }
+
         // 방 크기에 맞추어 정 가운데로 정렬
         Vector3 tileMapSize = new Vector3(room.WallLayer.size.x, room.WallLayer.size.y, 0f);
         room.TileMapParent.transform.localPosition -= tileMapSize * room.WallLayer.cellSize.x * 0.5f;
         room.IsClear = Clear;
     }
 
-    private void GenerateDoors(DungeonRoom[] dungeonRooms, TileType type)
+    //보스로 향하는 포탈을 알려줌
+    private void NearBossRoomDraw()
+    {
+        int num = 0;
+        int i = 0, j;
+        int x = 0, y = 0;
+        Vector3Int currentpos1, currentpos2, roomsize;
+        //보스 방 근처를 탐색하여 연결된 방을 찾아냄
+        for (i = 0; i < 4; i++)
+        {
+            x = maxRoomCount - 1 + rooms[bossIndex].X + dx[i];
+            y = maxRoomCount - 1 + rooms[bossIndex].Y + dy[i];
+            if (roomlocal[x, y] != 0)
+            {
+                num = roomlocal[x, y] - 1;
+                break;
+            }
+        }
+
+        roomsize = dungeonRooms[num].WallLayer.size;
+        GameObject firetorchObject1 = Instantiate(Firetorch);
+        GameObject firetorchObject2 = Instantiate(Firetorch);
+        firetorchObject1.transform.parent = dungeonRooms[num].transform;
+        firetorchObject2.transform.parent = dungeonRooms[num].transform;
+
+        //보스방이 왼쪽일 경우
+        if (dx[i] > 0)
+        {
+            currentpos1 = new Vector3Int(0, (int)(roomsize.y * 0.5f) - 1);
+            currentpos2 = new Vector3Int(0, (int)(roomsize.y * 0.5f) + 1);
+            firetorchObject1.transform.rotation = Quaternion.Euler(0, 0, 270);
+            firetorchObject2.transform.rotation = Quaternion.Euler(0, 0, 270);
+        }
+        //오른쪽일 경우
+        else if (dx[i] < 0)
+        {
+            currentpos1 = new Vector3Int(roomsize.x - 1, (int)(roomsize.y * 0.5f) - 1);
+            currentpos2 = new Vector3Int(roomsize.x - 1, (int)(roomsize.y * 0.5f) + 1);
+            firetorchObject1.transform.rotation = Quaternion.Euler(0, 0, 90);
+            firetorchObject2.transform.rotation = Quaternion.Euler(0, 0, 90);
+        }
+        //아래일 경우
+        else if (dy[i] > 0)
+        {
+            currentpos1 = new Vector3Int((int)(roomsize.x * 0.5f) - 1, 0);
+            currentpos2 = new Vector3Int((int)(roomsize.x * 0.5f) + 1, 0);
+        }
+        //위일 경우
+        else
+        {
+            currentpos1 = new Vector3Int((int)(roomsize.x * 0.5f) - 1, roomsize.y - 1);
+            currentpos2 = new Vector3Int((int)(roomsize.x * 0.5f) + 1, roomsize.y - 1);
+            firetorchObject1.transform.rotation = Quaternion.Euler(0, 0, 180);
+            firetorchObject2.transform.rotation = Quaternion.Euler(0, 0, 180);
+        }
+
+        firetorchObject1.transform.localPosition = new Vector3(
+        roomsize.x * -0.5f + currentpos1.x + 0.5f,
+        roomsize.y * -0.5f + currentpos1.y + 0.5f,
+        0f
+        );
+
+        firetorchObject2.transform.localPosition = new Vector3(
+        roomsize.x * -0.5f + currentpos2.x + 0.5f,
+        roomsize.y * -0.5f + currentpos2.y + 0.5f,
+        0f
+        );
+    }
+
+    private void GenerateDoors(TileType type)
     {
         for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++)
         {
@@ -508,16 +577,16 @@ public class RoomGenerator : MonoBehaviour
                 switch ((ushort)direct)
                 {
                     case 0:
-                        centerDoorPos = new Vector3Int((int)(roomSize.x / 2), roomSize.y - 1);
+                        centerDoorPos = new Vector3Int((int)(roomSize.x * 0.5f), roomSize.y - 1);
                         break;
                     case 2:
-                        centerDoorPos = new Vector3Int((int)(roomSize.x / 2), 0);
+                        centerDoorPos = new Vector3Int((int)(roomSize.x * 0.5f), 0);
                         break;
                     case 1:
-                        centerDoorPos = new Vector3Int(roomSize.x - 1, (int)(roomSize.y / 2));
+                        centerDoorPos = new Vector3Int(roomSize.x - 1, (int)(roomSize.y * 0.5f));
                         break;
                     case 3:
-                        centerDoorPos = new Vector3Int(0, (int)(roomSize.y / 2));
+                        centerDoorPos = new Vector3Int(0, (int)(roomSize.y * 0.5f));
                         break;
                     default:
                         centerDoorPos = Vector3Int.zero;
@@ -567,21 +636,27 @@ public class RoomGenerator : MonoBehaviour
         }
     }
 
-    private void GenerateObject(DungeonRoom[] rooms)
+    private void GenerateObject()
     {
-        foreach (DungeonRoom room in rooms)
+        int boxCount = 0;
+        foreach (DungeonRoom room in dungeonRooms)
         {
             float x = room.GroundLayer.size.x - 1;
             float y = room.GroundLayer.size.y - 1;
 
             for (int i = 0; i < 4; i++)
             {
-                if (Random.value > 0.5)
+                if (Random.value > 0.3)
                 {
                     continue;
                 }
 
-                int boxCount = Random.Range(1, 4);
+                if (x > 4 && y > 4)
+                    boxCount = Random.Range(1, 4);
+
+                else
+                    boxCount = 1;
+
                 GameObject boxes = Instantiate(boxesPref);
                 boxes.transform.SetParent(room.ObjectParent.transform);
                 boxes.GetComponent<Boxes>().Set(boxCount, (RoomDirect)i);
@@ -682,6 +757,10 @@ public class RoomGenerator : MonoBehaviour
             case 28:
                 // All doors
                 tile = allDoors[(ushort)type % 21];
+                break;
+                //BossTile
+            case 29:
+                tile = RoomGenerator.SelectRandomTile(BossGrounds);
                 break;
         }
 

@@ -46,6 +46,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd95bd0dc0e45a149ae6f0ebb2a445cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  connetecPortal: {fileID: 0}
+  _isActivated: 0
+  _outDirect: 0
+  _connectedRoomId: 0
+  offset: {x: 0, y: 0, z: 0}
+  entered: 1
 --- !u!61 &-6712518740789689625
 BoxCollider2D:
   m_ObjectHideFlags: 0
