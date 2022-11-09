@@ -12,7 +12,7 @@ public class DungeonSystem : MonoBehaviour
 
     [SerializeField]
     private RoomGenerator generator;
-    [SerializeField]
+    
     private int tempRoomCount;
 
     public GameObject DroppedItems;        // 떨어진 아이템 parent
@@ -30,7 +30,7 @@ public class DungeonSystem : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-        tempRoomCount = 13;
+        tempRoomCount = 7;
     }
 
     //테스트용 코드
@@ -60,7 +60,7 @@ public class DungeonSystem : MonoBehaviour
         };
 
         // 맵 생성
-        generator.Generate(tempRoomCount + 2 * Floor, tileSeqence[(Floor - 1) % 4]);
+        generator.Generate(tempRoomCount + 3 * Floor, tileSeqence[(Floor - 1) % 4]);
         CreateMonsterSpawner();   // 몬스터스포너 생성
         CreateShop();       // 상점 생성
         DroppedItems = new GameObject() { name = "DroppedItems" };
