@@ -64,7 +64,7 @@ public class ChainExplosion : BaseSkill
             SkillManager.Instance.onGoingSkillInfo.Clear(); // 스킬 정보 초기화
             yield break;
         }
-        Vector2 newpos = gameObject.transform.position + new Vector3(gameObject.transform.localScale.x /2 * direction.x, gameObject.transform.localScale.y /2* direction.y, 0);
+        Vector3 newpos = gameObject.transform.position + new Vector3(gameObject.transform.localScale.x /2 * direction.x, gameObject.transform.localScale.y /2* direction.y, 0);
         Instantiate(Resources.Load("Prefabs/Skill/ChainExplosion"), newpos, Quaternion.identity); // 새 이펙트 생성
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
