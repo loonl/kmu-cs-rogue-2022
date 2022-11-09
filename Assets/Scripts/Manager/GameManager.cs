@@ -177,7 +177,7 @@ public class GameManager : MonoBehaviour
 
         else
         {
-            wfs.Add(time, new WaitForSeconds((float)(time * 0.01)));
+            wfs.Add(time, new WaitForSeconds(time * 0.01f));
             return wfs[time];
         }
     }
