@@ -554,13 +554,13 @@ public class RoomGenerator : MonoBehaviour
         firetorchObject1.transform.localPosition = new Vector3(
         roomsize.x * -0.5f + currentpos1.x + 0.5f,
         roomsize.y * -0.5f + currentpos1.y + 0.5f,
-        0f
+        -1f
         );
 
         firetorchObject2.transform.localPosition = new Vector3(
         roomsize.x * -0.5f + currentpos2.x + 0.5f,
         roomsize.y * -0.5f + currentpos2.y + 0.5f,
-        0f
+        -1f
         );
     }
 
