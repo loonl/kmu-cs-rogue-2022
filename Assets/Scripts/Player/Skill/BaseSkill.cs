@@ -18,6 +18,11 @@ public abstract class BaseSkill : MonoBehaviour
         init();
         SetPosition();
         ExecuteSkill();
+        List<Monster> roommonsters = SkillManager.Instance.getMonstersInRoom(DungeonSystem.Instance.Currentroom);
+        foreach (Monster m in roommonsters)
+        {
+            Debug.Log(m.id);
+        }
     }
 
     protected virtual void init() // 변수 초기값 설정

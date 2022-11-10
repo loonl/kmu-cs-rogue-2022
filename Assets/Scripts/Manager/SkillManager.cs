@@ -15,7 +15,6 @@ public class SkillManager : MonoBehaviour
     public static SkillManager Instance { get { return _instance; } }
 
     public Dictionary<SkillInfo, object> onGoingSkillInfo = new Dictionary<SkillInfo, object>();
-
     private void Awake()
     {
         if (_instance == null)
@@ -38,4 +37,10 @@ public class SkillManager : MonoBehaviour
         GameObject skill = Instantiate(Resources.Load($"Prefabs/Skill/{skillname}")) as GameObject;
     }
 
+    public List<Monster> getMonstersInRoom(int roomindex)
+    {
+        List<Monster> monsters;
+        monsters = DungeonSystem.Instance.monsterSpawners[roomindex].monsters;
+        return monsters;
+    }
 }
