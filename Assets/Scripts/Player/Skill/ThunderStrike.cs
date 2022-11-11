@@ -7,7 +7,6 @@ using UnityEngine;
 public class ThunderStrike : BaseSkill
 {
     bool firstgenerated = false; // 처음 생성된 이펙트?
-    [SerializeField] float NextExplosionGenerateTimeF = 0.15f; // 다음 폭발 생성 딜레이, 이펙트 애니메이션 길이보다 짧아야함!
 
     protected override void Start()
     {
@@ -20,27 +19,42 @@ public class ThunderStrike : BaseSkill
         if (SkillManager.Instance.onGoingSkillInfo.Count == 0)
         {
             SkillManager.Instance.onGoingSkillInfo.Add(SkillManager.SkillInfo.Name, "ThunderStrike");
-            ExecuteSkill();
-            return;
+            firstgenerated = true;
         }
-        SetPosition();
+        ExecuteSkill();
     }
 
-    protected override void SetPosition()
-    {   
-        
+    private void GenerateEffects()
+    {
+        List<Monster> targets =
+            SkillManager.Instance.SortMonstersByDistance(SkillManager.Instance.GetMonstersInRoom(DungeonSystem.Instance.Currentroom));
+
+
+        for (int i = 0; i < targets.Count && i < 4; i++, Debug.Log($"{i},{targets.Count}, {i<targets.Count}"))
+        {
+            Debug.Log(i+1);
+            GameObject realEffect = Instantiate(Resources.Load($"Prefabs/Skill/{weapon.skillName}")) as GameObject;
+            realEffect.transform.position = new Vector3(targets[i].gameObject.transform.position.x, targets[i].gameObject.transform.position.y, -0.5f);
+            targets[i].OnDamage(weapon.stat.skillDamage, knockbackPower, invulnerabletime: colliderValidTime);
+        }
     }
 
     protected override IEnumerator SkillAction()
-    {   
-        yield return new WaitForSeconds(0.2f);
-        
+    {
+        if (firstgenerated)
+        {
+            yield return GameManager.Instance.Setwfs(20);
+            GenerateEffects();
+            yield return GameManager.Instance.Setwfs(100);
+            SkillManager.Instance.onGoingSkillInfo.Clear();
+            Destroy(gameObject);
+            yield break;
+        }
         animator.SetTrigger(weapon.skillName);
-        
-        collid.enabled = true;
-        yield return colliderValidTime;
-        collid.enabled = false;
-        monsters.Clear();
     }
 
+    protected override void SetPosition()
+    {
+
+    }
 }

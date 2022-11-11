@@ -275,8 +275,12 @@ public class Monster : MonoBehaviour
     }
 
     // 피격 시 실행
-    public void OnDamage(float damage, float _knockBackForce, Vector2 _knockBackDirection, WaitForSeconds invulnerabletime = null)
-    {
+    public void OnDamage(float damage, float _knockBackForce, Vector2 _knockBackDirection = default(Vector2), WaitForSeconds invulnerabletime = null)
+    {   
+        if(_knockBackForce != 0 && _knockBackDirection == default(Vector2))
+        {
+            _knockBackDirection = (gameObject.transform.position - player.transform.position).normalized;
+        }
         stat.OnDamage(damage);
 
         

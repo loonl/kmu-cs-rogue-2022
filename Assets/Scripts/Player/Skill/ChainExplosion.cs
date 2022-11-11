@@ -44,9 +44,9 @@ public class ChainExplosion : BaseSkill
     }
 
     protected override IEnumerator SkillAction()
-    {   
-        if(firstgenerated) yield return new WaitForSeconds(0.2f);
-        
+    {
+        if (firstgenerated) yield return GameManager.Instance.Setwfs(20);
+
         animator.SetTrigger(weapon.skillName);
         
         collid.enabled = true;
