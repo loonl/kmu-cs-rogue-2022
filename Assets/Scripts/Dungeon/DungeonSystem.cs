@@ -18,6 +18,7 @@ public class DungeonSystem : MonoBehaviour
     public GameObject DroppedItems;        // 떨어진 아이템 parent
 
     public List<DungeonRoom> Rooms { get { return generator.Rooms; } }
+    public Dictionary<int, MonsterSpawner> monsterSpawners = new Dictionary<int, MonsterSpawner>(); // key: 방 번호, MonsterSpawner: 해당 방의 MonsterSpawner
     public int Currentroom;
 
     private void Awake()
@@ -72,6 +73,8 @@ public class DungeonSystem : MonoBehaviour
         generator.Clear();
         // 아이템 삭제
         Destroy(DroppedItems.gameObject);
+        // 딕셔너리 초기화
+        monsterSpawners.Clear();
         DroppedItems = null;
     }
 
@@ -115,6 +118,7 @@ public class DungeonSystem : MonoBehaviour
             GameObject goSpawner = GameManager.Instance.CreateGO(MonsterSpawnerPath, generator.Rooms[roomIndex].transform);
             MonsterSpawner spawner = goSpawner.GetComponent<MonsterSpawner>();
             generator.Rooms[roomIndex].SetSpawner(spawner, roomIndex, monsterData);
+            monsterSpawners.Add(roomIndex, spawner); // (해당 방 번호, 몬스터 스포너)
         }
     }
 
