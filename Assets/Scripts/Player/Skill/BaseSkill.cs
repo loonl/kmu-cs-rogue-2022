@@ -23,6 +23,7 @@ public abstract class BaseSkill : MonoBehaviour
     protected virtual void init() // 변수 초기값 설정
     {
         player = GameObject.Find("Player").GetComponent<Player>();
+        gameObject.GetComponent<SpriteRenderer>().sortingLayerName = "Effect";
         weapon = player.equipment[0];
         animator = GetComponent<Animator>();
         //if (animator != null) SetTimer(); // 파티클시스템으로 이펙트 구현 시 애니메이터가 없을 수도 있음.

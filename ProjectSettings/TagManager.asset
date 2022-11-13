@@ -46,3 +46,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Creature
+    uniqueID: 343537363
+    locked: 0
+  - name: Door
+    uniqueID: 3586885429
+    locked: 0
+  - name: MapObject
+    uniqueID: 2989844863
+    locked: 0
+  - name: Effect
+    uniqueID: 2990603621
+    locked: 0
+  - name: UI
+    uniqueID: 3149951459
+    locked: 0
