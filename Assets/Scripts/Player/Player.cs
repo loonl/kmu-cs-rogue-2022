@@ -62,7 +62,8 @@ public class Player : MonoBehaviour {
                                      ItemManager.Instance.GetItem(15), // pants
                                      ItemManager.Instance.GetItem(1)  // shield
                                     };
-        playerAttack.SetUpEffect(equipment[0].effectName); // 첫 공격 effect
+        
+        wpnColl.SetUpEffect(equipment[0].effectName); // 첫 공격 effect
         
         List<Stat> temp = new List<Stat>();
         for (int i = 0; i < equipment.Count; i++)
@@ -150,20 +151,22 @@ public class Player : MonoBehaviour {
         // get move-related input
         Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0).normalized;
         
-        if (curState == PlayerState.Normal || curState == PlayerState.Invincible)
+        if (curState == PlayerState.Normal || curState == PlayerState.Invincible || curState == PlayerState.Attacking)
         {
-            // FLIP character depending on heading direction
-            if (moveInput.x > 0 && transform.localScale.x > 0)
+            if (curState != PlayerState.Attacking)
             {
-                transform.localScale =
-                    new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+                // FLIP character depending on heading direction
+                if (moveInput.x > 0 && transform.localScale.x > 0)
+                {
+                    transform.localScale =
+                        new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+                }
+                else if (moveInput.x < 0 && transform.localScale.x < 0)
+                {
+                    transform.localScale =
+                        new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+                }
             }
-            else if (moveInput.x < 0 && transform.localScale.x < 0)
-            {
-                transform.localScale =
-                    new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-            }
-
             // change character's position
             rig.velocity = moveInput * stat.speed;
 
@@ -187,11 +190,11 @@ public class Player : MonoBehaviour {
             // update current state to attacking
             curState = PlayerState.Attacking;
 
-            // cannot move - freeze
-            rig.velocity = Vector2.zero;
-            
+            //// cannot move - freeze
+            //rig.velocity = Vector2.zero;
+
             // play effect
-            playerAttack.Attack(equipment[0].effectName);
+            wpnColl.Attack(equipment[0].effectName);
             
             // TODO - play sound => 이상하면 고쳐야 함
             // string 검색 코스트가 굉장히 비싸서 앞글자만 따서 검색하는 형식으로 코딩
@@ -209,9 +212,6 @@ public class Player : MonoBehaviour {
                     SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Fire);
                     break;
             }
-
-            // enable weapon collider
-            wpnColl.poly.enabled = true;
         }
         
         // test debugging skill cool-time
@@ -232,8 +232,8 @@ public class Player : MonoBehaviour {
             // update current state to attacking
             curState = PlayerState.Attacking;
             
-            // cannot move - freeze
-            rig.velocity = Vector2.zero;
+            //// cannot move - freeze
+            //rig.velocity = Vector2.zero;
 
             // 스킬 관련 구현
 
@@ -345,7 +345,7 @@ public class Player : MonoBehaviour {
                 
                 equipment[4] = ItemManager.Instance.GetItem(1);
             }
-            playerAttack.SetUpEffect(item: item);// effect setting
+            wpnColl.SetUpEffect(item: item);
         }
 
         // 활 / 스태프 -> 방패 장착 시 활 / 스태프 자동 장착 해제

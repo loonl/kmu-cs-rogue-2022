@@ -12,7 +12,6 @@ public class GameManager : MonoBehaviour
     public Player Player { get; private set; }
 
     Dictionary<int, WaitForSeconds> wfs = new Dictionary<int, WaitForSeconds>();
-    WaitForSeconds second;
 
     public StageUIManager stageUIManager;
 
@@ -49,7 +48,7 @@ public class GameManager : MonoBehaviour
         return go;
     }
 
-    public List<Item> GetRandomItemList(int floor, float N = 0f, float R = 0f, float SR = 0f, float SSR = 0f)
+    public List<Item> GetRandomItemList(int Level = 0, float N = 0f, float R = 0f, float SR = 0f, float SSR = 0f)
     {
         List<Item> itemList = new List<Item>();
         List<int> indexList = new List<int>();
@@ -61,9 +60,9 @@ public class GameManager : MonoBehaviour
             SR += R;
             SSR += SR;
         }
-        else // floor만 지정해줬다면 사전 설정한 값에 의해 설정
+        else // Level만 지정해줬다면 사전 설정한 값에 의해 설정
         {
-            switch (floor)
+            switch (DungeonSystem.Instance.Floor)
             {
                 case 1:
                     N = 0.7f;
@@ -77,10 +76,10 @@ public class GameManager : MonoBehaviour
                     SR = R + 0.2f;
                     SSR = SR + 0.05f;
                     break;
-                case 3:
-                    N = 0.0f;
-                    R = N + 0.5f;
-                    SR = R + 0.4f;
+                default:
+                    N = 0.3f;
+                    R = N + 0.25f;
+                    SR = R + 0.35f;
                     SSR = SR + 0.1f;
                     break;
             }
@@ -177,7 +176,7 @@ public class GameManager : MonoBehaviour
 
         else
         {
-            wfs.Add(time, new WaitForSeconds((float)(time * 0.01)));
+            wfs.Add(time, new WaitForSeconds(time * 0.01f));
             return wfs[time];
         }
     }
