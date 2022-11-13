@@ -96,14 +96,14 @@ public class RoomGenerator : MonoBehaviour
     private List<Tile> vineMossEdges;
     [SerializeField]
     private List<Tile> BossGrounds;
+
+    [Header("Object")]
     [SerializeField]
     private GameObject emptyRoomPref;
     [SerializeField]
     private GameObject portalPref;
     [SerializeField]
     private GameObject Firetorch;
-
-    [Header ("Object")]
     [SerializeField]
     private GameObject boxesPref;
 
@@ -501,6 +501,7 @@ public class RoomGenerator : MonoBehaviour
         int num = 0;
         int i = 0, j;
         int x = 0, y = 0;
+        bool Isx = false;
         Vector3Int currentpos1, currentpos2, roomsize;
         //보스 방 근처를 탐색하여 연결된 방을 찾아냄
         for (i = 0; i < 4; i++)
@@ -541,6 +542,7 @@ public class RoomGenerator : MonoBehaviour
         {
             currentpos1 = new Vector3Int((int)(roomsize.x * 0.5f) - 1, 0);
             currentpos2 = new Vector3Int((int)(roomsize.x * 0.5f) + 1, 0);
+            Isx = true;
         }
         //위일 경우
         else
@@ -549,17 +551,28 @@ public class RoomGenerator : MonoBehaviour
             currentpos2 = new Vector3Int((int)(roomsize.x * 0.5f) + 1, roomsize.y - 1);
             firetorchObject1.transform.rotation = Quaternion.Euler(0, 0, 180);
             firetorchObject2.transform.rotation = Quaternion.Euler(0, 0, 180);
+            Isx = true;
         }
 
-        firetorchObject1.transform.localPosition = new Vector3(
-        roomsize.x * -0.5f + currentpos1.x + 0.5f,
+        firetorchObject1.transform.localPosition = Isx ? new Vector3(
+        roomsize.x * -0.5f + currentpos1.x + 0.5f + 0.5f,
         roomsize.y * -0.5f + currentpos1.y + 0.5f,
+        0f
+        ) : 
+        new Vector3(
+        roomsize.x * -0.5f + currentpos1.x + 0.5f,
+        roomsize.y * -0.5f + currentpos1.y + 0.5f + 0.5f,
         0f
         );
 
-        firetorchObject2.transform.localPosition = new Vector3(
-        roomsize.x * -0.5f + currentpos2.x + 0.5f,
+        firetorchObject2.transform.localPosition = Isx ? new Vector3(
+        roomsize.x * -0.5f + currentpos2.x + 0.5f - 0.5f,
         roomsize.y * -0.5f + currentpos2.y + 0.5f,
+        0f
+        ) :
+        new Vector3(
+        roomsize.x * -0.5f + currentpos2.x + 0.5f,
+        roomsize.y * -0.5f + currentpos2.y + 0.5f - 0.5f,
         0f
         );
     }

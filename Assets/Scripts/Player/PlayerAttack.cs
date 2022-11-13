@@ -19,73 +19,6 @@ public class PlayerAttack : MonoBehaviour
         effectTransform = transform.GetChild(0).GetChild(2).GetComponent<Transform>();
     }
 
-    public void Attack(string effectname)
-    {
-        effectanim.SetTrigger(effectname);
-    }
-
-    // 무기 별 effect의 크기, flip 등 설정
-    public void SetUpEffect(string effectname = "NormalSlash2", Item item = null, float range = 1f)
-    {   
-        if (item != null) {
-            effectname = item.effectName;
-            range = item.stat.range;
-            player.wpnColl.SetAttackRange(range); // 범위 설정
-        } 
-        switch (effectname)
-        {
-            case "NormalSlash":
-                effectTransform.localScale = new Vector2(range * 2.5f, range * 2.5f); 
-                effectTransform.eulerAngles = new Vector3(0, 0, 64f); // rotation
-                effectTransform.localPosition = new Vector3(range * 0.08f, range * 0.8f, 0);
-                break;
-            case "NormalSlash2":
-                effectTransform.localScale = new Vector2(range * 1.5f, range * 3f); 
-                effectTransform.eulerAngles = new Vector3(0, 0, 0); // rotation
-                effectTransform.localPosition = new Vector3(0.2f, -0.2f, 0);
-                break;
-            case "NormalSlash3":
-                effectTransform.localScale = new Vector2(range * 1.5f, -range * 2.5f);
-                effectTransform.eulerAngles = new Vector3(0, 0, 0); // rotation
-                effectTransform.localPosition = new Vector3(0.04f, -0.09f, 0);
-                break;
-            case "FireSlash":
-            case "ElectricSlash":
-                effectTransform.localScale = new Vector2(range * 1.5f, -range * 2.5f);
-                effectTransform.eulerAngles = new Vector3(0, 0, 0); // rotation
-                effectTransform.localPosition = new Vector3(0.08f, -0.09f, 0);
-                break;
-            case "ElectricSlash2":
-            case "FireSlash2":
-                effectTransform.localScale = new Vector2(range * 2f, range * 2.5f);
-                effectTransform.eulerAngles = new Vector3(0, 0, 30); // rotation
-                effectTransform.localPosition = new Vector3(0.08f, 0.28f, 0);
-                break;
-            case "FireSlash3":
-            case "ElectricSlash3":
-                effectTransform.localScale = new Vector2(range * 1.5f, range * 3.2f);
-                effectTransform.eulerAngles = new Vector3(0, 0, 0); // rotation
-                effectTransform.localPosition = new Vector3(0, -0.2f, 0);
-                break;
-            case "ElectricClaw":
-            case "NormalClaw":
-            case "FireClaw":
-                effectTransform.localScale = new Vector2(range * 1.5f, range * 2f);
-                effectTransform.eulerAngles = new Vector3(0, 0, 0); // rotation
-                effectTransform.localPosition = new Vector3(-0.21f, 0.07f, 0);
-                break;
-            default:
-                effectTransform.localScale = new Vector2(range * 1.5f, range * 3);
-                effectTransform.eulerAngles = new Vector3(0, 0, 0);
-                effectTransform.position = player.transform.position;
-                break;
-        }
-        if (player.transform.localScale.x < 0)
-        {
-            effectTransform.eulerAngles = new Vector3(0, 0, -effectTransform.eulerAngles.z); // 플레이어가 오른쪽 보고있으면 의도한대로 rotation이 저장이 안되서 수정해주는 코드
-        }
-    }
-
     // !! 편한 테스트를 위한 코드 !!
     private void Update()
     {
@@ -95,7 +28,7 @@ public class PlayerAttack : MonoBehaviour
                 meleeWeaponIdx = meleeWeaponID.Count - 1;
             else meleeWeaponIdx -= 1;
             Item it = ItemManager.Instance.GetItem(meleeWeaponID[meleeWeaponIdx]);
-            Debug.Log($"{it.name}, id {it.id}");
+            Debug.Log($"{it.name}, id {it.id}, skillname {it.skillName}");
             player.Equip(it);
         }
         if (Input.GetKeyDown(KeyCode.RightBracket)) //']' 키
@@ -104,7 +37,7 @@ public class PlayerAttack : MonoBehaviour
                 meleeWeaponIdx = 0;
             else meleeWeaponIdx += 1;
             Item it = ItemManager.Instance.GetItem(meleeWeaponID[meleeWeaponIdx]);
-            Debug.Log($"{it.name}, id {it.id}");
+            Debug.Log($"{it.name}, id {it.id}, skillname {it.skillName}");
             player.Equip(it);
         }
     }

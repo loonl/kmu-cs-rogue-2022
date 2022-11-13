@@ -104,7 +104,7 @@ public class SoundManager : MonoBehaviour
             if(_Doorclips == null)
                 DoorClip();
 
-            totalvolume = bgmvolume = effectvolume = 50;
+            totalvolume = bgmvolume = effectvolume = 0;
         }
     }
 

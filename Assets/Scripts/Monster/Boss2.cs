@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Boss2 : Monster
 {
-    protected float timeBetSkill = 5f; // ½ºÅ³ ´ë±â½Ã°£
-    protected float lastSkillTime; // ½ºÅ³ ½ÃÀÛ½Ã°£
+    protected float timeBetSkill = 5f; // ìŠ¤í‚¬ ëŒ€ê¸°ì‹œê°„
+    protected float lastSkillTime; // ìŠ¤í‚¬ ì‹œìž‘ì‹œê°„
 
     protected override IEnumerator Wandering()
     {
@@ -24,7 +24,7 @@ public class Boss2 : Monster
         rigidbody2d.velocity = Vector2.zero;
     }
 
-    // ½ºÅ³»ç¿ë ½Ã ½ÇÇà
+    // ìŠ¤í‚¬ì‚¬ìš© ì‹œ ì‹¤í–‰
     protected void Skill()
     {
         MonsterSpawner spawner = transform.GetComponentInParent<MonsterSpawner>();

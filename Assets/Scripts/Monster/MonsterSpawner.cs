@@ -6,7 +6,7 @@ public class MonsterSpawner : MonoBehaviour
     private List<Dictionary<string, object>> monsterData; // 몬스터 데이터
     public List<Monster> SetupMonsters = new List<Monster>(); // 생성할 몬스터들
     public List<Monster> monsters = new List<Monster>(); // 생존한 몬스터들
-    public List<Monster> deadMonsters = new List<Monster>(); // 생존한 몬스터들
+    public List<Monster> deadMonsters = new List<Monster>(); // 죽은 몬스터들
 
     private int roomIndex; // 방 번호
     private Vector3 roomPosition; // 방 위치
@@ -32,8 +32,8 @@ public class MonsterSpawner : MonoBehaviour
             monster.monsterData = monsterData;
             monster.transform.SetParent(gameObject.transform);
             Vector3 diff = new Vector3(
-                Random.Range(- 0.8f * horizontalRange, 0.8f * horizontalRange),
-                Random.Range(-0.8f * verticalRange, 0.8f * verticalRange),
+                Random.Range(- 0.5f * horizontalRange, 0.5f * horizontalRange),
+                Random.Range(-0.5f * verticalRange, 0.5f * verticalRange),
                 0f
             );
             monster.transform.position = roomPosition + diff;
