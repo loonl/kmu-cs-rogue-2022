@@ -133,7 +133,13 @@ MonoBehaviour:
   vineMossEdges:
   - {fileID: 11400000, guid: a9a0a739044711248bc6931fb6839740, type: 2}
   - {fileID: 11400000, guid: 4ff53b1e6a0952744b9b5ba62a3a0155, type: 2}
+  BossGrounds:
+  - {fileID: 11400000, guid: 4b554dd8c04c35a45a638c9872896ffe, type: 2}
   emptyRoomPref: {fileID: 8579086445747670869, guid: 2d927c9dbd312984dae337ebadc35a9d, type: 3}
+  portalPref: {fileID: 4879275266409792026, guid: 602b8d9b309a61d49b13ccb5706507cf, type: 3}
+  Firetorch: {fileID: 6673026343859464302, guid: 2714d401f6e4a3e45bd01dbc372b8b4f, type: 3}
+  boxesPref: {fileID: 4213907741763695782, guid: e64da0e635fb11a46847f73a86fc2c72, type: 3}
+  distance: 
 --- !u!1 &7798428690168941553
 GameObject:
   m_ObjectHideFlags: 0
@@ -181,7 +187,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generator: {fileID: 7798428689776333278}
-  tempRoomCount: 15
+  DroppedItems: {fileID: 0}
+  Currentroom: 0
 --- !u!114 &7798428690168941556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,4 +201,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f88bb5ec0a27b894794405370ce6e150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dungeonSystem: {fileID: 7798428690168941558}
+  fadeimg: {fileID: 0}

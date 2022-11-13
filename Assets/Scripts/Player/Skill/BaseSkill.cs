@@ -23,6 +23,7 @@ public abstract class BaseSkill : MonoBehaviour
     protected virtual void init() // 변수 초기값 설정
     {
         player = GameObject.Find("Player").GetComponent<Player>();
+        gameObject.GetComponent<SpriteRenderer>().sortingLayerName = "Effect";
         weapon = player.equipment[0];
         animator = GetComponent<Animator>();
         colliderValidTime = GameManager.Instance.Setwfs((int)(100 * colliderValidTimeF));

@@ -32,8 +32,8 @@ public class MonsterSpawner : MonoBehaviour
             monster.monsterData = monsterData;
             monster.transform.SetParent(gameObject.transform);
             Vector3 diff = new Vector3(
-                Random.Range(- 0.8f * horizontalRange, 0.8f * horizontalRange),
-                Random.Range(-0.8f * verticalRange, 0.8f * verticalRange),
+                Random.Range(- 0.5f * horizontalRange, 0.5f * horizontalRange),
+                Random.Range(-0.5f * verticalRange, 0.5f * verticalRange),
                 0f
             );
             monster.transform.position = roomPosition + diff;
