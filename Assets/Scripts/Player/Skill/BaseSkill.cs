@@ -77,7 +77,7 @@ public abstract class BaseSkill : MonoBehaviour
         if (monsters.Contains(collision)) // monsters 리스트에 없다면 이는 몬스터가 아님.
         {
             Monster target = collision.gameObject.GetComponent<Monster>();
-            if(!target.isInvulnerable) target.OnDamage(weapon.stat.skillDamage, knockbackPower, invulnerabletime:colliderValidTime);
+            if(!target.isInvulnerable) target.OnDamage(weapon.stat.skillDamage, knockbackPower, invulnerabletime:colliderValidTime); // 대미지 주기
         }
         if (collision.gameObject.CompareTag("MapObject"))
         {

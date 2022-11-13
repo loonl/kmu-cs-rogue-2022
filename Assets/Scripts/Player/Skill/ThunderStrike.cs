@@ -29,14 +29,20 @@ public class ThunderStrike : BaseSkill
         List<Monster> targets =
             SkillManager.Instance.SortMonstersByDistance(SkillManager.Instance.GetMonstersInRoom(DungeonSystem.Instance.Currentroom));
 
-
-        for (int i = 0; i < targets.Count && i < 4; i++, Debug.Log($"{i},{targets.Count}, {i<targets.Count}"))
+        List<Monster> temp = new List<Monster>();
+        int count = Mathf.Min(targets.Count, 3);
+        for (int i = 0; i<count; i++)
         {
             Debug.Log(i+1);
             GameObject realEffect = Instantiate(Resources.Load($"Prefabs/Skill/{weapon.skillName}")) as GameObject;
             realEffect.transform.position = new Vector3(targets[i].gameObject.transform.position.x, targets[i].gameObject.transform.position.y, -0.5f);
-            targets[i].OnDamage(weapon.stat.skillDamage, knockbackPower, invulnerabletime: colliderValidTime);
+           
         }
+        for(int i = temp.Count - 1; i >= 0; i--) // targets는 얕은복사가 되어있기 때문에 위의 for문 내에서 몬스터에게 대미지를 주어 죽는다면 리스트의 크기가 달라짐 - 버그 발생. 따라서 대미지는 나중에 줌..
+        {
+            temp[i].OnDamage(weapon.stat.skillDamage, knockbackPower, invulnerabletime: colliderValidTime);
+        }
+        
     }
 
     protected override IEnumerator SkillAction()
