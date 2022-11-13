@@ -36,7 +36,7 @@ public class Portal : MonoBehaviour
 
             if (direct == 0)
             {
-                offset = new Vector3(0, -1f, 0);
+                offset = new Vector3(0, -1.1f, 0);
             }
             else if (direct == 1)
             {
@@ -44,7 +44,7 @@ public class Portal : MonoBehaviour
             }
             else if (direct == 2)
             {
-                offset = new Vector3(0, .75f, 0);
+                offset = new Vector3(0, .6f, 0);
             }
             else
             {

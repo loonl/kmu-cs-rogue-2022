@@ -58,7 +58,6 @@ public class DungeonSystem : MonoBehaviour
             TileType.VineGround,
             TileType.VineMossGround
         };
-
         // 맵 생성
         generator.Generate(tempRoomCount + 3 * Floor, tileSeqence[(Floor - 1) % 4]);
         CreateMonsterSpawner();   // 몬스터스포너 생성
