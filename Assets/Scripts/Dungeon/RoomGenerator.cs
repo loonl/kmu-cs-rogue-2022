@@ -659,7 +659,7 @@ public class RoomGenerator : MonoBehaviour
 
             for (int i = 0; i < 4; i++)
             {
-                if (Random.value > 0.3)
+                if (Random.value > 0.4)
                 {
                     continue;
                 }
