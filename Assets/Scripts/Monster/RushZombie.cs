@@ -6,8 +6,8 @@ public class RushZombie : Monster
     CircleCollider2D circleCollider2D;
 
     bool rushing = false; // 돌진 중 여부
-    protected float rushCoolTime = 5f; // 돌진 쿨타임
-    protected float lastRushTime = -4f; // 마지막 돌진 시점
+    protected float rushCoolTime = 2f; // 돌진 쿨타임
+    protected float lastRushTime = 0f; // 마지막 돌진 시점
     protected float timeForRushReady = 1f; // 돌진 준비시간
 
     protected override void Awake()
@@ -29,19 +29,19 @@ public class RushZombie : Monster
         Init();
     }
 
-    // 스킬 수행
-    protected override IEnumerator SkillCasting2()
+    // 스킬1 수행
+    protected override IEnumerator SkillCasting1()
     {
         bool rushing = true;
         bool rushReady = true;
 
-        while (Action == ActionList.SkillCasting2 && rushing)
+        while (Action == ActionList.SkillCasting1 && rushing)
         {
             if (Time.time < lastRushTime + timeForRushReady) // 대기
             {
                 rigidbody2d.velocity = Vector2.zero;
             }
-            else if (rushReady == true) // 돌진
+            else if (rushReady) // 돌진
             {
                 SoundPlay(Sound[0]);
                 rigidbody2d.AddForce(direction * 300f);
@@ -69,7 +69,7 @@ public class RushZombie : Monster
             if (player == attackTarget)
             {
                 lastRushTime = Time.time;
-                Action = ActionList.SkillCasting2;
+                Action = ActionList.SkillCasting1;
             }
         }
     }
