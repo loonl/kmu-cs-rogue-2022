@@ -1,13 +1,8 @@
 id,name,type,rarity,dmg,range,skilldmg,cooltime,hp,knockbackforce,speed,effectName,skillName,path
 0,none,1,N,0,1,0,0,0,0,0,NormalSlash,,
-1,none,7,N,0,0,0,0,0,0,0,NormalSlash,,
-<<<<<<< HEAD
-2,sword1,1,N,20,0.8,25,2,0,0.1,0,NormalSlash2,,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_1.png
-3,sword2,1,N,19,1,18,1.5,0,0.1,0,NormalSlash2,,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_2.png
-=======
+1,none,7,N,7,0,0,0,0,0,0,NormalSlash,,
 2,sword1,1,N,20,0.8,25,2,0,0.1,0,NormalSlash2,FireSlash,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_1.png
 3,sword2,1,N,19,1,18,1.5,0,0.1,0,NormalSlash2,BigNormalSlash,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_2.png
->>>>>>> dev
 4,sword6,1,N,17,1.05,35,3,0,0.1,0,NormalSlash2,ExplosiveAttack,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_6.png
 5,sword8,1,N,16,1.1,14,1.5,0,0.1,0,NormalSlash2,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_05.png
 6,bow1,2,N,5,2,20,10,0,1,0,,,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Bow_1.png
@@ -26,17 +21,10 @@ id,name,type,rarity,dmg,range,skilldmg,cooltime,hp,knockbackforce,speed,effectNa
 19,shield1,7,N,0,0,0,0,200,1,0,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/6_Weapons/WoodShield1.png
 20,shield2,7,N,0,0,0,0,210,1,0,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/6_Weapons/WoodShield2.png
 21,shield3,7,N,0,0,0,0,220,1,0,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/6_Weapons/WoodShield3.png
-<<<<<<< HEAD
-22,sword3,1,R,12,1,16,5,0,1,0,FireSlash,,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_3.png
-23,sword4,1,R,13,1,19,5,0,1,0,FireSlash,,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_4.png
-24,sword9,1,R,18,1,34,10,0,1,0,ElectricSlash,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_06.png
-25,sword10,1,R,19,1,37,10,0,1,0,ElectricSlash,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_11.png
-=======
 22,sword3,1,R,12,1,16,5,0,1,0,FireSlash,DoubleFireSlash,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_3.png
 23,sword4,1,R,13,1,19,5,0,1,0,FireSlash,ChainExplosion,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_4.png
 24,sword9,1,R,18,1,34,10,0,1,0,ElectricSlash,ThunderStrike,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_06.png
 25,sword10,1,R,19,1,37,10,0,1,0,ElectricSlash,TripleExplosion,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_11.png
->>>>>>> dev
 26,axe1,1,R,8,1,15,5,0,1,0,NormalClaw,,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Axe_1.png
 27,axe2,1,R,10,1,18,5,0,1,0,NormalClaw,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/6_Weapons/AxeSmall1.png
 28,axe6,1,R,18,1,30,7,0,1,0,NormalClaw,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_04.png
