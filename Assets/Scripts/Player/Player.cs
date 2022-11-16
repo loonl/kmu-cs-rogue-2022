@@ -121,7 +121,7 @@ public class Player : MonoBehaviour {
         anim.GetComponent<PlayerAnimreciver>().onStunComplete = () =>
         {
             // 무적 시간 측정 시작
-            StartCoroutine(Grace());
+            StartCoroutine(Grace(50));
         };
 
         // player stat variables init
@@ -546,13 +546,13 @@ public class Player : MonoBehaviour {
     // -------------------------------------------------------------
     // Player Grace - 무적 시간 측정
     // -------------------------------------------------------------
-    IEnumerator Grace()
+    public IEnumerator Grace(int time)
     {
         // 스턴 종료 & 무적 시간 시작
         curState = PlayerState.Invincible;
 
         // 무적 시간 설정
-        yield return GameManager.Instance.Setwfs(50);
+        yield return GameManager.Instance.Setwfs(time);
         
         // 다시 피격 가능하게 조정
         curState = PlayerState.Normal;
