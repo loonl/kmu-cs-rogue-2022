@@ -276,7 +276,7 @@ public class Player : MonoBehaviour {
             print("MaxHP : " + stat.maxHp + "\nHP : " + stat.hp + "\nAttackPower : " + stat.damage
                + "\nAttackRange : " + stat.range + "\nSkillPower : " + stat.skillDamage
                + "\nSpeed : " + stat.speed + "\nKnockBackForce : " + stat.knockBackForce 
-               + "\nCoolTime : " + stat.coolTime);
+               + "\nCoolTime : " + stat.coolTime + "\nGameScore : " + GameManager.Instance.score);
         }
 
         // 상호작용
@@ -468,6 +468,8 @@ public class Player : MonoBehaviour {
         
         // TODO Death 사운드 적용
         
+        // BestScore 저장 - TODO 온라인 연동 기능 추가
+
         // change animation to death
         anim.SetTrigger("Die");
     }
