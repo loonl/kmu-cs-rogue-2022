@@ -51,7 +51,7 @@ public class DoubleFireSlash : BaseSkill
             Monster target = collision.gameObject.GetComponent<Monster>();
             if (!target.isInvulnerable) {
                 target.OnDamage(weapon.stat.skillDamage, knockbackPower, (collision.gameObject.transform.position - player.transform.position).normalized, colliderValidTime);
-                target.SetDotDmg(0.3f, 4f, 2f, 8f);
+                target.SetDotDmg(0.3f, 4f, 2f, 8f, "FireOrange");
             }
         }
         if (collision.gameObject.CompareTag("MapObject"))
