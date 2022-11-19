@@ -21,7 +21,7 @@ public class ThunderStrike : BaseSkill
             SkillManager.Instance.onGoingSkillInfo.Add(SkillManager.SkillInfo.Name, "ThunderStrike");
             firstgenerated = true;
         }
-        ExecuteSkill();
+        StartCoroutine(ExecuteSkill());
     }
 
     private void GenerateEffects()

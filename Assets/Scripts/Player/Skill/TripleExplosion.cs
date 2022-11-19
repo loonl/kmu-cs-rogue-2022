@@ -23,6 +23,7 @@ public class TripleExplosion: BaseSkill
                 direction = new Vector2(-1, 0);
             }
         }
+        player.GetComponent<Rigidbody2D>().AddForce(direction * 200f);
         gameObject.transform.position = player.transform.position + new Vector3(gameObject.transform.localScale.x / 3 * direction.x, gameObject.transform.localScale.y / 3 * direction.y, -0.5f);
     }
 
