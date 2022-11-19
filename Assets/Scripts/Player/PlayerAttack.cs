@@ -9,8 +9,8 @@ public class PlayerAttack : MonoBehaviour
     public Animator effectanim;
     Transform effectTransform; // for changing attack effect size or flipping
 
-    // !! meleeWeaponID, meleeWeaponIdx - ÆíÇÑ Å×½ºÆ®¸¦ À§ÇÑ ÄÚµå !!
-    List<int> meleeWeaponID = new List<int>() { 0, 2, 3, 4, 5, 22, 23, 24, 25, 26, 27, 28, 29, 30, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 77, 78, 79, 80 };
+    // !! meleeWeaponID, meleeWeaponIdx - íŽ¸í•œ í…ŒìŠ¤íŠ¸ë¥¼ ìœ„í•œ ì½”ë“œ !!
+    List<int> meleeWeaponID = new List<int>() { 1, 2, 3, 4, 21, 22, 23, 24, 25, 26, 27, 28, 29, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 76, 77, 78, 79 };
     int meleeWeaponIdx = 0;
     private void Start()
     {
@@ -18,11 +18,11 @@ public class PlayerAttack : MonoBehaviour
         effectanim = transform.GetChild(0).GetChild(2).GetComponent<Animator>();
         effectTransform = transform.GetChild(0).GetChild(2).GetComponent<Transform>();
     }
-
-    // !! ÆíÇÑ Å×½ºÆ®¸¦ À§ÇÑ ÄÚµå !!
+    
+    // !! íŽ¸í•œ í…ŒìŠ¤íŠ¸ë¥¼ ìœ„í•œ ì½”ë“œ !!
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftBracket)) //'[' Å°
+        if (Input.GetKeyDown(KeyCode.LeftBracket)) //'[' í‚¤
         {
             if (meleeWeaponIdx == 0)
                 meleeWeaponIdx = meleeWeaponID.Count - 1;
@@ -31,7 +31,7 @@ public class PlayerAttack : MonoBehaviour
             Debug.Log($"{it.name}, id {it.id}, skillname {it.skillName}");
             player.Equip(it);
         }
-        if (Input.GetKeyDown(KeyCode.RightBracket)) //']' Å°
+        if (Input.GetKeyDown(KeyCode.RightBracket)) //']' í‚¤
         {
             if (meleeWeaponIdx == meleeWeaponID.Count - 1)
                 meleeWeaponIdx = 0;

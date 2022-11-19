@@ -2946,7 +2946,6 @@ GameObject:
   - component: {fileID: 2040810539294258321}
   - component: {fileID: 522375067236575486}
   - component: {fileID: 522375067236575487}
-  - component: {fileID: 6673285259568830614}
   - component: {fileID: 522375067236575484}
   - component: {fileID: 522375067236575485}
   m_Layer: 7
@@ -3030,18 +3029,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectanim: {fileID: 0}
---- !u!114 &6673285259568830614
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6377248984904177701}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9859033653a5e4c43943ee6742a03954, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!70 &522375067236575484
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
