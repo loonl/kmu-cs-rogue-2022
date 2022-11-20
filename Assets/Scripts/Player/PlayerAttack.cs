@@ -10,7 +10,7 @@ public class PlayerAttack : MonoBehaviour
     Transform effectTransform; // for changing attack effect size or flipping
 
     // !! meleeWeaponID, meleeWeaponIdx - 편한 테스트를 위한 코드 !!
-    List<int> meleeWeaponID = new List<int>() { 0, 2, 3, 4, 5, 22, 23, 24, 25, 26, 27, 28, 29, 30, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 77, 78, 79, 80 };
+    List<int> meleeWeaponID = new List<int>() { 1, 2, 3, 4, 21, 22, 23, 24, 25, 26, 27, 28, 29, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 76, 77, 78, 79 };
     int meleeWeaponIdx = 0;
     private void Start()
     {

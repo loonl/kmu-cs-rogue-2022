@@ -429,10 +429,11 @@ public class Monster : MonoBehaviour
             doteffect.GetComponent<Animator>().SetTrigger(effectname);
             if (isDead) Destroy(doteffect);
         }
-        
-        StartCoroutine(DoDotDmg(dmg, delay, GameManager.Instance.Setwfs((int)(delay * 100)), duration));
-        
-        onDotdmg = true;
+        if (!isDead)
+        {
+            StartCoroutine(DoDotDmg(dmg, delay, GameManager.Instance.Setwfs((int)(delay * 100)), duration));
+            onDotdmg = true;
+        }
     }
 
     protected IEnumerator DoDotDmg(float dmg, float delayf, WaitForSeconds delay, float duration) // 도트데미지 적용
@@ -440,6 +441,7 @@ public class Monster : MonoBehaviour
         float starttime = Time.time;
         while(Time.time < starttime + duration)
         {
+            Debug.Log("dot");
             if (isDead && onDotdmg) // 다음 도트데미지 받기 전에 플레이어의 공격으로 죽었을 수도 있음.
             {
                 onDotdmg = false;
@@ -455,6 +457,8 @@ public class Monster : MonoBehaviour
             }  // 5초 지속이며 1초마다 데미지 받는 상황일 시 정확히 5초 지난 시점에도 데미지를 받도록 함. 즉 총 5회의 데미지
             yield return delay;
         }
+        onDotdmg = false;
+        doteffect.GetComponent<Animator>().SetBool("dotdmgEnd", true);
         //if (isDead) { 
         //    onDotdmg = false;
         //    doteffect.GetComponent<Animator>().SetBool("dotdmgEnd", true);
