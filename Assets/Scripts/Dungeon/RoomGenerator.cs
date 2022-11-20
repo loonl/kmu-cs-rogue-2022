@@ -1,7 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Linq;
+using System;
 
 public enum TileType
 {
@@ -106,6 +107,10 @@ public class RoomGenerator : MonoBehaviour
     private GameObject Firetorch;
     [SerializeField]
     private GameObject boxesPref;
+    [SerializeField]
+    private GameObject ObstaclePref;
+    [SerializeField]
+    private GameObject HolePref;
 
     private List<Room> rooms;            // 모든 방 리스트
     private Stack<Room> visitedRooms;
@@ -150,8 +155,6 @@ public class RoomGenerator : MonoBehaviour
         CreateEmptyRoom(maxCount);
         Distance();
         CreateSpecialRoom();
-        // Room 타일 그리기
-        //DungeonRoom[] dungeonrooms = roomParent.GetComponentsInChildren<DungeonRoom>();
 
         for(int i = 0; i < dungeonRooms.Count; i++)
         {
@@ -161,7 +164,7 @@ public class RoomGenerator : MonoBehaviour
         // 문 생성
         GenerateDoors(type);
 
-        //보스 방과 연결된 포탈 근처에 보스 방이라는 것을 알려주는 표식을 새김 
+        //보스 방과 연결된 포탈에 보스 방이라는 것을 알려주는 횃불 설치 
         NearBossRoomDraw();
 
         // 오브젝트 생성
@@ -219,7 +222,7 @@ public class RoomGenerator : MonoBehaviour
                 // before room index로 새 room 생성
                 Room newRoom = new Room(selectRoom.X, selectRoom.Y, roomCount);
                 // selectRoom에 인접한 빈 room 중 랜덤하게 선택하여 selectRoom과 상호 연결
-                RoomDirect selected = selectRoom.EmptyDirects[Random.Range(0, selectRoom.EmptyDirects.Count)];
+                RoomDirect selected = selectRoom.EmptyDirects[UnityEngine.Random.Range(0, selectRoom.EmptyDirects.Count)];
                 selectRoom.InterconnectRoom(newRoom, selected);
                 newRoom.UpdateCoorinate(selected);  // newRoom 좌표 재설정
 
@@ -369,7 +372,7 @@ public class RoomGenerator : MonoBehaviour
                         newRoomObj.name = count.ToString();
                         specialroom.SetRoomObject(newRoomObj);
                         rooms.Add(specialroom);
-                        roomlocal[maxRoomCount - 1 + specialroom.X, maxRoomCount - 1 + specialroom.Y] = count;
+                        roomlocal[maxRoomCount - 1 + specialroom.X, maxRoomCount - 1 + specialroom.Y] = count + 1;
                         distance[distance.ToList().IndexOf(distance.Max())] = 0;
                         break;
                     }
@@ -430,7 +433,7 @@ public class RoomGenerator : MonoBehaviour
 
         if (size == RoomSize.Small)
         {
-            if (Random.value < 0.5)
+            if (UnityEngine.Random.value < 0.5)
             {
                 rows = 7;
                 cols = 5;
@@ -499,7 +502,7 @@ public class RoomGenerator : MonoBehaviour
     private void NearBossRoomDraw()
     {
         int num = 0;
-        int i = 0, j;
+        int i = 0;
         int x = 0, y = 0;
         bool Isx = false;
         Vector3Int currentpos1, currentpos2, roomsize;
@@ -651,56 +654,140 @@ public class RoomGenerator : MonoBehaviour
 
     private void GenerateObject()
     {
-        int boxCount = 0;
-        foreach (DungeonRoom room in dungeonRooms)
+        int boxCount = 0, i;
+        for(i = 0; i < dungeonRooms.Count; i++)
         {
-            float x = room.GroundLayer.size.x - 1;
-            float y = room.GroundLayer.size.y - 1;
+            int x = (int)dungeonRooms[i].GroundLayer.size.x - 1;
+            int y = (int)dungeonRooms[i].GroundLayer.size.y - 1;
 
-            for (int i = 0; i < 4; i++)
+            //장애물 생성하면 안 되는 곳 check
+            int[] check = new int[(x * y)];
+
+            //문 앞에는 장애물 생성 X
+            foreach (RoomDirect rd in rooms[i].ExistDirects) 
             {
-                if (Random.value > 0.4)
+                switch (rd)
+                {
+                    case RoomDirect.Top:
+                        check[(int)((x - 1) * 0.5f)] = 1;
+                        break;
+                    case RoomDirect.Right:
+                        check[x * (int)((y + 1) * 0.5f) - 1] = 1;
+                        break;
+                    case RoomDirect.Down:
+                        check[x * (y - 1) + (int)((x - 1) * 0.5f)] = 1;
+                        break;
+                    case RoomDirect.Left:
+                        check[x * (int)((y - 1) * 0.5f)] = 1;
+                        break;
+                }
+            }
+
+            for (int j = 0; j < 4; j++)
+            {
+                if (UnityEngine.Random.value > 0.4)
                 {
                     continue;
                 }
 
                 if (x > 4 && y > 4)
-                    boxCount = Random.Range(1, 4);
+                    boxCount = UnityEngine.Random.Range(1, 4);
 
                 else
                     boxCount = 1;
 
                 GameObject boxes = Instantiate(boxesPref);
-                boxes.transform.SetParent(room.ObjectParent.transform);
-                boxes.GetComponent<Boxes>().Set(boxCount, (RoomDirect)i);
+                boxes.transform.SetParent(dungeonRooms[i].ObjectParent.transform);
+                boxes.GetComponent<Boxes>().Set(boxCount, (RoomDirect)j);
 
                 float z = boxes.transform.position.z;
                 Vector3 offset;
 
-                switch ((RoomDirect)i)
+                //상자가 놓인 부분에는 장애물 생성 X
+                switch ((RoomDirect)j)
                 {
                     case RoomDirect.Top:
                         offset = new Vector3(0.5f, -0.5f, 0f);
                         boxes.transform.localPosition = new Vector3(x * -0.5f, y * 0.5f, z) + offset;
+                        check[0] = 1;
                         break;
                     case RoomDirect.Right:
                         offset = new Vector3(-0.35f, -0.5f, 0f);
                         boxes.transform.localPosition = new Vector3(x * 0.5f, y * 0.5f, z) + offset;
                         boxes.transform.rotation = Quaternion.Euler(0, 0, 270);
+                        check[x - 1] = 1;
                         break;
                     case RoomDirect.Down:
                         offset = new Vector3(-0.35f, 0.5f, 0f);
                         boxes.transform.localPosition = new Vector3(x * 0.5f, y * -0.5f, z) + offset;
                         boxes.transform.rotation = Quaternion.Euler(0, 0, 180);
+                        check[x * y - 1] = 1;
                         break;
                     case RoomDirect.Left:
                         offset = new Vector3(0.5f, 0.5f, 0f);
                         boxes.transform.localPosition = new Vector3(x * -0.5f, y * -0.5f, z) + offset;
                         boxes.transform.rotation = Quaternion.Euler(0, 0, 90);
+                        check[x * (y - 1)] = 1;
                         break;
                 }
             }
-            
+            GenerateObstacle(check, i);
+        }
+    }
+
+    //맵에 장애물 생성 현재는 Hole만 생성
+    private void GenerateObstacle(int[] check, int num)
+    {
+        float i, j;
+        float xmax, ymax;
+        int cnt;
+
+        //70%확률로 방에 Hole 생성, 상점방과 처음방, 보스방에는 Hole 없게
+        if (dungeonRooms[num].IsClear || UnityEngine.Random.value > 0.7 || bossIndex == num)
+            return;
+
+        float x = dungeonRooms[num].GroundLayer.size.x - 2;
+        float y = dungeonRooms[num].GroundLayer.size.y - 2;
+        xmax = x * 0.5f;
+        ymax = y * 0.5f;
+        cnt = -1;
+
+        for (i = ymax; i >= -1 * ymax; i--)
+        {
+            for (j = -1 * xmax; j <= xmax; j++)
+            {
+                cnt++;
+                //check를 확인해서 이미 door or box가 있으면 그 구역에는 hole 설치 x
+                if (check[cnt] == 1)
+                    continue;
+                SetObstacle(j, i, dungeonRooms[num].ObstacleParent.transform);
+            }
+        }
+    }
+
+    //한 구역에 장애물 생성
+    private void SetObstacle(float x, float y, Transform t)
+    {
+        int i, j, cnt = 0;
+        float con = 1f / 3f;
+        //문제점: 좌상단부터 구멍을 생성하므로 구역의 구멍 모양이 균일할 수 있음
+        for(i = -1; i < 2; i++)
+        {
+            for(j = -1; j < 2; j++)
+            {
+                //20%확률로 hole 생성, 만약 구역에 구멍이 5개 이상이면 그만 생성
+                if (UnityEngine.Random.value > 0.2)
+                    continue;
+                if (cnt > 5)
+                    break;
+                GameObject Obstacle = Instantiate(HolePref);
+                Obstacle.transform.SetParent(t);
+                Obstacle.transform.localPosition = new Vector3(x + j * con, y + i * con, 0);
+                cnt++;
+            }
+
+            if (cnt > 6)
+                break;
         }
     }
 
@@ -796,6 +883,6 @@ public class RoomGenerator : MonoBehaviour
 
     private static Tile SelectRandomTile(List<Tile> tiles)
     {
-        return tiles[Random.Range(0, tiles.Count)];
+        return tiles[UnityEngine.Random.Range(0, tiles.Count)];
     }
 }

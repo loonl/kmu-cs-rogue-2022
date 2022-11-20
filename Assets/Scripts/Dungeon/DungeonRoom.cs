@@ -19,6 +19,8 @@ public class DungeonRoom : MonoBehaviour
     private Tilemap _openDoorLayer;
     [SerializeField]
     public GameObject ObjectParent;
+    [SerializeField]
+    public GameObject ObstacleParent;
 
     public Tilemap GroundLayer { get { return _groundLayer; } }
     public Tilemap WallLayer { get { return _wallLayer; } }

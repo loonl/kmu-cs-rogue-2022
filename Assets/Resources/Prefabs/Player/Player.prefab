@@ -923,8 +923,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1145015837
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -3010,13 +3010,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e208b8266a4b29b47ba57376eee16dea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isAttacking: 0
   remainCool: 0
-  dead: 0
-  isDashing: 0
-  isStunned: 0
-  isInvincible: 0
-  isMovable: 0
+  dashCool: 0
+  curState: 0
   wpnColl: {fileID: 0}
   spumMgr: {fileID: 0}
   _interact: {fileID: 0}
@@ -3989,6 +3985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poly: {fileID: 0}
+  effectanim: {fileID: 0}
   monsters: []
 --- !u!212 &8107431321796266069
 SpriteRenderer:
