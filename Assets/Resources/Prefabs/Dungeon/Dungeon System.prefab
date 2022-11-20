@@ -139,6 +139,8 @@ MonoBehaviour:
   portalPref: {fileID: 4879275266409792026, guid: 602b8d9b309a61d49b13ccb5706507cf, type: 3}
   Firetorch: {fileID: 6673026343859464302, guid: 2714d401f6e4a3e45bd01dbc372b8b4f, type: 3}
   boxesPref: {fileID: 4213907741763695782, guid: e64da0e635fb11a46847f73a86fc2c72, type: 3}
+  ObstaclePref: {fileID: 8982910191797367760, guid: a2a14e2852c54ff48b6d2f0c018056ee, type: 3}
+  HolePref: {fileID: 7273426238133812856, guid: f4c2bf0057902dc4fad995936ad3e1d8, type: 3}
   distance: 
 --- !u!1 &7798428690168941553
 GameObject:
