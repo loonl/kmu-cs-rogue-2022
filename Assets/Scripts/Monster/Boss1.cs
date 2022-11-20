@@ -4,6 +4,7 @@ using UnityEngine;
 public class Boss1 : RushZombie
 {
     int rushStep = 0;
+    
     // 스킬 수행
     protected override IEnumerator SkillCasting1()
     {
