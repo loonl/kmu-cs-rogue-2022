@@ -37,6 +37,7 @@ public class Monster : MonoBehaviour
     protected CapsuleCollider2D capsuleCollider2D;
 
     public int id; // 몬스터 Id
+
     public MonsterStat stat; // 몬스터 스텟
     public AudioClip[] Sound; // 0 공격 혹은 부활 시 재생소리(일반좀비는 null) 1 피격시 재생 소리 2 사망시 재생 소리
     protected Player player; // 플레이어
@@ -61,6 +62,7 @@ public class Monster : MonoBehaviour
     protected float knockBackForce; // 넉백 힘
     protected Vector2 knockBackDirection; // 넉백 방향
     protected MonsterType Monstertype;
+
 
     // action 프로퍼티
     public ActionList Action
@@ -119,19 +121,25 @@ public class Monster : MonoBehaviour
         actionFinished = true;
         isInvulnerable = false;
         Action = ActionList.Wandering;
-        stat.healthToMax();
-        
-        canvas = Instantiate(canvas, transform.position, Quaternion.identity);
-        canvas.transform.SetParent(transform);
-        canvas.transform.localPosition = new Vector3(0, 1f, 0);
-        canvas.transform.localScale = new Vector3(1, 1, 1);
-        
-        hpBar = Instantiate(hpBarPrefab, transform.position, Quaternion.identity);
-        hpBar.transform.SetParent(canvas.transform);
-        hpBar.transform.localPosition = new Vector3(0, 0, 0);
-        hpBar.transform.localScale = new Vector3(0.01f, 0.01f,0);
+
+        if (hpBar == null)
+        {
+            canvas = Instantiate(canvas, transform.position, Quaternion.identity);
+            canvas.transform.SetParent(transform);
+            canvas.transform.localPosition = new Vector3(0, 1f, 0);
+            canvas.transform.localScale = new Vector3(1, 1, 1);
+
+            hpBar = Instantiate(hpBarPrefab, transform.position, Quaternion.identity);
+            hpBar.transform.SetParent(canvas.transform);
+            hpBar.transform.localPosition = new Vector3(0, 0, 0);
+            hpBar.transform.localScale = new Vector3(0.01f, 0.01f, 0);
+        }
+
         hpBar.SetActive(false);
-        
+
+        Sound = new AudioClip[3];
+        stat.healthToMax();
+
         StartCoroutine(UpdatePath());
     }
 
@@ -210,9 +218,10 @@ public class Monster : MonoBehaviour
         
         while (!isDead && Action == ActionList.Wandering)
         {
+
             rigidbody2d.velocity = randomDirection * stat.speed;
             UpdateEyes();
-            
+
             if (distance < stat.sight || targetOn)
             {
                 stat.ChangeSpeed(2);
@@ -265,7 +274,7 @@ public class Monster : MonoBehaviour
             && (startWay.y > 0 && rigidbody2d.velocity.y > 0) || (startWay.y < 0 && rigidbody2d.velocity.y < 0))
         {
             rigidbody2d.AddForce(-knockBackDirection * (knockBackForce * 12f), ForceMode2D.Force);
-            
+
             yield return new WaitForSeconds(0.05f);
         }
 
@@ -288,6 +297,7 @@ public class Monster : MonoBehaviour
     // -------------------------------------
     
     // 피격 시 실행
+
 
     public virtual void OnDamage(float damage, float _knockBackForce, Vector2 _knockBackDirection = default(Vector2), WaitForSeconds invulnerabletime = null)
     {   
@@ -391,7 +401,8 @@ public class Monster : MonoBehaviour
         {
             lastAttackTime = Time.time;
             player.OnDamage(stat.damage, 5f, (other.transform.position - transform.position).normalized);
-            animator.SetTrigger("Attack_Normal");
+
+            animator.SetTrigger("Attack_Normal"
         }
     }
 

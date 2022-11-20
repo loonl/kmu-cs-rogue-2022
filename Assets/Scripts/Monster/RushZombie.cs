@@ -4,7 +4,7 @@ using UnityEngine;
 public class RushZombie : Monster
 {
     CircleCollider2D circleCollider2D;
-    
+
     protected float rushCoolTime = 2f; // 돌진 쿨타임
     protected float lastRushTime = 0f; // 마지막 돌진 시점
     protected float timeForRushReady = 1f; // 돌진 준비시간
@@ -27,11 +27,13 @@ public class RushZombie : Monster
         Sound = SoundManager.Instance.ZombieClip(Monstertype);
     }
 
+
     // 스킬1 수행
     protected override IEnumerator SkillCasting1()
     {
         bool rushing = true;
         bool rushReady = true;
+
 
         while (!isDead && Action == ActionList.SkillCasting1 && rushing)
         {

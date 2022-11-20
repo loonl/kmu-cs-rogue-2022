@@ -267,6 +267,8 @@ GameObject:
   m_Component:
   - component: {fileID: 163476195}
   - component: {fileID: 163476194}
+  - component: {fileID: 163476196}
+
   m_Layer: 0
   m_Name: UIManager
   m_TagString: HPCanvas
@@ -315,6 +317,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 163476193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c72c21233338cb849b2aadf42a64ccd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapSize: 0
+  posY: 0
+  posX: 0
 --- !u!1 &227353620
 GameObject:
   m_ObjectHideFlags: 0

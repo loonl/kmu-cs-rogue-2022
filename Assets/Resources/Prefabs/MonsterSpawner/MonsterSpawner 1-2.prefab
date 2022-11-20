@@ -47,6 +47,7 @@ MonoBehaviour:
   SetupMonsters:
   - {fileID: 1235897264516950016, guid: 13d24ff3f3dd4eb4394e090ad2e8fbbe, type: 3}
   - {fileID: 1235897264516950016, guid: 13d24ff3f3dd4eb4394e090ad2e8fbbe, type: 3}
+
   - {fileID: 1235897264516950016, guid: 13d24ff3f3dd4eb4394e090ad2e8fbbe, type: 3}
   monsters: []
   deadMonsters: []
