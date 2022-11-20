@@ -45,7 +45,14 @@ public class SkillManager : MonoBehaviour
     {
         List<Monster> monsters = new List<Monster>();
         if(DungeonSystem.Instance.monsterSpawners.TryGetValue(roomindex, out MonsterSpawner spawner)){
-            monsters = spawner.monsters;
+            List<Monster> allmonsters = spawner.allMonsters;
+            for(int i = allmonsters.Count-1; i >=0; i--)
+            {
+                if (!allmonsters[i].isDead)
+                {
+                    monsters.Add(allmonsters[i]);
+                }
+            }
         }
         return monsters;
     }

@@ -28,7 +28,7 @@ public class Boss2 : Monster
     protected void Skill()
     {
         MonsterSpawner spawner = transform.GetComponentInParent<MonsterSpawner>();
-        foreach (Monster monster in spawner.monsters) {
+        foreach (Monster monster in spawner.aliveMonsters) {
             if (monster.isDead)
             {
                 monster.Revive();
