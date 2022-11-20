@@ -1688,7 +1688,7 @@ MonoBehaviour:
   hpBarPrefab: {fileID: 0}
   goldTxt: {fileID: 0}
   canvas: {fileID: 0}
-  id: 12
+  id: 14
   Sound: []
   isDead: 0
   isInvulnerable: 0

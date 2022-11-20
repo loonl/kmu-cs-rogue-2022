@@ -71,6 +71,7 @@ public class Portal : MonoBehaviour
         {
             DungeonSystem.Instance.Rooms[_connectedRoomId].Enter(_outDirect, exiting);
             DungeonSystem.Instance.Currentroom = _connectedRoomId;
+            StartCoroutine(GameManager.Instance.Player.Grace(80));
         }
 
         else
@@ -101,6 +102,8 @@ public class Portal : MonoBehaviour
             if (entered)
             {
                 Exit(other.gameObject);
+                MinimapManager.instance.SetPosition(_outDirect);
+                MinimapManager.instance.DrawMinimap();
             }
         }
     }

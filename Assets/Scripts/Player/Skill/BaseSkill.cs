@@ -17,7 +17,7 @@ public abstract class BaseSkill : MonoBehaviour
     {
         init();
         SetPosition();
-        ExecuteSkill();
+        StartCoroutine(ExecuteSkill());
     }
 
     protected virtual void init() // 변수 초기값 설정
@@ -48,9 +48,10 @@ public abstract class BaseSkill : MonoBehaviour
 
     protected abstract void SetPosition(); // 스킬 오브젝트 위치 설정
 
-    protected virtual void ExecuteSkill() // 스킬 발동
+    protected virtual IEnumerator ExecuteSkill() // 스킬 발동
     {
-        StartCoroutine(SkillAction());
+        player.curState = PlayerState.Normal;
+        yield return SkillAction();
     }
 
     protected virtual IEnumerator SkillAction() // 실제 스킬 효과 구현
