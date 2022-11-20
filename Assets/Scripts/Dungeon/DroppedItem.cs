@@ -33,6 +33,7 @@ public class DroppedItem : Interact
         // 만약 기존 장착한 아이템이 있으면
         if (!temp.isEmpty())
             Set(temp);
+        
         // 없으면
         else
             Destroy(this.gameObject);

@@ -362,6 +362,9 @@ public class Monster : MonoBehaviour
     public void DropGold()
     {
         GameManager.Instance.Player.Inventory.UpdateGold(stat.gold);
+        
+        // score 업데이트
+        GameManager.Instance.score += stat.gold * 100;
 
         //UI 골드 추가
         if (stat.gold != 0)
