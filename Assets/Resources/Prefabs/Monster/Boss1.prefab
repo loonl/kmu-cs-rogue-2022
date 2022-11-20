@@ -1689,10 +1689,14 @@ MonoBehaviour:
   goldTxt: {fileID: 0}
   canvas: {fileID: 0}
 <<<<<<< HEAD
+<<<<<<< HEAD
   id: 14
 =======
   id: 12
 >>>>>>> KS
+=======
+  id: 14
+>>>>>>> ae825f930cb16ad3c82bffc49813f924170f816f
   Sound: []
   isDead: 0
   isInvulnerable: 0
