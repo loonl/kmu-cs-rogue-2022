@@ -45,7 +45,7 @@ public class Boss2 : Monster
             
             monster.Generate();
         
-            spawner.monsters.Add(monster);
+            spawner.aliveMonsters.Add(monster);
             spawner.deadMonsters.Remove(monster);
 
             monster.animator.SetTrigger("Revive");

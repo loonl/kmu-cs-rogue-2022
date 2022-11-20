@@ -15,7 +15,7 @@ public class ChainExplosion : BaseSkill
     {
         init();
         SetDirection();
-        ExecuteSkill();
+        StartCoroutine(ExecuteSkill());
     }
     protected override void init()
     {

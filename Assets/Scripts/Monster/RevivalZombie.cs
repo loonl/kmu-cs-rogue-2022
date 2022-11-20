@@ -95,7 +95,7 @@ public class RevivalZombie : Monster
                 
         if (revived)
         {
-            spawner.monsters.Remove(this);
+            spawner.aliveMonsters.Remove(this);
             spawner.deadMonsters.Add(this);
             spawner.CheckRemainEnemy();
             DropGold();

@@ -32,7 +32,6 @@ public class Player : MonoBehaviour {
     Animator anim;
     public WeaponCollider wpnColl;
     Rigidbody2D rig;
-    PlayerAttack playerAttack;
     [HideInInspector]
     public SPUM_SpriteList spumMgr;
 
@@ -49,7 +48,6 @@ public class Player : MonoBehaviour {
 
     void Start()
     {
-        playerAttack = GetComponent<PlayerAttack>();
         anim = transform.GetChild(0).gameObject.GetComponent<Animator>();
         wpnColl = transform.GetChild(0).gameObject.GetComponent<WeaponCollider>();
         spumMgr = transform.GetChild(0).GetChild(0).GetComponent<SPUM_SpriteList>();
@@ -105,7 +103,7 @@ public class Player : MonoBehaviour {
         anim.GetComponent<PlayerAnimreciver>().onSkillComplete = () =>
         {
             // update state
-            curState = PlayerState.Normal;
+            //curState = PlayerState.Normal;
             
             //// disable attack collider
             //wpnColl.poly.enabled = false;
@@ -256,16 +254,7 @@ public class Player : MonoBehaviour {
             Equip(ItemManager.Instance.GetItem(81));
         if (Input.GetKeyDown(KeyCode.Alpha0)) // staff
             Equip(ItemManager.Instance.GetItem(61));
-        if (Input.GetKeyDown(KeyCode.Alpha1)) // 1 - sword1
-            Equip(ItemManager.Instance.GetItem(2));
-        if (Input.GetKeyDown(KeyCode.Alpha2)) // 2 - sword2
-            Equip(ItemManager.Instance.GetItem(3));
-        if (Input.GetKeyDown(KeyCode.Alpha3)) // 3 - sword6
-            Equip(ItemManager.Instance.GetItem(4));
-        if (Input.GetKeyDown(KeyCode.Alpha4)) // 4 - sword8
-            Equip(ItemManager.Instance.GetItem(5));
-        if (Input.GetKeyDown(KeyCode.Alpha5)) // 5 - sword3 (rare)
-            Equip(ItemManager.Instance.GetItem(22));
+        
         if (Input.GetKeyDown(KeyCode.P))
         {
             print("MaxHP : " + stat.maxHp + "\nHP : " + stat.hp + "\nAttackPower : " + stat.damage
@@ -426,7 +415,7 @@ public class Player : MonoBehaviour {
 
     public void OnDamage(float damage, float knockBackForce, Vector2 direction)
     {
-        if (curState == PlayerState.Invincible || curState == PlayerState.Stunned || curState == PlayerState.Dead)
+        if (curState == PlayerState.Invincible || curState == PlayerState.Stunned || curState == PlayerState.Dead || curState == PlayerState.Dashing)
             return;
 
         stat.Damaged(damage);
@@ -551,5 +540,13 @@ public class Player : MonoBehaviour {
         
         // 다시 피격 가능하게 조정
         curState = PlayerState.Normal;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) //대쉬 중 몬스터와 충돌 무시
+    {
+        if(curState == PlayerState.Dashing && collision.gameObject.CompareTag("Monster"))
+        {
+            Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<CapsuleCollider2D>());
+        }
     }
 }

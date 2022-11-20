@@ -28,6 +28,7 @@ public class Monster : MonoBehaviour
     public GameObject hpBarPrefab; // 체력바 프리팹
     public GameObject goldTxt; // 골드 텍스트
     public GameObject canvas; // 캔버스
+    private GameObject doteffect; // 도트대미지 이펙트
 
     public List<Dictionary<string, object>> monsterData; // 몬스터 데이터 !!고칠 코드
 
@@ -346,7 +347,9 @@ public class Monster : MonoBehaviour
         isDead = true;
 
         DropGold();
-        spawner.monsters.Remove(this);
+        spawner.aliveMonsters.Remove(this);
+
+
         spawner.deadMonsters.Add(this);
         spawner.CheckRemainEnemy();
 
@@ -425,22 +428,45 @@ public class Monster : MonoBehaviour
 
     public void SetDotDmg(float prob, float dmg, float delay, float duration, string effectname = "") // 도트데미지 set, prob: 걸릴 확률 (0<prob<1)
     {
-        if (onDotdmg) StopCoroutine("DoDotDmg");
-        if (UnityEngine.Random.Range(0.0f, 1.0f) <= prob) StartCoroutine(DoDotDmg(dmg, delay, GameManager.Instance.Setwfs((int)(delay * 100)), duration));
-        onDotdmg = true;
+        if (UnityEngine.Random.Range(0.0f, 1.0f) > prob) return; // 도트 대미지 걸기 실패
+        //{ StopCoroutine("DoDotDmg"); }
+        if (!onDotdmg)
+        {
+            doteffect = Instantiate(Resources.Load($"Prefabs/Effect/{effectname}")) as GameObject; // 도트 이펙트 세팅
+            doteffect.transform.position = transform.position;
+            doteffect.transform.SetParent(transform);
+            doteffect.GetComponent<Animator>().SetTrigger(effectname);
+            if (isDead) Destroy(doteffect);
+        }
+        if (!isDead)
+        {
+            StartCoroutine(DoDotDmg(dmg, delay, GameManager.Instance.Setwfs((int)(delay * 100)), duration));
+            onDotdmg = true;
+        }
     }
 
     protected IEnumerator DoDotDmg(float dmg, float delayf, WaitForSeconds delay, float duration) // 도트데미지 적용
     {
-        if (isDead) { onDotdmg = false; yield break; } // 다음 도트데미지 받기 전에 플레이어의 공격으로 죽었을 수도 있음.
-        OnDamage(dmg, 0f, Vector2.zero);
-        duration -= delayf;
-        // 5초 지속이며 1초마다 데미지 받는 상황일 시 정확히 5초 지난 시점에도 데미지를 받도록 함. 즉 총 5회의 데미지
-        if (duration < 0f || isDead)
+        float starttime = Time.time;
+        while(Time.time < starttime + duration)
         {
-            onDotdmg = false; yield break;
+            Debug.Log("dot");
+            if (isDead && onDotdmg) // 다음 도트데미지 받기 전에 플레이어의 공격으로 죽었을 수도 있음.
+            {
+                onDotdmg = false;
+                doteffect.GetComponent<Animator>().SetBool("dotdmgEnd", true);
+                yield break;
+            }
+            OnDamage(dmg, 0f, Vector2.zero);
+            if (isDead && onDotdmg)
+            {
+                onDotdmg = false;
+                doteffect.GetComponent<Animator>().SetBool("dotdmgEnd", true);
+                yield break;
+            }  // 5초 지속이며 1초마다 데미지 받는 상황일 시 정확히 5초 지난 시점에도 데미지를 받도록 함. 즉 총 5회의 데미지
+            yield return delay;
         }
-        yield return delay;
-        StartCoroutine(DoDotDmg(dmg, delayf, delay, duration));
+        onDotdmg = false;
+        doteffect.GetComponent<Animator>().SetBool("dotdmgEnd", true);
     }
 }
