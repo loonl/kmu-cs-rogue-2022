@@ -166,6 +166,9 @@ public class RoomGenerator : MonoBehaviour
 
         // 오브젝트 생성
         GenerateObject();
+
+        MinimapManager.instance.SetMinimap(roomlocal, maxCount * 2 - 1,shopIndex+1,bossIndex+1);
+
     }
 
     public void Clear()

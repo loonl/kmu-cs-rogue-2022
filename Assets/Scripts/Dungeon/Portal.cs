@@ -102,6 +102,8 @@ public class Portal : MonoBehaviour
             if (entered)
             {
                 Exit(other.gameObject);
+                MinimapManager.instance.SetPosition(_outDirect);
+                MinimapManager.instance.DrawMinimap();
             }
         }
     }

@@ -32,7 +32,6 @@ public class Player : MonoBehaviour {
     Animator anim;
     public WeaponCollider wpnColl;
     Rigidbody2D rig;
-    PlayerAttack playerAttack;
     [HideInInspector]
     public SPUM_SpriteList spumMgr;
     public ArrowGenerate arrowGen;
@@ -53,7 +52,6 @@ public class Player : MonoBehaviour {
 
     void Start()
     {
-        playerAttack = GetComponent<PlayerAttack>();
         anim = transform.GetChild(0).gameObject.GetComponent<Animator>();
         wpnColl = transform.GetChild(0).gameObject.GetComponent<WeaponCollider>();
         spumMgr = transform.GetChild(0).GetChild(0).GetComponent<SPUM_SpriteList>();
@@ -483,7 +481,7 @@ public class Player : MonoBehaviour {
 
     public void OnDamage(float damage, float knockBackForce, Vector2 direction)
     {
-        if (curState == PlayerState.Invincible || curState == PlayerState.Stunned || curState == PlayerState.Dead)
+        if (curState == PlayerState.Invincible || curState == PlayerState.Stunned || curState == PlayerState.Dead || curState == PlayerState.Dashing)
             return;
 
         stat.Damaged(damage);
@@ -610,5 +608,13 @@ public class Player : MonoBehaviour {
         
         // 다시 피격 가능하게 조정
         curState = PlayerState.Normal;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) //대쉬 중 몬스터와 충돌 무시
+    {
+        if(curState == PlayerState.Dashing && collision.gameObject.CompareTag("Monster"))
+        {
+            Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<CapsuleCollider2D>());
+        }
     }
 }

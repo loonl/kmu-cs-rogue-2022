@@ -2531,9 +2531,11 @@ MonoBehaviour:
   hpBarPrefab: {fileID: 0}
   goldTxt: {fileID: 0}
   canvas: {fileID: 0}
+  id: 15
   Sound: []
-  id: 13
   isDead: 0
+  isInvulnerable: 0
+  onDotdmg: 0
 --- !u!1 &5203512430596018762
 GameObject:
   m_ObjectHideFlags: 0
