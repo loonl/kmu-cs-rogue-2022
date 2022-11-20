@@ -4,35 +4,52 @@ using UnityEngine;
 
 public class Boss2 : Monster
 {
-    protected float timeBetSkill = 5f; // 스킬 대기시간
+
+    protected float skillCoolTime = 5f; // 스킬 대기시간
     protected float lastSkillTime; // 스킬 시작시간
 
-    protected override IEnumerator Wandering()
+    protected override void Init()
     {
+        base.Init();
         lastSkillTime = Time.time;
-        while (!isDead && Action == ActionList.Wandering)
+
+        Monstertype = MonsterType.RushZombie;
+        Sound = SoundManager.Instance.ZombieClip(Monstertype);
+    }
+
+    protected override IEnumerator Chasing() 
+    {
+        while (!isDead && Action == ActionList.Chasing)
         {
             rigidbody2d.velocity = direction * stat.speed;
-            if (Time.time >= lastSkillTime + timeBetSkill)
+            UpdateEyes();
+            if (Time.time >= lastSkillTime + skillCoolTime)
             {
                 lastSkillTime = Time.time;
                 Skill();
             }
+            
             yield return new WaitForSeconds(0.05f);
         }
-
-        rigidbody2d.velocity = Vector2.zero;
     }
 
-    // 스킬사용 시 실행
-    protected void Skill()
+    
+    // 스킬1 수행
+    public virtual void Skill()
     {
-        MonsterSpawner spawner = transform.GetComponentInParent<MonsterSpawner>();
-        foreach (Monster monster in spawner.monsters) {
-            if (monster.isDead)
-            {
-                monster.Revive();
-            }
+        int cnt = spawner.deadMonsters.Count;
+        
+        for (int i = 0; i < cnt; i++)
+        {
+            Monster monster = spawner.deadMonsters[0];
+            
+            monster.Generate();
+        
+            spawner.monsters.Add(monster);
+            spawner.deadMonsters.Remove(monster);
+
+            monster.animator.SetTrigger("Revive");
+            monster.SoundPlay(Sound[0]);
         }
 
         animator.SetTrigger("Skill_Magic");
