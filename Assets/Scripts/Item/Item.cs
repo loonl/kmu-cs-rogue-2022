@@ -10,6 +10,8 @@ public class Item
     public int id { get; set; }
     public new string name { get; set; }
     public int itemType { get; set; }
+    public string rarity { get; set; }
+    public int price { get; set; }
     public Stat stat { get; set; }
     public string path { get; set; }
 
@@ -23,6 +25,8 @@ public class Item
                         float.Parse(data["skilldmg"].ToString()), float.Parse(data["cooltime"].ToString()), 
                         float.Parse(data["knockbackforce"].ToString()), float.Parse(data["speed"].ToString()));
         itemType = (int)data["type"];
+        rarity = (string)data["rarity"];
+        price = (int)data["price"];
         path = (string)data["path"];
         effectName = (string)data["effectName"] == "" ? "NormalSlash2" : (string)data["effectName"];
         skillName = (string)data["skillName"] == "" ? "ExplosiveAttack" : (string)data["skillName"];
