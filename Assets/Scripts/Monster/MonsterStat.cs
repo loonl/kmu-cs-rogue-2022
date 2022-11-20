@@ -15,7 +15,9 @@ public class MonsterStat
     public float speed1 { get; private set; } // 속도1
     public float speed2 { get; private set; } // 속도2
     public float speed3 { get; private set; } // 속도3
+
     public float speed { get; set; } // 현재 속도
+
     public float sight { get; private set; } // 시야
 
     // csv파일을 이용하여 몬스터 초기화

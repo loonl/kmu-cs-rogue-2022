@@ -5,7 +5,8 @@ public class MonsterSpawner : MonoBehaviour
 {
     private List<Dictionary<string, object>> monsterData; // 몬스터 데이터
     public List<Monster> SetupMonsters = new List<Monster>(); // 생성할 몬스터들
-    public List<Monster> monsters = new List<Monster>(); // 생존한 몬스터들
+    public List<Monster> allMonsters = new List<Monster>(); // 생존 + 죽은 몬스터
+    public List<Monster> aliveMonsters = new List<Monster>(); // 생존한 몬스터들
     public List<Monster> deadMonsters = new List<Monster>(); // 죽은 몬스터들
 
     private int roomIndex; // 방 번호
@@ -38,14 +39,15 @@ public class MonsterSpawner : MonoBehaviour
             );
             monster.transform.position = roomPosition + diff;
 
-            monsters.Add(monster);
+            aliveMonsters.Add(monster);
+            allMonsters.Add(monster);
         }
     }
 
     // 방에 남은 몬스터가 있는지 확인
     public void CheckRemainEnemy()
     {
-        if (monsters.Count < 1)
+        if (aliveMonsters.Count < 1)
         {
             DungeonSystem.Instance.Rooms[roomIndex].Clear();
             SoundManager.Instance.SoundPlay(SoundType.DoorOpen);

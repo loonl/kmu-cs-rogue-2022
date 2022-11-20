@@ -9,8 +9,11 @@ public class SkillManager : MonoBehaviour
     public enum SkillInfo // 현재 발동중인 스킬 정보가 될 수 있는 것
     {
         Name,
-        Direction
+        Direction,
+        PlayerOriginalPos,
+        PlayerChangedPos
     }
+
     private static SkillManager _instance = null;
     public static SkillManager Instance { get { return _instance; } }
 
@@ -42,7 +45,14 @@ public class SkillManager : MonoBehaviour
     {
         List<Monster> monsters = new List<Monster>();
         if(DungeonSystem.Instance.monsterSpawners.TryGetValue(roomindex, out MonsterSpawner spawner)){
-            monsters = spawner.monsters;
+            List<Monster> allmonsters = spawner.allMonsters;
+            for(int i = allmonsters.Count-1; i >=0; i--)
+            {
+                if (!allmonsters[i].isDead)
+                {
+                    monsters.Add(allmonsters[i]);
+                }
+            }
         }
         return monsters;
     }
@@ -60,5 +70,21 @@ public class SkillManager : MonoBehaviour
     private float GetDistanceFromPlayer(Monster monster)
     {
         return Vector2.Distance(monster.gameObject.transform.position, player.gameObject.transform.position);
+    }
+    public IEnumerator VelocityLerp(Rigidbody2D rig, Vector2 source, Vector2 target, float overTime)
+    {
+        float startTime = Time.time;
+        while (Time.time < startTime + overTime)
+        {   
+            if(rig.velocity == Vector2.zero) // 도중에 벽, 장애물 부딪혀서 속도가 0이 되어버린 경우
+            {
+                player.curState = PlayerState.Normal;
+                onGoingSkillInfo.Add(SkillInfo.PlayerChangedPos, player.transform.position);
+                break;
+            }
+            rig.velocity = Vector2.Lerp(source, target, (Time.time - startTime) / overTime);
+            yield return null;
+        }
+        rig.velocity = target;
     }
 }

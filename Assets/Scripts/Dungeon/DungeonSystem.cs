@@ -147,7 +147,7 @@ public class DungeonSystem : MonoBehaviour
             );
             // !!! 아이템 가격 표 필요 (아이템 가격 1000 고정)
             Item randomItem = GameManager.Instance.GetRandomDropItem();
-            dropped.GetComponent<DroppedItem>().Set(randomItem, 0);
+            dropped.GetComponent<DroppedItem>().Set(randomItem, 15);
             
             // UI 함수화 필요(수정중)
             GameObject canvas = Resources.Load<GameObject>("Prefabs/UI/MonsterHPCanvas");

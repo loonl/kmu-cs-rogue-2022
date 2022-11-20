@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Boss2 : Monster
 {
+
     protected float skillCoolTime = 5f; // 스킬 대기시간
     protected float lastSkillTime; // 스킬 시작시간
 
@@ -31,6 +32,7 @@ public class Boss2 : Monster
             yield return new WaitForSeconds(0.05f);
         }
     }
+
     
     // 스킬1 수행
     public virtual void Skill()
@@ -43,7 +45,7 @@ public class Boss2 : Monster
             
             monster.Generate();
         
-            spawner.monsters.Add(monster);
+            spawner.aliveMonsters.Add(monster);
             spawner.deadMonsters.Remove(monster);
 
             monster.animator.SetTrigger("Revive");

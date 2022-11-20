@@ -6,6 +6,7 @@ public class RevivalZombie : Monster
     protected PolygonCollider2D polygonCollider2D = new PolygonCollider2D();
 
     protected bool revived = false;
+
     protected float timeBetRevive = 2f; // 부활 대기시간
     protected float startReviveTime; // 부활 시작시간
     
@@ -91,13 +92,14 @@ public class RevivalZombie : Monster
             
         capsuleCollider2D.enabled = false;
         isDead = true;
-
+                
         if (revived)
         {
-            spawner.monsters.Remove(this);
+            spawner.aliveMonsters.Remove(this);
             spawner.deadMonsters.Add(this);
             spawner.CheckRemainEnemy();
             DropGold();
+            hpBar.gameObject.SetActive(false);
         }
 
         animator.SetTrigger("Die");

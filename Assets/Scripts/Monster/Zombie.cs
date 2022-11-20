@@ -4,6 +4,7 @@ using UnityEngine;
 public class Zombie : Monster
 {
     CircleCollider2D circleCollider2D;
+
     
     protected float rushCoolTime = 3f; // 돌진 쿨타임
     protected float lastRushTime; // 마지막 돌진 시점
@@ -12,6 +13,7 @@ public class Zombie : Monster
 
     protected override void Awake()
     {
+
         base.Awake();
         
         circleCollider2D = GetComponentInChildren<CircleCollider2D>();
@@ -69,4 +71,5 @@ public class Zombie : Monster
             }
         }
     }
+    
 }
