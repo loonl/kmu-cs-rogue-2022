@@ -104,12 +104,9 @@ public class Monster : MonoBehaviour
         stat = new MonsterStat(monsterData, id); // !! 고칠 코드
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         spawner = transform.GetComponentInParent<MonsterSpawner>();
-<<<<<<< HEAD
-=======
 
         Sound = new AudioClip[3];
         gameObject.GetComponentInChildren<SortingGroup>().sortingOrder = 2;
->>>>>>> ae825f930cb16ad3c82bffc49813f924170f816f
         
         Generate(); // 몬스터 생성
     }
@@ -117,11 +114,6 @@ public class Monster : MonoBehaviour
     protected void Start()
     {
         Init();
-<<<<<<< HEAD
-        Sound = new AudioClip[3];
-        gameObject.GetComponentInChildren<SortingGroup>().sortingOrder = 2;
-=======
->>>>>>> ae825f930cb16ad3c82bffc49813f924170f816f
     }
 
     // 몬스터 활성화
