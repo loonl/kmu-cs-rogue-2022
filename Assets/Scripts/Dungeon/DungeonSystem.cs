@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DungeonSystem : MonoBehaviour
 {
@@ -12,7 +13,12 @@ public class DungeonSystem : MonoBehaviour
 
     [SerializeField]
     private RoomGenerator generator;
-    
+
+    [SerializeField]
+    private Image fadeimg;
+    private Color color = new Color(0, 0, 0, 0);
+    private bool isrestart = false;
+
     private int tempRoomCount;
 
     public GameObject DroppedItems;        // 떨어진 아이템 parent
@@ -162,6 +168,19 @@ public class DungeonSystem : MonoBehaviour
             hpBar.transform.localPosition = new Vector3(0, 0, 0);
             hpBar.transform.localScale = new Vector3(0.01f, 0.01f,0);
         }
+        //물약 하나 상점에 추가
+        GameObject droppedItem = GameManager.Instance.CreateGO
+        (
+            "Prefabs/Dungeon/Portion",
+            generator.Shop.transform
+        );
+
+        droppedItem.transform.position = new Vector3
+            (
+                generator.Shop.transform.position.x,
+                generator.Shop.transform.position.y + 1,
+                -.1f
+            );
     }
 
     // csv파일에 기재된 확률에 의거해 무작위로 스포너 선택
@@ -193,16 +212,36 @@ public class DungeonSystem : MonoBehaviour
 
         return list.Count - 2;
     }
+
     public void LevelClear()
     {
         StartCoroutine(Clear());
     }
+
     private IEnumerator Clear()
     {
+        isrestart = true;
+        if (fadeimg != null)
+            while (color.a < 1.0f)
+            {
+                color.a += 0.01f;
+                yield return GameManager.Instance.Setwfs(1);
+                fadeimg.color = color;
+            }
+
         DungeonSystem.Instance.ClearDungeon();
-        yield return new WaitForSeconds(0.2f);
+        yield return GameManager.Instance.Setwfs(20);
         DungeonSystem.Instance.Load();
         GameManager.Instance.Player.transform.position = Vector3.zero;
         DungeonSystem.Instance.Rooms[0].Clear();
+
+        if (fadeimg != null)
+            while (color.a > 0.0f)
+            {
+                color.a -= 0.01f;
+                yield return GameManager.Instance.Setwfs(1);
+                fadeimg.color = color;
+            }
+        isrestart = false;
     }
 }
