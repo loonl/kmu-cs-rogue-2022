@@ -731,6 +731,7 @@ public class RoomGenerator : MonoBehaviour
                         break;
                 }
             }
+            //장애물 생성
             GenerateObstacle(check, i);
         }
     }
@@ -775,10 +776,10 @@ public class RoomGenerator : MonoBehaviour
         {
             for(j = -1; j < 2; j++)
             {
-                //20%확률로 hole 생성, 만약 구역에 구멍이 5개 이상이면 그만 생성
+                //20%확률로 hole 생성, 만약 구역에 구멍이 2개 이상이면 그만 생성
                 if (UnityEngine.Random.value > 0.2)
                     continue;
-                if (cnt > 5)
+                if (cnt > 1)
                     break;
                 GameObject Obstacle = Instantiate(HolePref);
                 Obstacle.transform.SetParent(t);
@@ -786,7 +787,7 @@ public class RoomGenerator : MonoBehaviour
                 cnt++;
             }
 
-            if (cnt > 6)
+            if (cnt > 1)
                 break;
         }
     }
