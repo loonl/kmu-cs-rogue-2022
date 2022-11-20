@@ -2948,6 +2948,7 @@ GameObject:
   - component: {fileID: 522375067236575487}
   - component: {fileID: 522375067236575484}
   - component: {fileID: 522375067236575485}
+  - component: {fileID: -1944949967455787421}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -3015,7 +3016,9 @@ MonoBehaviour:
   curState: 0
   wpnColl: {fileID: 0}
   spumMgr: {fileID: 0}
+  arrowGen: {fileID: 0}
   _interact: {fileID: 0}
+  moveInfo: {x: 0, y: 0, z: 0}
 --- !u!114 &522375067236575487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3066,6 +3069,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &-1944949967455787421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6377248984904177701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fed5aaa1cb4c4424db1e9f04cb7f6a7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parent: {fileID: 3043483847632197857, guid: c5af32935dd3b80499b15ee7f218569a, type: 3}
+  arrowPrefabs:
+  - {fileID: 4430114174443269565, guid: 87f7a6de513d20244bdf8d11e58e60dc, type: 3}
 --- !u!1 &6561307665398564036
 GameObject:
   m_ObjectHideFlags: 0

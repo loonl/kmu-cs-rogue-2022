@@ -4,7 +4,7 @@ id,name,type,rarity,dmg,range,skilldmg,cooltime,hp,knockbackforce,speed,price,ef
 2,sword2,1,N,19,1,18,1.5,0,3,0,20,NormalSlash2,BigNormalSlash,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_2.png
 3,sword6,1,N,17,1.05,35,3,0,3,0,30,NormalSlash2,ExplosiveAttack,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_6.png
 4,sword8,1,N,16,1.1,14,1.5,0,3,0,40,NormalSlash2,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_05.png
-5,bow1,2,N,5,2,20,10,0,1,0,20,,,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Bow_1.png
+5,bow1,2,N,30,2,20,10,0,1,0,20,NormalArrow,FireShot,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Bow_1.png
 6,helmet1,4,N,0,0,0,0,10,0,0,10,,,Assets/Resources/SPUM/SPUM_Sprites/Items/4_Helmet/Helmet_1.png
 7,helmet2,4,N,0,0,0,0,15,0,-0.05,20,,,Assets/Resources/SPUM/SPUM_Sprites/Items/4_Helmet/Helmet_2.png
 8,helmet14,4,N,0,0,0,0,30,0,-0.15,30,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/4_Helmet/New_Helmet_02.png
