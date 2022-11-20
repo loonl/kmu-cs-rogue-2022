@@ -171,7 +171,6 @@ public class Monster : MonoBehaviour
     {
         while(!isDead)
         {
-            print(stat.speed);
             if (actionChanged)
             {
                 actionChanged = false;
@@ -405,7 +404,7 @@ public class Monster : MonoBehaviour
             lastAttackTime = Time.time;
             player.OnDamage(stat.damage, 5f, (other.transform.position - transform.position).normalized);
 
-            animator.SetTrigger("Attack_Normal"
+            animator.SetTrigger("Attack_Normal");
         }
     }
 
