@@ -23,12 +23,12 @@ public abstract class BaseSkill : MonoBehaviour
     protected virtual void init() // 변수 초기값 설정
     {
         player = GameObject.Find("Player").GetComponent<Player>();
+        gameObject.GetComponent<SpriteRenderer>().sortingLayerName = "Effect";
         weapon = player.equipment[0];
         animator = GetComponent<Animator>();
-        //if (animator != null) SetTimer(); // 파티클시스템으로 이펙트 구현 시 애니메이터가 없을 수도 있음.
         colliderValidTime = GameManager.Instance.Setwfs((int)(100 * colliderValidTimeF));
         collid = GetComponent<Collider2D>();
-        collid.enabled = false;
+        if(collid != null) collid.enabled = false;
         animationLength = GetAnimationLength();
     }
 
@@ -78,7 +78,7 @@ public abstract class BaseSkill : MonoBehaviour
         if (monsters.Contains(collision)) // monsters 리스트에 없다면 이는 몬스터가 아님.
         {
             Monster target = collision.gameObject.GetComponent<Monster>();
-            if(!target.isInvulnerable) target.OnDamage(weapon.stat.skillDamage, knockbackPower, (collision.gameObject.transform.position - player.transform.position).normalized, colliderValidTime);
+            if(!target.isInvulnerable) target.OnDamage(weapon.stat.skillDamage, knockbackPower, invulnerabletime:colliderValidTime); // 대미지 주기
         }
         if (collision.gameObject.CompareTag("MapObject"))
         {

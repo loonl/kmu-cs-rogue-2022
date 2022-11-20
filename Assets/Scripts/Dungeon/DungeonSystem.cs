@@ -12,12 +12,13 @@ public class DungeonSystem : MonoBehaviour
 
     [SerializeField]
     private RoomGenerator generator;
-    [SerializeField]
+    
     private int tempRoomCount;
 
     public GameObject DroppedItems;        // 떨어진 아이템 parent
 
     public List<DungeonRoom> Rooms { get { return generator.Rooms; } }
+    public Dictionary<int, MonsterSpawner> monsterSpawners = new Dictionary<int, MonsterSpawner>(); // key: 방 번호, MonsterSpawner: 해당 방의 MonsterSpawner
     public int Currentroom;
 
     private void Awake()
@@ -30,7 +31,7 @@ public class DungeonSystem : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-        tempRoomCount = 13;
+        tempRoomCount = 7;
     }
 
     //테스트용 코드
@@ -58,9 +59,8 @@ public class DungeonSystem : MonoBehaviour
             TileType.VineGround,
             TileType.VineMossGround
         };
-
         // 맵 생성
-        generator.Generate(tempRoomCount + 2 * Floor, tileSeqence[(Floor - 1) % 4]);
+        generator.Generate(tempRoomCount + 3 * Floor, tileSeqence[(Floor - 1) % 4]);
         CreateMonsterSpawner();   // 몬스터스포너 생성
         CreateShop();       // 상점 생성
         DroppedItems = new GameObject() { name = "DroppedItems" };
@@ -73,6 +73,8 @@ public class DungeonSystem : MonoBehaviour
         generator.Clear();
         // 아이템 삭제
         Destroy(DroppedItems.gameObject);
+        // 딕셔너리 초기화
+        monsterSpawners.Clear();
         DroppedItems = null;
     }
 
@@ -116,6 +118,7 @@ public class DungeonSystem : MonoBehaviour
             GameObject goSpawner = GameManager.Instance.CreateGO(MonsterSpawnerPath, generator.Rooms[roomIndex].transform);
             MonsterSpawner spawner = goSpawner.GetComponent<MonsterSpawner>();
             generator.Rooms[roomIndex].SetSpawner(spawner, roomIndex, monsterData);
+            monsterSpawners.Add(roomIndex, spawner); // (해당 방 번호, 몬스터 스포너)
         }
     }
 
@@ -144,7 +147,7 @@ public class DungeonSystem : MonoBehaviour
             );
             // !!! 아이템 가격 표 필요 (아이템 가격 1000 고정)
             Item randomItem = GameManager.Instance.GetRandomDropItem();
-            dropped.GetComponent<DroppedItem>().Set(randomItem, 0);
+            dropped.GetComponent<DroppedItem>().Set(randomItem, 15);
             
             // UI 함수화 필요(수정중)
             GameObject canvas = Resources.Load<GameObject>("Prefabs/UI/MonsterHPCanvas");

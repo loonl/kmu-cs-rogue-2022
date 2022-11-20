@@ -1,19 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.Mime;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Slider = UnityEngine.UI.Slider;
 
 // 행동 목록
 public enum ActionList
 {
-    Wandering, // 방황 중
+    Wandering, // 방랑 중
+    Chasing, // 추적 중
     SkillCasting1, // 스킬1 캐스팅 중
-    SkillCasting2, // 스킬2 캐스팅 중
     OnDamaging, // 피격 중
 }
 
@@ -33,8 +30,6 @@ public class Monster : MonoBehaviour
     public GameObject canvas; // 캔버스
 
     public List<Dictionary<string, object>> monsterData; // 몬스터 데이터 !!고칠 코드
-    // 0 공격 혹은 부활 시 재생소리(일반좀비는 null) 1 피격시 재생 소리 2 사망시 재생 소리
-    public AudioClip[] Sound;
 
     protected Animator animator;
     protected AudioSource audioPlayer;
@@ -43,10 +38,20 @@ public class Monster : MonoBehaviour
 
     public int id; // 몬스터 Id
     protected MonsterStat stat; // 몬스터 스텟
+    public AudioClip[] Sound; // 0 공격 혹은 부활 시 재생소리(일반좀비는 null) 1 피격시 재생 소리 2 사망시 재생 소리
     protected Player player; // 플레이어
     protected MonsterSpawner spawner; // 부모 스포너 객체
-
-    protected float distance; // 플레이어와의 거리
+    
+    public bool isDead; // 사망 여부
+    protected bool targetOn; // 타깃 여부
+    protected bool actionChanged; // 행동 변경 여부
+    protected bool actionFinished; // 행동 종료 여부
+    protected Coroutine currentActionCoroutine; // 현재 행동 코루틴
+    public bool isInvulnerable; // 무적 여부
+    public bool onDotdmg; // 도트 데미지 받고있는 여부
+    private ActionList action; // 현재 행동
+    
+    protected float distance = 100; // 플레이어와의 거리
     protected Vector2 direction; // 플레이어 방향
     protected Vector2 randomDirection; // 랜덤 방향
     protected float attackCoolTime = 0.5f; // 공격 쿨타임
@@ -57,13 +62,8 @@ public class Monster : MonoBehaviour
     protected Vector2 knockBackDirection; // 넉백 방향
     protected MonsterType Monstertype;
 
-    public bool isDead; // 사망 여부
-    protected bool actionChanged; // 행동 변경 여부
-    protected bool actionFinished; // 행동 종료 여부
-    protected Coroutine currentActionCoroutine; // 현재 행동 코루틴
-    public bool isInvulnerable; // 무적 여부
-    public bool onDotdmg; // 도트 데미지 받고있는 여부
-    private ActionList action; // 현재 행동
+    private static readonly int AttackNormal = Animator.StringToHash("Attack_Normal");
+
     // action 프로퍼티
     public ActionList Action
     {
@@ -77,7 +77,9 @@ public class Monster : MonoBehaviour
             action = value;
         }
     }
-
+    // --------------------------------------
+    // 기본 메소드
+    // --------------------------------------
     protected virtual void Awake()
     {
         // 컴포넌트 초기화
@@ -109,26 +111,35 @@ public class Monster : MonoBehaviour
     {
         capsuleCollider2D.enabled = true;
         isDead = false;
+        targetOn = false;
         actionChanged = true;
         actionFinished = true;
         isInvulnerable = false;
         Action = ActionList.Wandering;
-        
-        canvas = Instantiate(canvas, transform.position, Quaternion.identity);
-        canvas.transform.SetParent(transform);
-        canvas.transform.localPosition = new Vector3(0, 1f, 0);
-        canvas.transform.localScale = new Vector3(1, 1, 1);
-        hpBar = Instantiate(hpBarPrefab, transform.position, Quaternion.identity);
-        hpBar.transform.SetParent(canvas.transform);
-        hpBar.transform.localPosition = new Vector3(0, 0, 0);
-        hpBar.transform.localScale = new Vector3(0.01f, 0.01f,0);
+
+        if (hpBar == null)
+        {
+            canvas = Instantiate(canvas, transform.position, Quaternion.identity);
+            canvas.transform.SetParent(transform);
+            canvas.transform.localPosition = new Vector3(0, 1f, 0);
+            canvas.transform.localScale = new Vector3(1, 1, 1);
+
+            hpBar = Instantiate(hpBarPrefab, transform.position, Quaternion.identity);
+            hpBar.transform.SetParent(canvas.transform);
+            hpBar.transform.localPosition = new Vector3(0, 0, 0);
+            hpBar.transform.localScale = new Vector3(0.01f, 0.01f, 0);
+        }
+
         hpBar.SetActive(false);
 
         Sound = new AudioClip[3];
-
         StartCoroutine(UpdatePath());
     }
 
+    // --------------------------------------
+    // 행동 코루틴
+    // --------------------------------------
+    
     // 경로 갱신
     protected IEnumerator UpdatePath()
     {
@@ -140,13 +151,6 @@ public class Monster : MonoBehaviour
             {
                 distance = Vector2.Distance(player.transform.position, transform.position);
                 direction = (player.transform.position - transform.position).normalized;
-            }
-            else
-            {
-                //player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-                //distance = Vector2.Distance(player.transform.position, transform.position);
-                //direction = (player.transform.position - transform.position).normalized;
-                //StartCoroutine(CheckAction());
             }
 
             animator.SetBool("HasTarget", true);
@@ -169,11 +173,11 @@ public class Monster : MonoBehaviour
                     case ActionList.Wandering:
                         currentActionCoroutine = StartCoroutine(Wandering());
                         break;
+                    case ActionList.Chasing:
+                        currentActionCoroutine = StartCoroutine(Chasing());
+                        break;
                     case ActionList.SkillCasting1:
                         currentActionCoroutine = StartCoroutine(SkillCasting1());
-                        break;
-                    case ActionList.SkillCasting2:
-                        currentActionCoroutine = StartCoroutine(SkillCasting2());
                         break;
                     case ActionList.OnDamaging:
                         currentActionCoroutine = StartCoroutine(OnDamaging());
@@ -184,7 +188,7 @@ public class Monster : MonoBehaviour
             {
                 if (actionFinished)
                 {
-                    Action = ActionList.Wandering;
+                    Action = ActionList.Chasing;
                 }
             }
 
@@ -195,23 +199,26 @@ public class Monster : MonoBehaviour
         currentActionCoroutine = StartCoroutine(Dying());
     }
 
-    // 추적 수행
+    // 방랑 수행
     protected virtual IEnumerator Wandering()
     {
         stat.ChangeSpeed(1);
         lastRandomDirectionUpdate = Time.time;
         randomDirection = new Vector2(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1.0f, 1.0f)).normalized;
-
-        float randomDirectionCoolTime = UnityEngine.Random.Range(1f, 3f);
+        randomDirectionCoolTime = UnityEngine.Random.Range(2f, 3f);
+        
         while (!isDead && Action == ActionList.Wandering)
         {
-            if (distance < stat.sight)
+            if (distance < stat.sight || targetOn)
             {
-                Action = ActionList.SkillCasting1;
+                stat.ChangeSpeed(2);
+                targetOn = true;
+                Action = ActionList.Chasing;
             }
             else if (Time.time >= lastRandomDirectionUpdate + randomDirectionCoolTime)
             {
                 randomDirection = new Vector2(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f));
+                randomDirectionCoolTime = UnityEngine.Random.Range(2f, 3f);
                 lastRandomDirectionUpdate = Time.time;
             }
 
@@ -223,12 +230,10 @@ public class Monster : MonoBehaviour
         actionFinished = true;
     }
 
-    // 스킬1 수행
-    protected virtual IEnumerator SkillCasting1() 
+    // 추적 수행
+    protected virtual IEnumerator Chasing() 
     {
-        stat.ChangeSpeed(2);
-
-        while (!isDead && Action == ActionList.SkillCasting1 && distance < stat.sight)
+        while (!isDead && Action == ActionList.Chasing)
         {
             rigidbody2d.velocity = direction * stat.speed;
             UpdateEyes();
@@ -238,10 +243,10 @@ public class Monster : MonoBehaviour
         actionFinished = true;
     }
 
-    // 스킬2 수행
-    protected virtual IEnumerator SkillCasting2()
+    // 스킬1 수행
+    protected virtual IEnumerator SkillCasting1()
     {
-        while (!isDead && Action == ActionList.SkillCasting2)
+        while (!isDead && Action == ActionList.SkillCasting1)
         {
 
             yield return new WaitForSeconds(0.05f);
@@ -258,7 +263,7 @@ public class Monster : MonoBehaviour
             && (startWay.x > 0 && rigidbody2d.velocity.x > 0) || (startWay.x < 0 && rigidbody2d.velocity.x < 0)
             && (startWay.y > 0 && rigidbody2d.velocity.y > 0) || (startWay.y < 0 && rigidbody2d.velocity.y < 0))
         {
-            rigidbody2d.AddForce(-knockBackDirection * knockBackForce * 12f, ForceMode2D.Force);
+            rigidbody2d.AddForce(-knockBackDirection * (knockBackForce * 12f), ForceMode2D.Force);
             yield return new WaitForSeconds(0.05f);
         }
 
@@ -275,11 +280,20 @@ public class Monster : MonoBehaviour
         }
     }
 
+    // -------------------------------------
+    // 실행 메소드
+    // -------------------------------------
+    
     // 피격 시 실행
-    public void OnDamage(float damage, float _knockBackForce, Vector2 _knockBackDirection, WaitForSeconds invulnerabletime = null)
-    {
-        stat.OnDamage(damage);
 
+    public  virtual void OnDamage(float damage, float _knockBackForce, Vector2 _knockBackDirection = default(Vector2), WaitForSeconds invulnerabletime = null)
+    {   
+        if(_knockBackForce != 0 && _knockBackDirection == default(Vector2))
+        {
+            _knockBackDirection = (gameObject.transform.position - player.transform.position).normalized;
+        }
+        stat.OnDamage(damage);
+        targetOn = true;
         
         hpBar.GetComponent<Slider>().value = stat.health / stat.maxHealth;
         if (stat.health<stat.maxHealth)
@@ -287,16 +301,16 @@ public class Monster : MonoBehaviour
             hpBar.SetActive(true);
         }
 
-        if(invulnerabletime != null) StartCoroutine(SetInvulnerable(invulnerabletime));
-
-
+        if(invulnerabletime != null) 
+            StartCoroutine(SetInvulnerable(invulnerabletime));
+        
         if (stat.health <= 0)
         {
             Die();
         }
         else
         {
-            if (true) // !! 스킬시전 중 스턴가능 여부 추가
+            if (Action != ActionList.SkillCasting1)
             {
                 if (Action == ActionList.OnDamaging)
                 {
@@ -325,8 +339,6 @@ public class Monster : MonoBehaviour
 
         
         hpBar.SetActive(false);
-        
-        onDie();
 
         animator.SetTrigger("Die");
         SoundPlay(Sound[2]);
@@ -338,7 +350,6 @@ public class Monster : MonoBehaviour
         GameManager.Instance.Player.Inventory.UpdateGold(stat.gold);
 
         //UI 골드 추가
-
         if (stat.gold != 0)
         {
             GameObject temp = Instantiate(goldTxt, transform.position, Quaternion.identity);
@@ -349,8 +360,6 @@ public class Monster : MonoBehaviour
                 temp.transform.localScale = new Vector3(0.01f, 0.01f, 1);
             temp.GetComponent<TextMeshProUGUI>().text = $"+{stat.gold}G";
         }
-
-
     }
 
     // 부활 시 실행
@@ -378,29 +387,19 @@ public class Monster : MonoBehaviour
         }
     }
 
-    protected void OnCollisionStay2D(Collision2D other)
+    protected virtual void OnCollisionStay2D(Collision2D other)
     {
-        Player attackTarget = null;
-        try
-        {
-            attackTarget = other.gameObject.GetComponent<Player>();
-        }
-        catch (NullReferenceException)
-        {
-            return; 
-        }
-
         // 충돌한 게임 오브젝트가 추적 대상이라면 공격
-        if (attackTarget != player)
+        if (!other.gameObject.CompareTag("Player"))
         {
             randomDirection = new Vector2(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f));
             lastRandomDirectionUpdate = Time.time;
         }
-        else if (Time.time >= lastAttackTime + attackCoolTime && attackTarget != null)
+        else if (Time.time >= lastAttackTime + attackCoolTime)
         {
             lastAttackTime = Time.time;
-            attackTarget.OnDamage(stat.damage, 5f, (attackTarget.transform.position - transform.position).normalized);
-            animator.SetTrigger("Attack_Normal");
+            player.OnDamage(stat.damage, 5f, (other.transform.position - transform.position).normalized);
+            animator.SetTrigger(AttackNormal);
         }
     }
 
@@ -414,7 +413,7 @@ public class Monster : MonoBehaviour
         audioPlayer.Play();
     }
 
-    private IEnumerator SetInvulnerable(WaitForSeconds timer)
+    protected IEnumerator SetInvulnerable(WaitForSeconds timer)
     {
         isInvulnerable = true;
         yield return timer;
@@ -428,7 +427,7 @@ public class Monster : MonoBehaviour
         onDotdmg = true;
     }
 
-    private IEnumerator DoDotDmg(float dmg, float delayf, WaitForSeconds delay, float duration) // 도트데미지 적용
+    protected IEnumerator DoDotDmg(float dmg, float delayf, WaitForSeconds delay, float duration) // 도트데미지 적용
     {
         if (isDead) { onDotdmg = false; yield break; } // 다음 도트데미지 받기 전에 플레이어의 공격으로 죽었을 수도 있음.
         OnDamage(dmg, 0f, Vector2.zero);

@@ -12,6 +12,7 @@ public class MapTest : MonoBehaviour
     Color color = new Color(0, 0, 0, 0);
     bool isrestart = false;
 
+    // ì¹˜íŠ¸í‚¤
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) && !isrestart)
@@ -23,11 +24,10 @@ public class MapTest : MonoBehaviour
         {
             StartCoroutine(TestClear());
         }
-        //Å×½ºÆ®¿ë ÄÚµå
         if (Input.GetKeyDown(KeyCode.K))
             DungeonSystem.Instance.KillAll();
     }
-
+    
     private IEnumerator Restart()
     {
         isrestart = true;
@@ -44,7 +44,7 @@ public class MapTest : MonoBehaviour
         DungeonSystem.Instance.CreateDungeon();
         GameManager.Instance.Player.transform.position = Vector3.zero;
         DungeonSystem.Instance.Rooms[0].Clear();
-
+        
         if (fadeimg != null)
             while (color.a > 0.0f)
             {

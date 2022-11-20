@@ -15,7 +15,6 @@ public class SkillManager : MonoBehaviour
     public static SkillManager Instance { get { return _instance; } }
 
     public Dictionary<SkillInfo, object> onGoingSkillInfo = new Dictionary<SkillInfo, object>();
-
     private void Awake()
     {
         if (_instance == null)
@@ -38,4 +37,28 @@ public class SkillManager : MonoBehaviour
         GameObject skill = Instantiate(Resources.Load($"Prefabs/Skill/{skillname}")) as GameObject;
     }
 
+    // 방 안의 살아있는 몬스터 리스트를 가져옴
+    public List<Monster> GetMonstersInRoom(int roomindex)
+    {
+        List<Monster> monsters = new List<Monster>();
+        if(DungeonSystem.Instance.monsterSpawners.TryGetValue(roomindex, out MonsterSpawner spawner)){
+            monsters = spawner.monsters;
+        }
+        return monsters;
+    }
+
+    // 플레이어와의 거리에 따라 몬스터 리스트 정렬
+    public List<Monster> SortMonstersByDistance(List<Monster> monsters)
+    {
+        monsters.Sort((m1, m2) =>
+            GetDistanceFromPlayer(m1).CompareTo(GetDistanceFromPlayer(m2))
+        );
+        return monsters;
+    }
+
+    // 플레이어로부터의 거리를 구함
+    private float GetDistanceFromPlayer(Monster monster)
+    {
+        return Vector2.Distance(monster.gameObject.transform.position, player.gameObject.transform.position);
+    }
 }
