@@ -9,7 +9,7 @@ public class PlayerAttack : MonoBehaviour
     public Animator effectanim;
     Transform effectTransform; // for changing attack effect size or flipping
 
-    // !! meleeWeaponID, meleeWeaponIdx - ÆíÇÑ Å×½ºÆ®¸¦ À§ÇÑ ÄÚµå !!
+    // !! meleeWeaponID, meleeWeaponIdx - ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ !!
     List<int> meleeWeaponID = new List<int>() { 0, 2, 3, 4, 5, 22, 23, 24, 25, 26, 27, 28, 29, 30, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 77, 78, 79, 80 };
     int meleeWeaponIdx = 0;
     private void Start()
@@ -19,7 +19,7 @@ public class PlayerAttack : MonoBehaviour
         effectTransform = transform.GetChild(0).GetChild(2).GetComponent<Transform>();
     }
 
-    // !! ÆíÇÑ Å×½ºÆ®¸¦ À§ÇÑ ÄÚµå !!
+    // !! ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ !!
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.LeftBracket)) //'[' Å°
