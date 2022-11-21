@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Slider = UnityEngine.UI.Slider;
 
 // 행동 목록
@@ -103,6 +104,9 @@ public class Monster : MonoBehaviour
         stat = new MonsterStat(monsterData, id); // !! 고칠 코드
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         spawner = transform.GetComponentInParent<MonsterSpawner>();
+
+        Sound = new AudioClip[3];
+        gameObject.GetComponentInChildren<SortingGroup>().sortingOrder = 2;
         
         Generate(); // 몬스터 생성
     }

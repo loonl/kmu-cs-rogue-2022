@@ -35,11 +35,11 @@ public class BuffZombie : Monster
     // 스킬1 수행
     protected void Skill()
     {
-        int cnt = spawner.monsters.Count;
+        int cnt = spawner.aliveMonsters.Count;
         
         for (int i = 0; i < cnt; i++)
         {
-            Monster monster = spawner.monsters[i];
+            Monster monster = spawner.aliveMonsters[i];
             
             StartCoroutine(SpeedUp(monster));
         }
