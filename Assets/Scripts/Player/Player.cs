@@ -150,7 +150,7 @@ public class Player : MonoBehaviour {
             
             // 활 공격은 애니메이션 이벤트에서 행해짐
 
-                // TODO - play sound => 이상하면 고쳐야 함
+            // TODO - play sound => 이상하면 고쳐야 함
             switch (equipment[0].effectName)
             {
                 case "NormalSlash":
@@ -219,7 +219,7 @@ public class Player : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha4)) // 4 - sword8
             Equip(ItemManager.Instance.GetItem(4));
         if (Input.GetKeyDown(KeyCode.Alpha5)) // 5 - sword3 (rare)
-            Equip(ItemManager.Instance.GetItem(21));
+            Equip(ItemManager.Instance.GetItem(74));
         if (Input.GetKeyDown(KeyCode.Alpha6)) // 6 - Cheat Weapon
             Equip(ItemManager.Instance.GetItem(89));
         if (Input.GetKeyDown(KeyCode.Equals))
@@ -320,30 +320,23 @@ public class Player : MonoBehaviour {
                                      ItemManager.Instance.GetItem(0)  // shield
                                     };
         for (int i = 0; i < equipment.Count; i++)
-            Equip(equipment[i]);
+            Equip(equipment[i], true);
     }
 
     // -------------------------------------------------------------
     // Player 아이템 착용 / 해제
+    // true = 정상 작동, false = 비정상 작동
     // -------------------------------------------------------------
-    public void Equip(Item item)
+    public bool Equip(Item item, bool first = false)
     {
-
         // 바뀌는 장비가 어느 부위인지 판단
         int partsIndex;
         int type = item.itemType;
-        if (type == 0 || type == 1 || type == 2)
+        if (type == 1 || type == 2 || type == 3)
             partsIndex = 0;
         else
             partsIndex = item.itemType - 3;
-
-        // 입고 있는 것 먼저 un-equip
-        if (!item.isEmpty())
-            UnEquip(equipment[partsIndex]);
-
-        // 플레이어 스탯 수정
-        List<Stat> itemStat = new List<Stat> { item.stat };
-        stat.SyncStat(itemStat);
+        
         
         // 근접 무기
         if (partsIndex == 0 && type == 1)
@@ -357,19 +350,12 @@ public class Player : MonoBehaviour {
             // 근접 무기 -> 활로 무기 변경 시 방패 자동 장착 해제
             if (equipment[0].itemType == 1 && !equipment[4].isEmpty())
             {
+                // 방패 un-equip 후 DroppedItem으로 생성
                 UnEquip(equipment[4]);
+                MakeDroppedItem(equipment[4], true);
                 
-                // 끼던 방패를 DroppedItem으로 생성
-                var shieldDropped = GameManager.Instance.CreateGO
-                (
-                    "Prefabs/Dungeon/Dropped",
-                    DungeonSystem.Instance.DroppedItems.transform
-                );
-                
-                shieldDropped.transform.position = this.gameObject.transform.position;
-                shieldDropped.GetComponent<DroppedItem>().Set(equipment[4]);
-                
-                equipment[4] = ItemManager.Instance.GetItem(1);
+                // Index 업데이트
+                equipment[4] = ItemManager.Instance.GetItem(0);
             }
         }
         
@@ -379,39 +365,38 @@ public class Player : MonoBehaviour {
             // 근접 무기 -> 스태프로 무기 변경 시 방패 자동 장착 해제
             if (equipment[0].itemType == 1 && !equipment[4].isEmpty())
             {
+                // 방패 un-equip 후 DroppedItem으로 생성
                 UnEquip(equipment[4]);
+                MakeDroppedItem(equipment[4], true);
                 
-                // 끼던 방패를 DroppedItem으로 생성
-                var shieldDropped = GameManager.Instance.CreateGO
-                (
-                    "Prefabs/Dungeon/Dropped",
-                    DungeonSystem.Instance.DroppedItems.transform
-                );
-                
-                shieldDropped.transform.position = this.gameObject.transform.position;
-                shieldDropped.GetComponent<DroppedItem>().Set(equipment[4]);
-                
-                equipment[4] = ItemManager.Instance.GetItem(1);
+                // Index 업데이트
+                equipment[4] = ItemManager.Instance.GetItem(0);
             }
             
             // 효과 적용
             // magic.SetupEffect(item: item);
         }
         
-        // 방패
+        // 방패 
         else if (partsIndex == 4)
         {
             // 활 / 스태프 -> 방패 장착 시도 시엔 장착 불가
             if (equipment[0].itemType == 2 || equipment[0].itemType == 3)
             {
                 Debug.Log("Cannot Equip Shield!");
-                return;
                 
-                // TODO - 위에 코드 문제 없으면 지우기
-                //UnEquip(equipment[0]);
-                //equipment[0] = ItemManager.Instance.GetItem(1);
+                // 비정상 작동 알림
+                return false;
             }
         }
+
+        // 입고 있는 것 먼저 un-equip
+        if (!item.isEmpty() && !first)
+            UnEquip(equipment[partsIndex]);
+
+        // 플레이어 스탯 수정
+        List<Stat> itemStat = new List<Stat> { item.stat };
+        stat.SyncStat(itemStat);
 
         // 플레이어 외형 수정
         switch (type)
@@ -444,8 +429,11 @@ public class Player : MonoBehaviour {
                 break;
         }
 
-        // 장착 슬롯에 아이템 추가
+        // 장착 아이템 index 업데이트 
         equipment[partsIndex] = item;
+        
+        // 정상 작동 알림
+        return true;
     }
 
     public void UnEquip(Item item)
@@ -616,5 +604,30 @@ public class Player : MonoBehaviour {
         {
             Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<CapsuleCollider2D>());
         }
+    }
+    
+    /*
+     * Player 안에서 자주 사용하는 함수
+     */
+    
+    // -------------------------------------------------------------
+    // DroppedItem 생성
+    // -------------------------------------------------------------
+    private void MakeDroppedItem(Item item, bool beside = false)
+    {
+        // 없어진 방패 재생성
+        var GO = GameManager.Instance.CreateGO
+        (
+            "Prefabs/Dungeon/Dropped",
+            DungeonSystem.Instance.DroppedItems.transform
+        );
+                
+        // 같은 위치 혹은 그 옆에 생성
+        if (beside)
+            GO.transform.position = this.gameObject.transform.position;
+        else
+            GO.transform.position = this.gameObject.transform.position + new Vector3(2f, 0, 0);
+        
+        GO.GetComponent<DroppedItem>().Set(item);
     }
 }

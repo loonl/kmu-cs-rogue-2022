@@ -8,9 +8,9 @@ id,name,type,rarity,dmg,range,skilldmg,cooltime,hp,knockbackforce,speed,price,ef
 6,helmet1,4,N,0,0,0,0,10,0,0,10,,,Assets/Resources/SPUM/SPUM_Sprites/Items/4_Helmet/Helmet_1.png
 7,helmet2,4,N,0,0,0,0,15,0,-0.05,20,,,Assets/Resources/SPUM/SPUM_Sprites/Items/4_Helmet/Helmet_2.png
 8,helmet14,4,N,0,0,0,0,30,0,-0.15,30,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/4_Helmet/New_Helmet_02.png
-9,armor1,5,N,0,0,0,0,10,0,0,10,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/5_Armor/Armor_1.png
-10,armor2,5,N,0,0,0,0,15,0,-0.05,20,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/5_Armor/Armor_2.png
-11,armor3,5,N,0,0,0,0,20,0,-0.1,30,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/5_Armor/Armor_3.png
+9,armor1,5,N,0,0,0,0,10,0,0,10,,,Assets/Resources/SPUM/SPUM_Sprites/Items/5_Armor/Armor_1.png
+10,armor2,5,N,0,0,0,0,15,0,-0.05,20,,,Assets/Resources/SPUM/SPUM_Sprites/Items/5_Armor/Armor_2.png
+11,armor3,5,N,0,0,0,0,20,0,-0.1,30,,,Assets/Resources/SPUM/SPUM_Sprites/Items/5_Armor/Armor_3.png
 12,armor11,5,N,0,0,0,0,25,0,-0.15,40,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/5_Armor/New_Armor_02.png
 13,armor18,5,N,0,0,0,0,30,0,-0.2,50,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/5_Armor/New_Armor_09.png
 14,pants2,6,N,0,0,0,0,20,0,0,10,,,Assets/Resources/SPUM/SPUM_Sprites/Items/3_Pant/Foot_2.png
@@ -37,9 +37,9 @@ id,name,type,rarity,dmg,range,skilldmg,cooltime,hp,knockbackforce,speed,price,ef
 35,helmet12,4,R,0,0,0,0,120,0,0,60,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/4_Helmet/Normal_Helmet3.png
 36,helmet18,4,R,0,0,0,0,180,0,0,70,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/4_Helmet/New_Helmet_06.png
 37,helmet21,4,R,0,0,0,0,210,0,0,80,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/4_Helmet/New_Helmet_09.png
-38,armor4,5,R,0,0,0,0,40,0,0,50,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/5_Armor/Armor_4.png
-39,armor7,5,R,0,0,0,0,70,0,0,60,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/5_Armor/Armor_7.png
-40,armor8,5,R,0,0,0,0,80,0,0,70,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/5_Armor/Armor_8.png
+38,armor4,5,R,0,0,0,0,40,0,0,50,,,Assets/Resources/SPUM/SPUM_Sprites/Items/5_Armor/Armor_4.png
+39,armor7,5,R,0,0,0,0,70,0,0,60,,,Assets/Resources/SPUM/SPUM_Sprites/Items/5_Armor/Armor_7.png
+40,armor8,5,R,0,0,0,0,80,0,0,70,,,Assets/Resources/SPUM/SPUM_Sprites/Items/5_Armor/Armor_8.png
 41,armor9,5,R,0,0,0,0,90,0,0,80,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/5_Armor/Normal_Armor1.png
 42,pants1,6,R,0,0,0,0,10,0,0,50,,,Assets/Resources/SPUM/SPUM_Sprites/Items/3_Pant/Foot_1.png
 43,pants7,6,R,0,0,0,0,70,0,0,60,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/3_Pant/New_Pant_03.png

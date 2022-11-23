@@ -13,30 +13,33 @@ public class DroppedItem : Interact
     
 
     public int _price = 0;
-    // private Image _sprite;
 
     private void GetItem()
     {
         int itemIndex;
         int type = _item.itemType;
-        if (type == 0 || type == 1 || type == 2)
+        if (type == 1 || type == 2 || type == 3)
             itemIndex = 0;
         else
             itemIndex = _item.itemType - 3;
 
         Item temp = GameManager.Instance.Player.equipment[itemIndex];
 
-        // Get
-        GameManager.Instance.Player.Equip(this._item);
+        // 상호작용 시작
+        bool response = GameManager.Instance.Player.Equip(this._item);
         tooltip.GetComponent<ItemTooltip>().HideTooltip();
 
-        // 만약 기존 장착한 아이템이 있으면
-        if (!temp.isEmpty())
-            Set(temp);
-        
-        // 없으면
-        else
-            Destroy(this.gameObject);
+        // 성공적으로 상호작용이 되었다면
+        if (response)
+        {
+            // 만약 기존 장착한 아이템이 있으면
+            if (!temp.isEmpty())
+                Set(temp);
+
+            // 없으면
+            else
+                Destroy(this.gameObject);
+        }
     }
 
     public void Set(Item item, int price = 0)
