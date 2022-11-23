@@ -219,7 +219,7 @@ public class Player : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha4)) // 4 - sword8
             Equip(ItemManager.Instance.GetItem(4));
         if (Input.GetKeyDown(KeyCode.Alpha5)) // 5 - sword3 (rare)
-            Equip(ItemManager.Instance.GetItem(74));
+            Equip(ItemManager.Instance.GetItem(21));
         if (Input.GetKeyDown(KeyCode.Alpha6)) // 6 - Cheat Weapon
             Equip(ItemManager.Instance.GetItem(89));
         if (Input.GetKeyDown(KeyCode.Equals))
@@ -298,7 +298,7 @@ public class Player : MonoBehaviour {
         anim.GetComponent<PlayerAnimreciver>().onStunComplete = () =>
         {
             // 무적 시간 측정 시작
-            StartCoroutine(Grace(50));
+            StartCoroutine(NoHit(50));
         };
         
         // 화살 쏴야할 때
@@ -524,13 +524,33 @@ public class Player : MonoBehaviour {
 
         this._interact = interact;
     }
-
+    
     public void RemoveInteractEvent()
     {
         this._interact = null;
     }
     
-    
+    // -------------------------------------------------------------
+    // DroppedItem 생성
+    // -------------------------------------------------------------
+    private void MakeDroppedItem(Item item, bool beside = false)
+    {
+        // 없어진 방패 재생성
+        var GO = GameManager.Instance.CreateGO
+        (
+            "Prefabs/Dungeon/Dropped",
+            DungeonSystem.Instance.DroppedItems.transform
+        );
+                
+        // 같은 위치 혹은 그 옆에 생성
+        if (beside)
+            GO.transform.position = this.gameObject.transform.position;
+        else
+            GO.transform.position = this.gameObject.transform.position + new Vector3(2f, 0, 0);
+        
+        GO.GetComponent<DroppedItem>().Set(item);
+    }
+
     /*
      *   Coroutine 함수
     */
@@ -584,9 +604,9 @@ public class Player : MonoBehaviour {
     }
 
     // -------------------------------------------------------------
-    // Player Grace - 무적 시간 측정
+    // Player NoHit - 무적 시간 측정
     // -------------------------------------------------------------
-    public IEnumerator Grace(int time)
+    public IEnumerator NoHit(int time)
     {
         // 스턴 종료 & 무적 시간 시작
         curState = PlayerState.Invincible;
@@ -597,37 +617,13 @@ public class Player : MonoBehaviour {
         // 다시 피격 가능하게 조정
         curState = PlayerState.Normal;
     }
-
-    private void OnCollisionEnter2D(Collision2D collision) //대쉬 중 몬스터와 충돌 무시
+    
+    // 충돌 체크
+    private void OnCollisionEnter2D(Collision2D collision) // 대쉬 중 몬스터와 충돌 무시
     {
         if(curState == PlayerState.Dashing && collision.gameObject.CompareTag("Monster"))
         {
             Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<CapsuleCollider2D>());
         }
-    }
-    
-    /*
-     * Player 안에서 자주 사용하는 함수
-     */
-    
-    // -------------------------------------------------------------
-    // DroppedItem 생성
-    // -------------------------------------------------------------
-    private void MakeDroppedItem(Item item, bool beside = false)
-    {
-        // 없어진 방패 재생성
-        var GO = GameManager.Instance.CreateGO
-        (
-            "Prefabs/Dungeon/Dropped",
-            DungeonSystem.Instance.DroppedItems.transform
-        );
-                
-        // 같은 위치 혹은 그 옆에 생성
-        if (beside)
-            GO.transform.position = this.gameObject.transform.position;
-        else
-            GO.transform.position = this.gameObject.transform.position + new Vector3(2f, 0, 0);
-        
-        GO.GetComponent<DroppedItem>().Set(item);
     }
 }
