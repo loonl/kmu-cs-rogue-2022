@@ -11,13 +11,30 @@ public class SkillManager : MonoBehaviour
         Name,
         Direction,
         PlayerOriginalPos,
-        PlayerChangedPos
+        PlayerChangedPos,
+        AliveEffectCount,
+        SpawnerObject
+    }
+
+    public enum DirectionName
+    {
+        Up,
+        Right,
+        Down,
+        Left
     }
 
     private static SkillManager _instance = null;
     public static SkillManager Instance { get { return _instance; } }
 
     public Dictionary<SkillInfo, object> onGoingSkillInfo = new Dictionary<SkillInfo, object>();
+    public Dictionary<DirectionName, Vector2> DirectionDict = new Dictionary<DirectionName, Vector2>()
+    {
+        { DirectionName.Up, Vector2.up },
+        { DirectionName.Right, Vector2.right },
+        { DirectionName.Down, Vector2.down },
+        { DirectionName.Left, Vector2.left }
+    };
     private void Awake()
     {
         if (_instance == null)
@@ -71,6 +88,7 @@ public class SkillManager : MonoBehaviour
     {
         return Vector2.Distance(monster.gameObject.transform.position, player.gameObject.transform.position);
     }
+    // 속도 부드러운 변화를 위해 사용
     public IEnumerator VelocityLerp(Rigidbody2D rig, Vector2 source, Vector2 target, float overTime)
     {
         float startTime = Time.time;
@@ -86,5 +104,17 @@ public class SkillManager : MonoBehaviour
             yield return null;
         }
         rig.velocity = target;
+    }
+
+    // normalized된 target에서 source를 가리키는 vector 반환
+    public Vector2 GetDirectionFromObject(Transform source, Transform target)
+    {
+        return (source.position - target.position).normalized;
+    }
+
+    public void DestroySpawnerObject(GameObject obj)
+    {
+        Destroy(obj);
+        onGoingSkillInfo.Clear();
     }
 }

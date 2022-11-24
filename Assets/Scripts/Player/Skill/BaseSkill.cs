@@ -65,6 +65,7 @@ public abstract class BaseSkill : MonoBehaviour
         yield return colliderValidTime;
         collid.enabled = false;
         monsters.Clear();
+        SkillManager.Instance.onGoingSkillInfo.Clear();
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
