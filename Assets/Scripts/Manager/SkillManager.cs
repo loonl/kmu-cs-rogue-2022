@@ -74,19 +74,26 @@ public class SkillManager : MonoBehaviour
         return monsters;
     }
 
-    // 플레이어와의 거리에 따라 몬스터 리스트 정렬
-    public List<Monster> SortMonstersByDistance(List<Monster> monsters)
+    // 게임오브젝트와의 거리에 따라 몬스터 리스트 정렬
+    public List<Monster> SortMonstersByDistance(GameObject obj, List<Monster> monsters)
     {
         monsters.Sort((m1, m2) =>
-            GetDistanceFromPlayer(m1).CompareTo(GetDistanceFromPlayer(m2))
+            GetDistanceFromObject(obj, m1).CompareTo(GetDistanceFromObject(obj, m2))
         );
         return monsters;
     }
 
-    // 플레이어로부터의 거리를 구함
-    private float GetDistanceFromPlayer(Monster monster)
+    // 게임오브젝트로부터 몬스터 사이의 거리를 구함
+    private float GetDistanceFromObject(GameObject obj, Monster monster)
     {
-        return Vector2.Distance(monster.gameObject.transform.position, player.gameObject.transform.position);
+        return Vector2.Distance(monster.gameObject.transform.position, obj.transform.position);
+    }
+
+    public Monster GetClosestMonsterFromObject(GameObject obj)
+    {
+        List<Monster> monsters = SortMonstersByDistance(obj, GetMonstersInRoom(DungeonSystem.Instance.Currentroom));
+        if (monsters.Count == 0) return null;
+        return monsters[0];
     }
     // 속도 부드러운 변화를 위해 사용
     public IEnumerator VelocityLerp(Rigidbody2D rig, Vector2 source, Vector2 target, float overTime)
@@ -106,10 +113,10 @@ public class SkillManager : MonoBehaviour
         rig.velocity = target;
     }
 
-    // normalized된 target에서 source를 가리키는 vector 반환
-    public Vector2 GetDirectionFromObject(Transform source, Transform target)
+    // normalized된 source에서 target을 가리키는 normalized된 vector 반환
+    public Vector2 GetDirectionFromObject(Transform target, Transform source)
     {
-        return (source.position - target.position).normalized;
+        return (target.position - source.position).normalized;
     }
 
     public void DestroySpawnerObject(GameObject obj)
