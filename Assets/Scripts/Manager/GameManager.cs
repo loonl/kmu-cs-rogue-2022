@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     Dictionary<int, WaitForSeconds> wfs = new Dictionary<int, WaitForSeconds>();
 
     public StageUIManager stageUIManager;
+    public int score; // 게임 점수
 
     private void Awake()
     {
@@ -34,6 +35,7 @@ public class GameManager : MonoBehaviour
         stageUIManager.init(Player);
         DungeonSystem.Instance.CreateDungeon();
         DungeonSystem.Instance.Rooms[0].Clear();    // 첫번째 방은 클리어 된 상태
+        score = 0;
     }
 
     // -------------------------------------------------------------

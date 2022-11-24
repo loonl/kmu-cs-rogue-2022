@@ -918,7 +918,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 2
 --- !u!95 &2828077058819322865
 Animator:
   serializedVersion: 4
@@ -1688,9 +1688,11 @@ MonoBehaviour:
   hpBarPrefab: {fileID: 0}
   goldTxt: {fileID: 0}
   canvas: {fileID: 0}
+  id: 14
   Sound: []
-  id: 12
   isDead: 0
+  isInvulnerable: 0
+  onDotdmg: 0
 --- !u!1 &4616083264600162395
 GameObject:
   m_ObjectHideFlags: 0

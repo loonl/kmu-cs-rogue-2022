@@ -19,6 +19,8 @@ public class DungeonRoom : MonoBehaviour
     private Tilemap _openDoorLayer;
     [SerializeField]
     public GameObject ObjectParent;
+    [SerializeField]
+    public GameObject ObstacleParent;
 
     public Tilemap GroundLayer { get { return _groundLayer; } }
     public Tilemap WallLayer { get { return _wallLayer; } }
@@ -73,9 +75,9 @@ public class DungeonRoom : MonoBehaviour
     //테스트용 코드
     public void KillAll()
     {
-        int cnt = _spawner.monsters.Count;
+        int cnt = _spawner.aliveMonsters.Count;
         if (_spawner != null)
             for(int i = 0; i < cnt; i++)
-                _spawner.monsters[0].Die();
+                _spawner.aliveMonsters[0].Die();
     }
 }

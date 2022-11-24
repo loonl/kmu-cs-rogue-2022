@@ -10,11 +10,6 @@ public class FastZombie : Monster
         Sound = SoundManager.Instance.ZombieClip(Monstertype);
     }
 
-    private void Start()
-    {
-        Init();
-    }
-    
     // 피격 시 실행
     public override void OnDamage(float damage, float _knockBackForce, Vector2 _knockBackDirection, WaitForSeconds invulnerabletime = null)
     {

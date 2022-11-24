@@ -187,6 +187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generator: {fileID: 7798428689776333278}
+  fadeimg: {fileID: 2402616407364701943, guid: 833de1bec56274f4298feae1d8d0ca13, type: 3}
   DroppedItems: {fileID: 0}
   Currentroom: 0
 --- !u!114 &7798428690168941556
@@ -201,4 +202,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f88bb5ec0a27b894794405370ce6e150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeimg: {fileID: 0}
+  fadeimg: {fileID: 2402616407364701943, guid: 833de1bec56274f4298feae1d8d0ca13, type: 3}
