@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2527924041890242527}
   - component: {fileID: 5994026925124318913}
   m_Layer: 3
-  m_Name: NormalArrow
+  m_Name: FireArrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: -1305122433
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d2702206601aea74c9850a043054aee1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 80b0b488bb257ee4689c08bb58cd1bd9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

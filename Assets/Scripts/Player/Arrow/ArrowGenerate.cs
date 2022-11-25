@@ -38,8 +38,8 @@ public class ArrowGenerate : MonoBehaviour
         {
             Queue<GameObject> temp = new Queue<GameObject>();
             
-            // 화살 2발씩 미리 로딩
-            for (int j = 0; j < 2; j++)
+            // 화살 20발씩 미리 로딩
+            for (int j = 0; j < 20; j++)
             {
                 GameObject obj = Instantiate(arrowPrefabs[i]);
                 obj.SetActive(false);
@@ -94,6 +94,34 @@ public class ArrowGenerate : MonoBehaviour
          */
     }
     
+    // -------------------------------------------------------------
+    // 날아갈 방향을 지정해준 Arrow 공격
+    // -------------------------------------------------------------
+    public void Attack(string effectName, Vector2 dir)
+    {
+        // 사용할 화살 이펙트 prefab index 결정
+        switch (effectName)
+        {
+            case "NormalArrow":
+                index = 0;
+                break;
+        }
+        
+        GameObject arrowPrefab = arrowPool[index].Dequeue();
+        arrowPrefab.SetActive(true);
+        
+        // 화살 스폰 위치 조정
+        arrowPrefab.transform.position = player.transform.position;
+
+        // 화살 회전 설정
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        arrowPrefab.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+        // 화살 발사 - 오토에임
+        // TODO - 속도 조절
+        arrowPrefab.GetComponent<Rigidbody2D>().velocity = dir.normalized * 5f;
+    }
+
     // -------------------------------------------------------------
     // 사용이 끝나고 다시 Pool 안에 반납
     // -------------------------------------------------------------

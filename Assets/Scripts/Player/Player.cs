@@ -194,11 +194,13 @@ public class Player : MonoBehaviour {
             SkillCoolDown.Instance.TriggerSkill();
 
             if (equipment[0] != null)
-            { 
-                SkillCoolDown.Instance.TriggerSkill();
-                SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
+            {
+                if (equipment[0].itemType == 1)
+                {
+                    SkillCoolDown.Instance.TriggerSkill();
+                    SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
+                }
             }
-
         }
         
         // dash input
@@ -305,6 +307,13 @@ public class Player : MonoBehaviour {
         anim.GetComponent<PlayerAnimreciver>().onArrowShoot = () =>
         {
             arrowGen.Attack(equipment[0].effectName);
+        };
+        
+        // 활 스킬 시작해야 할 때
+        anim.GetComponent<PlayerAnimreciver>().onBowSkillStart = () =>
+        {
+            SkillCoolDown.Instance.TriggerSkill();
+            SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
         };
     }
 
