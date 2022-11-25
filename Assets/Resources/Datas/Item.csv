@@ -48,8 +48,8 @@ id,name,type,rarity,dmg,range,skilldmg,cooltime,hp,knockbackforce,speed,price,ef
 46,shield4,7,R,0,0,0,0,230,0,0,50,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/6_Weapons/WoodShield4.png
 47,shield6,7,R,0,0,0,0,250,0,0,60,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Shield_01.png
 48,shield7,7,R,0,0,0,0,260,0,0,70,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Shield_02.png
-49,sword5,1,SR,14,1.5,22,5,0,1,0,100,FireSlash3,,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_5.png
-50,sword12,1,SR,21,1.5,43,10,0,1,0,110,FireSlash3,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_17.png
+49,sword5,1,SR,14,1.5,22,5,0,1,0,100,FireSlash3,FourWayExplosion,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Sword_5.png
+50,sword12,1,SR,21,1.5,13,10,0,1,0,110,FireSlash3,DustStorm,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_17.png
 51,sword13,1,SR,22,1.5,46,10,0,1,0,120,ElectricSlash3,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_19.png
 52,sword14,1,SR,23,1.5,49,10,0,1,0,130,ElectricSlash3,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_20.png
 53,axe3,1,SR,12,1.5,21,5,0,1,0,140,FireClaw,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/6_Weapons/AxeNormal1.png
