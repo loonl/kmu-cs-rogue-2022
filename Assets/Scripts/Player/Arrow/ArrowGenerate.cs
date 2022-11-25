@@ -73,10 +73,17 @@ public class ArrowGenerate : MonoBehaviour
         
         // 화살 스폰 위치 조정
         arrowPrefab.transform.position = player.transform.position;
+        
+        // 오토 에임 방향 저장
+        Vector2 shootDirection = NearestShootDirection();
+        
+        // 화살 회전 설정
+        float angle = Mathf.Atan2(shootDirection.y, shootDirection.x) * Mathf.Rad2Deg;
+        arrowPrefab.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         // 화살 발사 - 오토에임
         // TODO - 속도 조절
-        arrowPrefab.GetComponent<Rigidbody2D>().velocity = NearestShootDirection() * 5f;
+        arrowPrefab.GetComponent<Rigidbody2D>().velocity = shootDirection * 5f;
         
 
         /** PlayStore 출시할 때 오토에임 기능 Off 만든다고 결정되면 사용할 코드
