@@ -58,7 +58,7 @@ id,name,type,rarity,dmg,range,skilldmg,cooltime,hp,knockbackforce,speed,price,ef
 56,spear1,1,SR,8,1.5,15,8,0,1,0,100,ElectricSlash3,,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Soon_Spear.png
 57,spear3,1,SR,14,1.5,17,8,0,1,0,110,FireSlash,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_09.png
 58,mace,1,SR,15,1.5,20,5,0,1,0,120,ElectricSlash2,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_07.png
-59,bow2,2,SR,6,3,22,11,0,1,0,130,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_10.png
+59,bow2,2,SR,6,3,22,11,0,1,0,130,FireArrow,HexaShot,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_10.png
 60,staff2,3,SR,40,10,28,7,0,1,0,140,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_03.png
 61,helmet4,4,SR,0,0,0,0,40,0,0,100,,,Assets/Resources/SPUM/SPUM_Sprites/Items/4_Helmet/Helmet_4.png
 62,helmet5,4,SR,0,0,0,0,50,0,0,110,,,Assets/Resources/SPUM/SPUM_Sprites/Items/4_Helmet/Helmet_5.png

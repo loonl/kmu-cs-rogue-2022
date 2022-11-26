@@ -29,8 +29,8 @@ public class MultipleArrows : BaseSkill
         for (int i = 0; i < directions.Length; i++)
         {
             // 데미지는 2배
-            player.GetComponent<ArrowGenerate>().Attack(weapon.skillName, directions[i]);
-            player.GetComponent<ArrowGenerate>().Attack(weapon.skillName, directions[i]);
+            player.GetComponent<ArrowGenerate>().Attack(weapon.effectName, directions[i]);
+            player.GetComponent<ArrowGenerate>().Attack(weapon.effectName, directions[i]);
         }
 
         SkillManager.Instance.onGoingSkillInfo.Clear();

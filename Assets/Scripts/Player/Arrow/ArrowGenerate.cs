@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ArrowGenerate : MonoBehaviour
@@ -38,12 +39,10 @@ public class ArrowGenerate : MonoBehaviour
         {
             Queue<GameObject> temp = new Queue<GameObject>();
             
-            // 화살 20발씩 미리 로딩
-            for (int j = 0; j < 20; j++)
+            // 화살 넉넉하게 100발씩 미리 로딩
+            for (int j = 0; j < 100; j++)
             {
-                GameObject obj = Instantiate(arrowPrefabs[i]);
-                obj.SetActive(false);
-                obj.transform.SetParent(parent);
+                GameObject obj = CreateNewObject(i);
                 temp.Enqueue(obj);
             }
             
@@ -61,14 +60,9 @@ public class ArrowGenerate : MonoBehaviour
     public void Attack(string effectName)
     {
         // 사용할 화살 이펙트 prefab index 결정
-        switch (effectName)
-        {
-            case "NormalArrow":
-                index = 0;
-                break;
-        }
+        index = ChooseIndex(effectName);
         
-        GameObject arrowPrefab = arrowPool[index].Dequeue();
+        GameObject arrowPrefab = GetObject();
         arrowPrefab.SetActive(true);
         
         // 화살 스폰 위치 조정
@@ -100,14 +94,9 @@ public class ArrowGenerate : MonoBehaviour
     public void Attack(string effectName, Vector2 dir)
     {
         // 사용할 화살 이펙트 prefab index 결정
-        switch (effectName)
-        {
-            case "NormalArrow":
-                index = 0;
-                break;
-        }
-        
-        GameObject arrowPrefab = arrowPool[index].Dequeue();
+        index = ChooseIndex(effectName);
+
+        GameObject arrowPrefab = GetObject();
         arrowPrefab.SetActive(true);
         
         // 화살 스폰 위치 조정
@@ -119,7 +108,55 @@ public class ArrowGenerate : MonoBehaviour
 
         // 화살 발사 - 오토에임
         // TODO - 속도 조절
-        arrowPrefab.GetComponent<Rigidbody2D>().velocity = dir.normalized * 5f;
+        arrowPrefab.GetComponent<Rigidbody2D>().velocity = dir * 5f;
+    }
+
+    private int ChooseIndex(string effectName)
+    {
+        int idx = -1;
+        switch (effectName)
+        {
+            case "NormalArrow":
+                idx = 0;
+                break;
+            case "FireArrow":
+                idx = 1;
+                break;
+            case "GreenArrow":
+                idx = 2;
+                break;
+            case "GoldArrow":
+                idx = 3;
+                break;
+            case "DiamondArrow":
+                idx = 4;
+                break;
+        }
+
+        return idx;
+    }
+
+    private GameObject CreateNewObject(int idx)
+    {
+        GameObject obj = Instantiate(arrowPrefabs[idx]);
+        obj.SetActive(false);
+        obj.transform.SetParent(parent);
+        return obj;
+    }
+
+    private GameObject GetObject()
+    {
+        if (arrowPool[index].Count > 0)
+        {
+            GameObject obj = arrowPool[index].Dequeue();
+            return obj;
+        }
+        else
+        {
+            GameObject obj = CreateNewObject(index);
+            obj.SetActive(true);
+            return obj;
+        }
     }
 
     // -------------------------------------------------------------

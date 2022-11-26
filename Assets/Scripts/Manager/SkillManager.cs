@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 public class SkillManager : MonoBehaviour
 {
     Player player;
-    public enum SkillInfo // ÇöÀç ¹ßµ¿ÁßÀÎ ½ºÅ³ Á¤º¸°¡ µÉ ¼ö ÀÖ´Â °Í
+    public enum SkillInfo // ï¿½ï¿½ï¿½ï¿½ ï¿½ßµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½
     {
         Name,
         Direction,
@@ -57,7 +57,7 @@ public class SkillManager : MonoBehaviour
         GameObject skill = Instantiate(Resources.Load($"Prefabs/Skill/{skillname}")) as GameObject;
     }
 
-    // ¹æ ¾ÈÀÇ »ì¾ÆÀÖ´Â ¸ó½ºÅÍ ¸®½ºÆ®¸¦ °¡Á®¿È
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public List<Monster> GetMonstersInRoom(int roomindex)
     {
         List<Monster> monsters = new List<Monster>();
@@ -74,7 +74,7 @@ public class SkillManager : MonoBehaviour
         return monsters;
     }
 
-    // °ÔÀÓ¿ÀºêÁ§Æ®¿ÍÀÇ °Å¸®¿¡ µû¶ó ¸ó½ºÅÍ ¸®½ºÆ® Á¤·Ä
+    // ï¿½ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
     public List<Monster> SortMonstersByDistance(GameObject obj, List<Monster> monsters)
     {
         monsters.Sort((m1, m2) =>
@@ -83,7 +83,7 @@ public class SkillManager : MonoBehaviour
         return monsters;
     }
 
-    // °ÔÀÓ¿ÀºêÁ§Æ®·ÎºÎÅÍ ¸ó½ºÅÍ »çÀÌÀÇ °Å¸®¸¦ ±¸ÇÔ
+    // ï¿½ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private float GetDistanceFromObject(GameObject obj, Monster monster)
     {
         return Vector2.Distance(monster.gameObject.transform.position, obj.transform.position);
@@ -95,13 +95,13 @@ public class SkillManager : MonoBehaviour
         if (monsters.Count == 0) return null;
         return monsters[0];
     }
-    // ¼Óµµ ºÎµå·¯¿î º¯È­¸¦ À§ÇØ »ç¿ë
+    // ï¿½Óµï¿½ ï¿½Îµå·¯ï¿½ï¿½ ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
     public IEnumerator VelocityLerp(Rigidbody2D rig, Vector2 source, Vector2 target, float overTime)
     {
         float startTime = Time.time;
         while (Time.time < startTime + overTime)
         {   
-            if(rig.velocity == Vector2.zero) // µµÁß¿¡ º®, Àå¾Ö¹° ºÎµúÇô¼­ ¼Óµµ°¡ 0ÀÌ µÇ¾î¹ö¸° °æ¿ì
+            if(rig.velocity == Vector2.zero) // ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ï¿½, ï¿½ï¿½Ö¹ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ 0ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             {
                 player.curState = PlayerState.Normal;
                 onGoingSkillInfo.Add(SkillInfo.PlayerChangedPos, player.transform.position);
@@ -113,7 +113,7 @@ public class SkillManager : MonoBehaviour
         rig.velocity = target;
     }
 
-    // normalizedµÈ source¿¡¼­ targetÀ» °¡¸®Å°´Â normalizedµÈ vector ¹ÝÈ¯
+    // normalizedï¿½ï¿½ sourceï¿½ï¿½ï¿½ï¿½ targetï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ normalizedï¿½ï¿½ vector ï¿½ï¿½È¯
     public Vector2 GetDirectionFromObject(Transform target, Transform source)
     {
         return (target.position - source.position).normalized;

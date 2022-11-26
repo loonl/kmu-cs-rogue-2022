@@ -11,8 +11,8 @@ public abstract class BaseSkill : MonoBehaviour
     protected float knockbackPower;
     protected List<Collider2D> monsters = new List<Collider2D>();
     protected float animationLength;
-    protected WaitForSeconds colliderValidTime; // ������ ���� �ð� �� ���� �浹 ���� �ð�����, �̸� ����� �ξ� �ڷ�ƾ���� �޸� ���� ����. �⺻ 0.1��. ����Ʈ �ִϸ��̼� ���� �ð� != �浹 ���� �ð�
-    protected float colliderValidTimeF = 0.1f; // ���� �ð��� 0.1�� �̿��� ������ �ϱ� ���� ���
+    protected WaitForSeconds colliderValidTime; // 몬스터의 무적 시간 및 범위 충돌 판정 시간으로, 미리 만들어 두어 코루틴에서 메모리 낭비를 방지. 기본 0.1초. 이펙트 애니메이션 지속 시간 != 충돌 판정 시간
+    protected float colliderValidTimeF = 0.1f; // 판정 시간을 0.1초 이외의 값으로 하기 위해 사용
     protected virtual void Start()
     {
         init();
@@ -20,7 +20,7 @@ public abstract class BaseSkill : MonoBehaviour
         StartCoroutine(ExecuteSkill());
     }
 
-    protected virtual void init() // ���� �ʱⰪ ����
+    protected virtual void init() // 변수 초기값 설정
     {
         player = GameManager.Instance.Player;
         gameObject.GetComponent<SpriteRenderer>().sortingLayerName = "Effect";
@@ -32,7 +32,7 @@ public abstract class BaseSkill : MonoBehaviour
         animationLength = GetAnimationLength();
     }
 
-    float GetAnimationLength() // ����Ʈ �ִϸ��̼��� ���� ��ȯ
+    float GetAnimationLength() // 이펙트 애니메이션의 길이 반환
     {
         if (animator == null) return 0;
         AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
@@ -46,18 +46,18 @@ public abstract class BaseSkill : MonoBehaviour
         return 0;
     }
 
-    protected abstract void SetPosition(); // ��ų ������Ʈ ��ġ ����
+    protected abstract void SetPosition(); // 스킬 오브젝트 위치 설정
 
-    protected virtual IEnumerator ExecuteSkill() // ��ų �ߵ�
+    protected virtual IEnumerator ExecuteSkill() // 스킬 발동
     {
         player.curState = PlayerState.Normal;
         yield return SkillAction();
     }
 
-    protected virtual IEnumerator SkillAction() // ���� ��ų ȿ�� ����
+    protected virtual IEnumerator SkillAction() // 실제 스킬 효과 구현
     {
-        yield return GameManager.Instance.Setwfs(20); // �÷��̾� ��ų ����� Į�� ����ٰ� ������� ����̱� ������, �ڿ������� ������ ���� �������� Ÿ�ֿ̹� ��ų�� �ߵ������ֵ��� ��� ���.
-        if (animator != null) // ��ƼŬ�ý������� ����Ʈ ���� �� �ִϸ����Ͱ� ���� ���� ����.
+        yield return GameManager.Instance.Setwfs(20); // 플레이어 스킬 모션이 칼을 들었다가 내려찍는 모션이기 때문에, 자연스러운 연출을 위해 내려찍을 타이밍에 스킬을 발동시켜주도록 잠시 대기.
+        if (animator != null) // 파티클시스템으로 이펙트 구현 시 애니메이터가 없을 수도 있음.
         {
             animator.SetTrigger(weapon.skillName);
         }
@@ -70,17 +70,17 @@ public abstract class BaseSkill : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Monster")) // ��ų ��Ʈ�ڽ� ���� ���͸� ����Ʈ�� ���
+        if (collision.gameObject.CompareTag("Monster")) // 스킬 히트박스 내의 몬스터를 리스트에 담기
         {
             monsters.Add(collision);
         }
     }
     protected virtual void OnTriggerStay2D(Collider2D collision)
     {   
-        if (monsters.Contains(collision)) // monsters ����Ʈ�� ���ٸ� �̴� ���Ͱ� �ƴ�.
+        if (monsters.Contains(collision)) // monsters 리스트에 없다면 이는 몬스터가 아님.
         {
             Monster target = collision.gameObject.GetComponent<Monster>();
-            if(!target.isInvulnerable) target.OnDamage(weapon.stat.skillDamage, knockbackPower, invulnerabletime:colliderValidTime); // ����� �ֱ�
+            if(!target.isInvulnerable) target.OnDamage(weapon.stat.skillDamage, knockbackPower, invulnerabletime:colliderValidTime); // 데미지 주기
         }
         if (collision.gameObject.CompareTag("MapObject"))
         {
