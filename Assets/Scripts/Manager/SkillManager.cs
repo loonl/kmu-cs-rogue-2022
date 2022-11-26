@@ -19,9 +19,13 @@ public class SkillManager : MonoBehaviour
     public enum DirectionName
     {
         Up,
+        RightUp,
         Right,
+        RightDown,
         Down,
-        Left
+        LeftDown,
+        Left,
+        LeftUp
     }
 
     private static SkillManager _instance = null;
@@ -31,9 +35,13 @@ public class SkillManager : MonoBehaviour
     public Dictionary<DirectionName, Vector2> DirectionDict = new Dictionary<DirectionName, Vector2>()
     {
         { DirectionName.Up, Vector2.up },
+        { DirectionName.RightUp, new Vector2(1, 1).normalized },
         { DirectionName.Right, Vector2.right },
+        { DirectionName.RightDown, new Vector2(1,-1).normalized },
         { DirectionName.Down, Vector2.down },
-        { DirectionName.Left, Vector2.left }
+        { DirectionName.LeftDown, new Vector2(-1,-1).normalized },
+        { DirectionName.Left, Vector2.left },
+        { DirectionName.LeftUp, new Vector2(-1,1).normalized },
     };
     private void Awake()
     {
@@ -89,6 +97,7 @@ public class SkillManager : MonoBehaviour
         return Vector2.Distance(monster.gameObject.transform.position, obj.transform.position);
     }
 
+    // 오브젝트로부터 가장 가까운 몬스터 반환
     public Monster GetClosestMonsterFromObject(GameObject obj)
     {
         List<Monster> monsters = SortMonstersByDistance(obj, GetMonstersInRoom(DungeonSystem.Instance.Currentroom));

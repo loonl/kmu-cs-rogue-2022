@@ -4,7 +4,7 @@ using static SkillManager;
 using UnityEngine;
 
 
-public class FourWayExplosion : BaseSkill
+public class EightWayFireExplosion : BaseSkill
 {
     bool canGenerateNextExplosion = true; // 다음 이펙트 생성 가능 여부
     bool firstgenerated = false; // 처음 생성된 이펙트?
@@ -31,7 +31,7 @@ public class FourWayExplosion : BaseSkill
             return;
         }
         firstgenerated = true;
-        SkillManager.Instance.onGoingSkillInfo.Add(SkillManager.SkillInfo.AliveEffectCount, 4);
+        SkillManager.Instance.onGoingSkillInfo.Add(SkillManager.SkillInfo.AliveEffectCount, 8);
         Instance.onGoingSkillInfo.Add(SkillInfo.SpawnerObject, gameObject);
 
         SetPosition();
@@ -46,12 +46,12 @@ public class FourWayExplosion : BaseSkill
         if (firstgenerated)
         {
             yield return GameManager.Instance.Setwfs(20);
-            List<DirectionName> dirs = new List<DirectionName>() { DirectionName.Up, DirectionName.Right, DirectionName.Down, DirectionName.Left };
+            List<DirectionName> dirs = new List<DirectionName>() { DirectionName.Up, DirectionName.RightUp, DirectionName.Right, DirectionName.RightDown, DirectionName.Down, DirectionName.LeftDown, DirectionName.Left, DirectionName.LeftUp };
             for(int i = 0; i < dirs.Count; i++)
             {
                 Vector2 direction = Instance.DirectionDict[dirs[i]];
                 Vector2 newpos = (Vector2)gameObject.transform.position + new Vector2(gameObject.transform.localScale.x / 2 * direction.x, gameObject.transform.localScale.y / 2 * direction.y);
-                Instantiate(Resources.Load("Prefabs/Skill/FourWayExplosion"), newpos, Quaternion.identity, gameObject.transform); // 새 이펙트 생성
+                Instantiate(Resources.Load("Prefabs/Skill/EightWayFireExplosion"), newpos, Quaternion.identity, gameObject.transform); // 새 이펙트 생성
             }
             yield break;
         }
@@ -83,7 +83,7 @@ public class FourWayExplosion : BaseSkill
             yield break;
         }
         Vector2 newpos = (Vector2)gameObject.transform.position + new Vector2(gameObject.transform.localScale.x /2 * direction.x, gameObject.transform.localScale.y /2* direction.y);
-        Instantiate(Resources.Load("Prefabs/Skill/FourWayExplosion"), newpos, Quaternion.identity, ((GameObject)Instance.onGoingSkillInfo[SkillInfo.SpawnerObject]).transform); // 새 이펙트 생성
+        Instantiate(Resources.Load("Prefabs/Skill/EightWayFireExplosion"), newpos, Quaternion.identity, ((GameObject)Instance.onGoingSkillInfo[SkillInfo.SpawnerObject]).transform); // 새 이펙트 생성
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
@@ -93,6 +93,23 @@ public class FourWayExplosion : BaseSkill
         if (collision.gameObject.CompareTag("Monster")) // 스킬 히트박스 내의 몬스터를 리스트에 담기
         {
             monsters.Add(collision);
+        }
+    }
+
+    protected override void OnTriggerStay2D(Collider2D collision)
+    {
+        if (monsters.Contains(collision))
+        {
+            Monster target = collision.gameObject.GetComponent<Monster>();
+            if (!target.isInvulnerable)
+            {
+                target.OnDamage(weapon.stat.skillDamage, knockbackPower, (collision.gameObject.transform.position - player.transform.position).normalized, colliderValidTime);
+                target.SetDotDmg(0.3f, 15f, 2f, 10f, "FireOrange"); // 도트대미지 세팅
+            }
+        }
+        if (collision.gameObject.CompareTag("MapObject"))
+        {
+            collision.gameObject.SendMessage("OnDamage");
         }
     }
 }

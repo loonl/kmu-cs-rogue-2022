@@ -208,7 +208,7 @@ public class Monster : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
 
-        StopCoroutine(currentActionCoroutine);
+        if(currentActionCoroutine != null) StopCoroutine(currentActionCoroutine);
         currentActionCoroutine = StartCoroutine(Dying());
     }
 
@@ -329,7 +329,7 @@ public class Monster : MonoBehaviour
         {
             if (Action != ActionList.SkillCasting1)
             {
-                if (Action == ActionList.OnDamaging)
+                if (Action == ActionList.OnDamaging && currentActionCoroutine != null)
                 {
                     StopCoroutine(currentActionCoroutine);
                 }
