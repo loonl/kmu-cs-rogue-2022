@@ -5,15 +5,29 @@ using UnityEngine;
 public class StaffEffect : MonoBehaviour
 {
     Animator animator;
+    BoxCollider2D boxCollider;
 
     private void Awake()
     {
         animator = gameObject.GetComponent<Animator>();
+        boxCollider = gameObject.GetComponent<BoxCollider2D>();
     }
 
     private void OnEnable()
     {
         animator.SetTrigger(gameObject.name);
+        if (gameObject.name.Contains("Skill"))
+        {
+            gameObject.transform.localScale = Vector3.one * 1.5f;
+            boxCollider.size = new Vector2(0.8f, 0.4f);
+            boxCollider.offset = new Vector2(0, 0.3f);
+        }
+        else
+        {
+            gameObject.transform.localScale = Vector3.one;
+            boxCollider.size = new Vector2(0.3f, 0.3f);
+            boxCollider.offset = new Vector2(0, 0.15f);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
