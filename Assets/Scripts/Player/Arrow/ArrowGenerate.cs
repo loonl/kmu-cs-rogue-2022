@@ -59,14 +59,11 @@ public class ArrowGenerate : MonoBehaviour
     // -------------------------------------------------------------
     public void Attack(string effectName)
     {
-        // 사용할 화살 이펙트 prefab index 결정
-        index = ChooseIndex(effectName);
-        
         GameObject arrowPrefab = GetObject();
         arrowPrefab.SetActive(true);
         
         // 화살 스폰 위치 조정
-        arrowPrefab.transform.position = player.transform.position;
+        arrowPrefab.transform.position = player.transform.position + new Vector3(0, 0.2f, 0);
         
         // 오토 에임 방향 저장
         Vector2 shootDirection = NearestShootDirection();
@@ -93,14 +90,11 @@ public class ArrowGenerate : MonoBehaviour
     // -------------------------------------------------------------
     public void Attack(string effectName, Vector2 dir)
     {
-        // 사용할 화살 이펙트 prefab index 결정
-        index = ChooseIndex(effectName);
-
         GameObject arrowPrefab = GetObject();
         arrowPrefab.SetActive(true);
         
         // 화살 스폰 위치 조정
-        arrowPrefab.transform.position = player.transform.position;
+        arrowPrefab.transform.position = player.transform.position + new Vector3(0, 0.2f, 0);
 
         // 화살 회전 설정
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
@@ -111,8 +105,9 @@ public class ArrowGenerate : MonoBehaviour
         arrowPrefab.GetComponent<Rigidbody2D>().velocity = dir * 5f;
     }
 
-    private int ChooseIndex(string effectName)
+    public void ChangeIndex(string effectName)
     {
+        print(effectName);
         int idx = -1;
         switch (effectName)
         {
@@ -132,8 +127,8 @@ public class ArrowGenerate : MonoBehaviour
                 idx = 4;
                 break;
         }
-
-        return idx;
+        
+        index = idx;
     }
 
     private GameObject CreateNewObject(int idx)
@@ -208,12 +203,12 @@ public class ArrowGenerate : MonoBehaviour
             return new Vector2(-player.transform.localScale.x, 0).normalized;
 
         // 조건을 만족하는 Monster들 중에서 가장 가까운 Monster 판별
-        Vector2 returnVal = monstersList[0].transform.position - player.transform.position;
+        Vector2 returnVal = monstersList[0].transform.position - player.transform.position - new Vector3(0, 0.2f, 0);
         float mini = returnVal.magnitude;
         for (int i = 1; i < monstersList.Count; i++)
         {
             Monster monster = monstersList[i];
-            Vector2 direction = monster.transform.position - player.transform.position;
+            Vector2 direction = monster.transform.position - player.transform.position - new Vector3(0, 0.2f, 0);
             if (direction.magnitude < mini)
             {
                 mini = direction.magnitude;
