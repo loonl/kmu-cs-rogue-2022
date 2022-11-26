@@ -30,7 +30,7 @@ id,name,type,rarity,dmg,range,skilldmg,cooltime,hp,knockbackforce,speed,price,ef
 28,spear2,1,R,11,1,16,8,0,1,0,80,NormalSlash3,,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Spear_1.png
 29,spear4,1,R,17,1,18,8,0,1,0,90,NormalSlash3,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_14.png
 30,bow3,2,R,7,4,24,12,0,1,0,50,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_12.png
-31,staff1,3,R,10,7,28,14,0,1,0,60,,,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Ward_1.png
+31,staff1,3,R,10,7,28,14,0,1,0,60,NormalStaffAttack,NormalStaffSkill,Assets/Resources/SPUM/SPUM_Sprites/Items/6_Weapons/Ward_1.png
 32,staff3,3,R,20,7,32,16,0,1,0,70,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_18.png
 33,helmet8,4,R,0,0,0,0,80,0,0,80,,,Assets/Resources/SPUM/SPUM_Sprites/Items/4_Helmet/Helmet_8.png
 34,helmet11,4,R,0,0,0,0,110,0,0,50,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/4_Helmet/Normal_Helmet2.png

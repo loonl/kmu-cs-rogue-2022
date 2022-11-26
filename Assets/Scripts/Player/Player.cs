@@ -35,6 +35,7 @@ public class Player : MonoBehaviour {
     [HideInInspector]
     public SPUM_SpriteList spumMgr;
     public ArrowGenerate arrowGen;
+    Staff staff;
 
     // 인벤토리
     public Inventory Inventory { get; private set; }
@@ -45,6 +46,8 @@ public class Player : MonoBehaviour {
     // 이동정보
     public Vector3 moveInfo;
 
+    PlayerAnimreciver playerAnimreciver;
+
     private void Awake()
     {
         this.Inventory = GameObject.Find("Inventory").GetComponent<Inventory>();    
@@ -53,10 +56,12 @@ public class Player : MonoBehaviour {
     void Start()
     {
         anim = transform.GetChild(0).gameObject.GetComponent<Animator>();
+        playerAnimreciver = anim.GetComponent<PlayerAnimreciver>();
         wpnColl = transform.GetChild(0).gameObject.GetComponent<WeaponCollider>();
         spumMgr = transform.GetChild(0).GetChild(0).GetComponent<SPUM_SpriteList>();
         rig = GetComponent<Rigidbody2D>();
         arrowGen = gameObject.GetComponent<ArrowGenerate>();
+        staff = gameObject.GetComponent<Staff>();
 
         // 첫 장비 설정
         EquipInit();
@@ -141,12 +146,15 @@ public class Player : MonoBehaviour {
 
             //// cannot move - freeze
             //rig.velocity = Vector2.zero;
-            
+
             // play effect
             if (equipment[0].itemType == 1)
             {
                 wpnColl.Attack(equipment[0].effectName);
             }
+
+            else if (equipment[0].itemType == 3)
+                staff.Attack(equipment[0].effectName);
             
             // 활 공격은 애니메이션 이벤트에서 행해짐
 
@@ -194,10 +202,15 @@ public class Player : MonoBehaviour {
             SkillCoolDown.Instance.TriggerSkill();
 
             if (equipment[0] != null)
-            { 
+            {
                 SkillCoolDown.Instance.TriggerSkill();
-                SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
+                if(equipment[0].itemType != 3)
+                    SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
             }
+
+            //스태프 스킬
+            if (equipment[0].itemType == 3)
+                staff.Attack(equipment[0].skillName, false);
 
         }
         
@@ -205,7 +218,9 @@ public class Player : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.LeftShift) && dashCool <= 0.0f && moveInput.magnitude != 0 && curState == PlayerState.Normal)
             StartCoroutine(Dash());
 
-            // test code - change equipments
+        if (Input.GetKeyDown(KeyCode.Alpha8)) // bow
+            Equip(ItemManager.Instance.GetItem(31));
+        // test code - change equipments
         if (Input.GetKeyDown(KeyCode.Alpha9)) // bow
             Equip(ItemManager.Instance.GetItem(5));
         if (Input.GetKeyDown(KeyCode.Alpha0)) // staff
@@ -251,7 +266,7 @@ public class Player : MonoBehaviour {
     public void AnimEventInit()
     {
         // 사망 시
-        anim.GetComponent<PlayerAnimreciver>().onDieComplete = () =>
+        playerAnimreciver.onDieComplete = () =>
         {
             // hide character
             //gameObject.SetActive(false);
@@ -263,7 +278,7 @@ public class Player : MonoBehaviour {
         };
 
         // 공격 종료
-        anim.GetComponent<PlayerAnimreciver>().onAttackComplete = () =>
+        playerAnimreciver.onAttackComplete = () =>
         {
             // update state
             curState = PlayerState.Normal;
@@ -279,7 +294,7 @@ public class Player : MonoBehaviour {
         };
 
         // 스킬 종료
-        anim.GetComponent<PlayerAnimreciver>().onSkillComplete = () =>
+        playerAnimreciver.onSkillComplete = () =>
         {
             // update state
             curState = PlayerState.Normal;
@@ -295,14 +310,14 @@ public class Player : MonoBehaviour {
         };
 
         // 스턴 종료
-        anim.GetComponent<PlayerAnimreciver>().onStunComplete = () =>
+        playerAnimreciver.onStunComplete = () =>
         {
             // 무적 시간 측정 시작
             StartCoroutine(NoHit(50));
         };
-        
+
         // 화살 쏴야할 때
-        anim.GetComponent<PlayerAnimreciver>().onArrowShoot = () =>
+        playerAnimreciver.onArrowShoot = () =>
         {
             arrowGen.Attack(equipment[0].effectName);
         };
