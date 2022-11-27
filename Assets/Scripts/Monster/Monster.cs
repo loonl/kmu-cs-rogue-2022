@@ -393,8 +393,8 @@ public class Monster : MonoBehaviour
         }
         else if (rigidbody2d.velocity.x < 0)
         {
-            hpBar.transform.localScale = new Vector3(0.01f, 0.01f, 1);
             transform.localScale = new Vector3(stat.scale, stat.scale, 1);
+            hpBar.transform.localScale = new Vector3(0.01f, 0.01f, 1);
         }
     }
 

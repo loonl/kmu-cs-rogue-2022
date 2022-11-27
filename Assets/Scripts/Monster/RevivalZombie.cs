@@ -7,9 +7,10 @@ public class RevivalZombie : Monster
 
     protected bool revived = false;
 
-    protected float timeBetRevive = 2f; // 부활 대기시간
+    protected float timeBetRevive = 1f; // 부활 대기시간
     protected float startReviveTime; // 부활 시작시간
-    
+
+    protected float swingRange = 1.5f; // 스윙 사정거리
     protected float swingCoolTime = 3f; // 스윙 쿨타임
     protected float lastSwingTime; // 마지막 스윙 시점
     protected float timeForSwingReady = 1f; // 스윙 준비시간
@@ -38,7 +39,7 @@ public class RevivalZombie : Monster
         {
             rigidbody2d.velocity = direction * stat.speed;
             UpdateEyes();
-            if (distance < 2f && Time.time >= lastSwingTime + swingCoolTime)
+            if (distance < swingRange && Time.time >= lastSwingTime + swingCoolTime)
             {
                 lastSwingTime = Time.time;
                 Action = ActionList.SkillCasting1;
@@ -51,24 +52,24 @@ public class RevivalZombie : Monster
     // 스킬1 수행
     protected override IEnumerator SkillCasting1()
     {
-        bool swinging = true;
+        int swingStep = 0;
         bool swingReady = true;
         UpdateEyes();
         
-        while (!isDead && Action == ActionList.SkillCasting1 && swinging)
+        while (!isDead && Action == ActionList.SkillCasting1 && swingStep == 0)
         {
             rigidbody2d.velocity = new Vector2(0, 0.01f);
             
-            if (Time.time > lastSwingTime + timeForSwingReady && swingReady) // 대기
+            if (Time.time > lastSwingTime + timeForSwingReady && swingReady) // 스윙
             {
                 SoundPlay(Sound[0]);
                 animator.SetTrigger("Skill_Normal");
                 StartCoroutine(EnablepolygonCollider2D());
                 swingReady = false;
             }
-            else if (Time.time >= lastSwingTime + timeForSwingReady + 1f) // 스윙 종료
+            else if (Time.time >= lastSwingTime + timeForSwingReady + 0.5f) // 스윙 종료
             {
-                swinging = false;
+                swingStep++;
             }
 
             yield return new WaitForSeconds(0.05f);
