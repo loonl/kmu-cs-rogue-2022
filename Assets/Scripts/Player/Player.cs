@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Windows.Speech;
-using static UnityEditor.Progress;
 
 public enum PlayerState {
     Normal = 0,

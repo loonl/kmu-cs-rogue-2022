@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 
@@ -14,8 +13,9 @@ public class DoubleFireSlash : BaseSkill
     {
         if (player.transform.localScale.x < 0)// 플레이어가 오른쪽 바라보고 있음
         {
-            collid.offset = new Vector2(0.3f, collid.offset.y);
-            gameObject.GetComponent<SpriteRenderer>().flipX = false;
+            collid.offset = new Vector2(-0.3f, collid.offset.y);
+            gameObject.GetComponent<SpriteRenderer>().flipX = false; // 작동을 안함.. 정확힌 하기는 하는데 의미 없음.. 애니메이터 때문인데 해결방안 불명.
+            gameObject.transform.localScale = new Vector2(-gameObject.transform.localScale.x, gameObject.transform.localScale.y);
             gameObject.transform.position = player.transform.position + new Vector3(0.4f, 0, -0.5f);
         }
         else
