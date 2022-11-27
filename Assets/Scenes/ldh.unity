@@ -3793,6 +3793,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8427328457276617205, guid: b0890d5a7bf86be4483cd3e539c0b68d, type: 3}
+      propertyPath: bgmvolume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8427328457276617205, guid: b0890d5a7bf86be4483cd3e539c0b68d, type: 3}
+      propertyPath: totalvolume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8427328457276617205, guid: b0890d5a7bf86be4483cd3e539c0b68d, type: 3}
+      propertyPath: effectvolume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8427328457276617205, guid: b0890d5a7bf86be4483cd3e539c0b68d, type: 3}
+      propertyPath: _BGMclips.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8427328457276617205, guid: b0890d5a7bf86be4483cd3e539c0b68d, type: 3}
+      propertyPath: _BGMclips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 0bb7ae0775cabd74199e64f17897df83, type: 3}
     - target: {fileID: 8427328457276617210, guid: b0890d5a7bf86be4483cd3e539c0b68d, type: 3}
       propertyPath: m_Name
       value: SoundManager
