@@ -24,6 +24,9 @@ public class DroppedItem : Interact
         _canvas.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         GameObject hpBarPrefab = Resources.Load<GameObject>("Prefabs/UI/ShopTxt");
         GameObject hpBar = Instantiate(hpBarPrefab, transform.position, Quaternion.identity);
+        Canvas c = _canvas.GetComponent<Canvas>();
+        c.sortingOrder = 1;
+        c.sortingLayerName = "Default";
         hpBar.GetComponent<TextMeshProUGUI>().text = _price.ToString();
         hpBar.transform.SetParent(_canvas.transform);
         hpBar.transform.localPosition = new Vector3(0, 0, 0);
