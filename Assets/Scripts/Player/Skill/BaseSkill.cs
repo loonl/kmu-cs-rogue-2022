@@ -12,7 +12,9 @@ public abstract class BaseSkill : MonoBehaviour
     protected List<Collider2D> monsters = new List<Collider2D>();
     protected float animationLength;
     protected WaitForSeconds colliderValidTime; // 몬스터의 무적 시간 및 범위 충돌 판정 시간으로, 미리 만들어 두어 코루틴에서 메모리 낭비를 방지. 기본 0.1초. 이펙트 애니메이션 지속 시간 != 충돌 판정 시간
+    [SerializeField]
     protected float colliderValidTimeF = 0.1f; // 판정 시간을 0.1초 이외의 값으로 하기 위해 사용
+    
     protected virtual void Start()
     {
         init();
