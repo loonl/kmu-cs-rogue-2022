@@ -10,11 +10,15 @@ public class WeaponCollider : MonoBehaviour
     ArcCollider2D arc;
     Transform effectTransform; // for changing attack effect size or flipping
     public PolygonCollider2D poly;
-    //public List<Monster> monsters;
     public Animator effectanim;
     public List<Collider2D> monsters = new List<Collider2D>();
 
     void Start()
+    {
+        Init();
+    }
+
+    protected virtual void Init()
     {
         player = transform.GetComponentInParent<Player>();
         arc = GetComponent<ArcCollider2D>();
@@ -22,6 +26,7 @@ public class WeaponCollider : MonoBehaviour
         poly.enabled = false;
         effectanim = player.transform.GetChild(0).GetChild(2).GetComponent<Animator>();
         effectTransform = player.transform.GetChild(0).GetChild(2).GetComponent<Transform>();
+        
     }
 
     public void SetAttackRange(float value = 1)
