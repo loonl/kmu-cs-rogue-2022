@@ -530,9 +530,6 @@ public class Player : MonoBehaviour {
 
             // 넉백
             StartCoroutine(KnockBack(knockBackForce, direction));
-
-            // debug
-            print("Player's health : " + stat.hp);
         }
     }
     

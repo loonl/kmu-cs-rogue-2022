@@ -2531,7 +2531,8 @@ MonoBehaviour:
   hpBarPrefab: {fileID: 0}
   goldTxt: {fileID: 0}
   canvas: {fileID: 0}
-  id: 15
+  animator: {fileID: 0}
+  id: 16
   Sound: []
   isDead: 0
   isInvulnerable: 0
