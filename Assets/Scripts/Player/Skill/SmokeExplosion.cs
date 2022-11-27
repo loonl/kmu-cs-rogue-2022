@@ -13,7 +13,7 @@ public class SmokeExplosion : BaseSkill
     protected override void SetPosition()
     {
         List<Monster> target = 
-            SkillManager.Instance.SortMonstersByDistance(SkillManager.Instance.GetMonstersInRoom(DungeonSystem.Instance.Currentroom));
+            SkillManager.Instance.SortMonstersByDistance(player.gameObject, SkillManager.Instance.GetMonstersInRoom(DungeonSystem.Instance.Currentroom));
         if (target.Count != 0) transform.position = target[0].transform.position;
         else transform.position = player.transform.position;
     }

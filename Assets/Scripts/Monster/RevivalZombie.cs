@@ -4,6 +4,7 @@ using UnityEngine;
 public class RevivalZombie : Monster
 {
     protected PolygonCollider2D polygonCollider2D = new PolygonCollider2D();
+    Animator attackeffect;
 
     protected bool revived = false;
 
@@ -21,6 +22,7 @@ public class RevivalZombie : Monster
         lastSwingTime = Time.time;
         
         polygonCollider2D = GetComponentInChildren<PolygonCollider2D>();
+        attackeffect = transform.GetChild(0).GetChild(2).GetComponent<Animator>();
     }
     
     protected override void Init()
@@ -64,6 +66,7 @@ public class RevivalZombie : Monster
             {
                 SoundPlay(Sound[0]);
                 animator.SetTrigger("Skill_Normal");
+                attackeffect.SetTrigger("NormalSlash");
                 StartCoroutine(EnablepolygonCollider2D());
                 swingReady = false;
             }

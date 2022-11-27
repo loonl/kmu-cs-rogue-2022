@@ -20,7 +20,8 @@ public enum SoundType
     PlayerAttack_Normal,
     PlayerAttack_Fire,
     PlayerAttack_Electric,
-    Boss
+    Boss,
+    BGM
 }
 
 public class SoundManager : MonoBehaviour
@@ -55,6 +56,9 @@ public class SoundManager : MonoBehaviour
 
     [SerializeField] 
     private List<AudioClip> _PlayerAttackclips = new List<AudioClip>();
+    
+    [SerializeField]
+    private List<AudioClip> _BGMclips = new List<AudioClip>();
 
     private int i;
     public float bgmvolume, effectvolume, totalvolume;
@@ -87,6 +91,7 @@ public class SoundManager : MonoBehaviour
         if (root == null)
         {
             root = new GameObject { name = "@Sound" };
+            root.AddComponent<BGMPlayer>();
             Object.DontDestroyOnLoad(root);
 
             string[] soundNames = System.Enum.GetNames(typeof(Sound));
@@ -155,6 +160,10 @@ public class SoundManager : MonoBehaviour
     {
         switch (st)
         {
+            case SoundType.BGM:
+                Play(_BGMclips[0], Sound.Bgm);
+                break;
+
             case SoundType.Box:
                 Play(_Boxclips[Random.Range(0, _Boxclips.Count)]);
                 break;
@@ -207,7 +216,9 @@ public class SoundManager : MonoBehaviour
 
             audioSource.pitch = pitch;
             audioSource.clip = audioClip;
-            audioSource.volume = bgmvolume * totalvolume;
+            // TODO - 변경해주기
+            //audioSource.volume = bgmvolume * totalvolume;
+            audioSource.volume = 1;
             audioSource.Play();
         }
 

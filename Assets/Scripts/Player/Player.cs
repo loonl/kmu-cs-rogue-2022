@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Windows.Speech;
 using static UnityEditor.Progress;
 
 public enum PlayerState {
@@ -29,12 +30,13 @@ public class Player : MonoBehaviour {
     [HideInInspector]
     public List<Item> equipment;
 
-    Animator anim;
+    public Animator anim;
     public WeaponCollider wpnColl;
     Rigidbody2D rig;
     [HideInInspector]
     public SPUM_SpriteList spumMgr;
     public ArrowGenerate arrowGen;
+    Staff staff;
 
     // 인벤토리
     public Inventory Inventory { get; private set; }
@@ -45,6 +47,8 @@ public class Player : MonoBehaviour {
     // 이동정보
     public Vector3 moveInfo;
 
+    PlayerAnimreceiver playerAnimreceiver;
+
     private void Awake()
     {
         this.Inventory = GameObject.Find("Inventory").GetComponent<Inventory>();    
@@ -53,10 +57,12 @@ public class Player : MonoBehaviour {
     void Start()
     {
         anim = transform.GetChild(0).gameObject.GetComponent<Animator>();
+        playerAnimreceiver = anim.GetComponent<PlayerAnimreceiver>();
         wpnColl = transform.GetChild(0).gameObject.GetComponent<WeaponCollider>();
         spumMgr = transform.GetChild(0).GetChild(0).GetComponent<SPUM_SpriteList>();
         rig = GetComponent<Rigidbody2D>();
         arrowGen = gameObject.GetComponent<ArrowGenerate>();
+        staff = gameObject.GetComponent<Staff>();
 
         // 첫 장비 설정
         EquipInit();
@@ -141,16 +147,19 @@ public class Player : MonoBehaviour {
 
             //// cannot move - freeze
             //rig.velocity = Vector2.zero;
-            
+
             // play effect
             if (equipment[0].itemType == 1)
             {
                 wpnColl.Attack(equipment[0].effectName);
             }
+
+            else if (equipment[0].itemType == 3)
+                staff.Attack(equipment[0].effectName);
             
             // 활 공격은 애니메이션 이벤트에서 행해짐
 
-                // TODO - play sound => 이상하면 고쳐야 함
+            // TODO - play sound => 이상하면 고쳐야 함
             switch (equipment[0].effectName)
             {
                 case "NormalSlash":
@@ -181,31 +190,46 @@ public class Player : MonoBehaviour {
             anim.SetInteger("WpnState", equipment[0].itemType);
 
             // change animation to skill
-            anim.SetTrigger("Skill");
+            if (equipment[0].skillName == "RapidArrow")
+            {
+                anim.SetTrigger("BowGroundSkill");
+                
+                // 쿨타임 적용
+                SkillCoolDown.Instance.TriggerSkill();
+            }
+            else
+                anim.SetTrigger("Skill");
 
             // update current state to attacking
             curState = PlayerState.Attacking;
-            
-            //// cannot move - freeze
-            //rig.velocity = Vector2.zero;
 
             // 스킬 관련 구현
-
             SkillCoolDown.Instance.TriggerSkill();
 
             if (equipment[0] != null)
-            { 
-                SkillCoolDown.Instance.TriggerSkill();
-                SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
-            }
+            {
+                // 근접 무기 스킬
+                if (equipment[0].itemType == 1)
+                {
+                    SkillCoolDown.Instance.TriggerSkill();
+                    SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
+                }
 
+                // 활 스킬은 애니메이션 delegate 쪽에서 호출 - onBowSkillStart 참조
+
+                //스태프 스킬
+                else if (equipment[0].itemType == 3)
+                    staff.Attack(equipment[0].skillName, false);
+            }
         }
         
         // dash input
         if (Input.GetKeyDown(KeyCode.LeftShift) && dashCool <= 0.0f && moveInput.magnitude != 0 && curState == PlayerState.Normal)
             StartCoroutine(Dash());
 
-            // test code - change equipments
+        if (Input.GetKeyDown(KeyCode.Alpha8)) // bow
+            Equip(ItemManager.Instance.GetItem(31));
+        // test code - change equipments
         if (Input.GetKeyDown(KeyCode.Alpha9)) // bow
             Equip(ItemManager.Instance.GetItem(5));
         if (Input.GetKeyDown(KeyCode.Alpha0)) // staff
@@ -251,7 +275,7 @@ public class Player : MonoBehaviour {
     public void AnimEventInit()
     {
         // 사망 시
-        anim.GetComponent<PlayerAnimreciver>().onDieComplete = () =>
+        playerAnimreceiver.onDieComplete = () =>
         {
             // hide character
             //gameObject.SetActive(false);
@@ -263,7 +287,7 @@ public class Player : MonoBehaviour {
         };
 
         // 공격 종료
-        anim.GetComponent<PlayerAnimreciver>().onAttackComplete = () =>
+        playerAnimreceiver.onAttackComplete = () =>
         {
             // update state
             curState = PlayerState.Normal;
@@ -279,7 +303,7 @@ public class Player : MonoBehaviour {
         };
 
         // 스킬 종료
-        anim.GetComponent<PlayerAnimreciver>().onSkillComplete = () =>
+        playerAnimreceiver.onSkillComplete = () =>
         {
             // update state
             curState = PlayerState.Normal;
@@ -295,16 +319,30 @@ public class Player : MonoBehaviour {
         };
 
         // 스턴 종료
-        anim.GetComponent<PlayerAnimreciver>().onStunComplete = () =>
+        playerAnimreceiver.onStunComplete = () =>
         {
             // 무적 시간 측정 시작
-            StartCoroutine(Grace(50));
+            StartCoroutine(NoHit(50));
         };
-        
+
         // 화살 쏴야할 때
-        anim.GetComponent<PlayerAnimreciver>().onArrowShoot = () =>
+        playerAnimreceiver.onArrowShoot = () =>
         {
             arrowGen.Attack(equipment[0].effectName);
+        };
+        
+        // 활 스킬 시작해야 할 때
+        anim.GetComponent<PlayerAnimreceiver>().onBowSkillStart = () =>
+        {
+            SkillCoolDown.Instance.TriggerSkill();
+            SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
+        };
+        
+        // 활 스킬 중에서 화살 쏴야 할 때
+        anim.GetComponent<PlayerAnimreceiver>().onSkillArrowShoot = () =>
+        {
+            anim.SetBool("SkillFinished", false);
+            SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
         };
     }
 
@@ -320,30 +358,23 @@ public class Player : MonoBehaviour {
                                      ItemManager.Instance.GetItem(0)  // shield
                                     };
         for (int i = 0; i < equipment.Count; i++)
-            Equip(equipment[i]);
+            Equip(equipment[i], true);
     }
 
     // -------------------------------------------------------------
     // Player 아이템 착용 / 해제
+    // true = 정상 작동, false = 비정상 작동
     // -------------------------------------------------------------
-    public void Equip(Item item)
+    public bool Equip(Item item, bool first = false)
     {
-
         // 바뀌는 장비가 어느 부위인지 판단
         int partsIndex;
         int type = item.itemType;
-        if (type == 0 || type == 1 || type == 2)
+        if (type == 1 || type == 2 || type == 3)
             partsIndex = 0;
         else
             partsIndex = item.itemType - 3;
-
-        // 입고 있는 것 먼저 un-equip
-        if (!item.isEmpty())
-            UnEquip(equipment[partsIndex]);
-
-        // 플레이어 스탯 수정
-        List<Stat> itemStat = new List<Stat> { item.stat };
-        stat.SyncStat(itemStat);
+        
         
         // 근접 무기
         if (partsIndex == 0 && type == 1)
@@ -357,20 +388,16 @@ public class Player : MonoBehaviour {
             // 근접 무기 -> 활로 무기 변경 시 방패 자동 장착 해제
             if (equipment[0].itemType == 1 && !equipment[4].isEmpty())
             {
+                // 방패 un-equip 후 DroppedItem으로 생성
                 UnEquip(equipment[4]);
+                MakeDroppedItem(equipment[4], true);
                 
-                // 끼던 방패를 DroppedItem으로 생성
-                var shieldDropped = GameManager.Instance.CreateGO
-                (
-                    "Prefabs/Dungeon/Dropped",
-                    DungeonSystem.Instance.DroppedItems.transform
-                );
-                
-                shieldDropped.transform.position = this.gameObject.transform.position;
-                shieldDropped.GetComponent<DroppedItem>().Set(equipment[4]);
-                
-                equipment[4] = ItemManager.Instance.GetItem(1);
+                // Index 업데이트
+                equipment[4] = ItemManager.Instance.GetItem(0);
             }
+            
+            // 쏠 화살 변경
+            arrowGen.ChangeIndex(item.effectName);
         }
         
         // 스태프
@@ -379,39 +406,38 @@ public class Player : MonoBehaviour {
             // 근접 무기 -> 스태프로 무기 변경 시 방패 자동 장착 해제
             if (equipment[0].itemType == 1 && !equipment[4].isEmpty())
             {
+                // 방패 un-equip 후 DroppedItem으로 생성
                 UnEquip(equipment[4]);
+                MakeDroppedItem(equipment[4], true);
                 
-                // 끼던 방패를 DroppedItem으로 생성
-                var shieldDropped = GameManager.Instance.CreateGO
-                (
-                    "Prefabs/Dungeon/Dropped",
-                    DungeonSystem.Instance.DroppedItems.transform
-                );
-                
-                shieldDropped.transform.position = this.gameObject.transform.position;
-                shieldDropped.GetComponent<DroppedItem>().Set(equipment[4]);
-                
-                equipment[4] = ItemManager.Instance.GetItem(1);
+                // Index 업데이트
+                equipment[4] = ItemManager.Instance.GetItem(0);
             }
             
             // 효과 적용
             // magic.SetupEffect(item: item);
         }
         
-        // 방패
+        // 방패 
         else if (partsIndex == 4)
         {
             // 활 / 스태프 -> 방패 장착 시도 시엔 장착 불가
             if (equipment[0].itemType == 2 || equipment[0].itemType == 3)
             {
                 Debug.Log("Cannot Equip Shield!");
-                return;
                 
-                // TODO - 위에 코드 문제 없으면 지우기
-                //UnEquip(equipment[0]);
-                //equipment[0] = ItemManager.Instance.GetItem(1);
+                // 비정상 작동 알림
+                return false;
             }
         }
+
+        // 입고 있는 것 먼저 un-equip
+        if (!item.isEmpty() && !first)
+            UnEquip(equipment[partsIndex]);
+
+        // 플레이어 스탯 수정
+        List<Stat> itemStat = new List<Stat> { item.stat };
+        stat.SyncStat(itemStat);
 
         // 플레이어 외형 수정
         switch (type)
@@ -444,8 +470,11 @@ public class Player : MonoBehaviour {
                 break;
         }
 
-        // 장착 슬롯에 아이템 추가
+        // 장착 아이템 index 업데이트 
         equipment[partsIndex] = item;
+        
+        // 정상 작동 알림
+        return true;
     }
 
     public void UnEquip(Item item)
@@ -533,13 +562,33 @@ public class Player : MonoBehaviour {
 
         this._interact = interact;
     }
-
+    
     public void RemoveInteractEvent()
     {
         this._interact = null;
     }
     
-    
+    // -------------------------------------------------------------
+    // DroppedItem 생성
+    // -------------------------------------------------------------
+    private void MakeDroppedItem(Item item, bool beside = false)
+    {
+        // 없어진 방패 재생성
+        var GO = GameManager.Instance.CreateGO
+        (
+            "Prefabs/Dungeon/Dropped",
+            DungeonSystem.Instance.DroppedItems.transform
+        );
+                
+        // 같은 위치 혹은 그 옆에 생성
+        if (beside)
+            GO.transform.position = this.gameObject.transform.position;
+        else
+            GO.transform.position = this.gameObject.transform.position + new Vector3(2f, 0, 0);
+        
+        GO.GetComponent<DroppedItem>().Set(item);
+    }
+
     /*
      *   Coroutine 함수
     */
@@ -593,9 +642,9 @@ public class Player : MonoBehaviour {
     }
 
     // -------------------------------------------------------------
-    // Player Grace - 무적 시간 측정
+    // Player NoHit - 무적 시간 측정
     // -------------------------------------------------------------
-    public IEnumerator Grace(int time)
+    public IEnumerator NoHit(int time)
     {
         // 스턴 종료 & 무적 시간 시작
         curState = PlayerState.Invincible;
@@ -606,8 +655,9 @@ public class Player : MonoBehaviour {
         // 다시 피격 가능하게 조정
         curState = PlayerState.Normal;
     }
-
-    private void OnCollisionEnter2D(Collision2D collision) //대쉬 중 몬스터와 충돌 무시
+    
+    // 충돌 체크
+    private void OnCollisionEnter2D(Collision2D collision) // 대쉬 중 몬스터와 충돌 무시
     {
         if(curState == PlayerState.Dashing && collision.gameObject.CompareTag("Monster"))
         {
