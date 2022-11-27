@@ -71,7 +71,7 @@ public class Portal : MonoBehaviour
         {
             DungeonSystem.Instance.Rooms[_connectedRoomId].Enter(_outDirect, exiting);
             DungeonSystem.Instance.Currentroom = _connectedRoomId;
-            StartCoroutine(GameManager.Instance.Player.Grace(80));
+            StartCoroutine(GameManager.Instance.Player.NoHit(80));
         }
 
         else
