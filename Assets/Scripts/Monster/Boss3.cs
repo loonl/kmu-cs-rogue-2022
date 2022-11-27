@@ -8,8 +8,7 @@ public class Boss3 : RevivalZombie
         polygonCollider2D.enabled = false;
         
         base.Init();
-        swingRange = 2f;
-        
+
         Monstertype = MonsterType.RevivalZombie;
         Sound = SoundManager.Instance.ZombieClip(Monstertype);
     }
@@ -17,6 +16,8 @@ public class Boss3 : RevivalZombie
     // 스킬 수행
     protected override IEnumerator SkillCasting1()
     {
+        swingRange = 2f;
+        
         int swingStep = 0;
         bool swingReady = true;
         UpdateEyes();
