@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Windows.Speech;
 using static UnityEditor.Progress;
 
 public enum PlayerState {
@@ -29,7 +30,7 @@ public class Player : MonoBehaviour {
     [HideInInspector]
     public List<Item> equipment;
 
-    Animator anim;
+    public Animator anim;
     public WeaponCollider wpnColl;
     Rigidbody2D rig;
     [HideInInspector]
@@ -46,7 +47,7 @@ public class Player : MonoBehaviour {
     // 이동정보
     public Vector3 moveInfo;
 
-    PlayerAnimreciver playerAnimreciver;
+    PlayerAnimreceiver playerAnimreceiver;
 
     private void Awake()
     {
@@ -56,7 +57,7 @@ public class Player : MonoBehaviour {
     void Start()
     {
         anim = transform.GetChild(0).gameObject.GetComponent<Animator>();
-        playerAnimreciver = anim.GetComponent<PlayerAnimreciver>();
+        playerAnimreceiver = anim.GetComponent<PlayerAnimreceiver>();
         wpnColl = transform.GetChild(0).gameObject.GetComponent<WeaponCollider>();
         spumMgr = transform.GetChild(0).GetChild(0).GetComponent<SPUM_SpriteList>();
         rig = GetComponent<Rigidbody2D>();
@@ -189,29 +190,37 @@ public class Player : MonoBehaviour {
             anim.SetInteger("WpnState", equipment[0].itemType);
 
             // change animation to skill
-            anim.SetTrigger("Skill");
+            if (equipment[0].skillName == "RapidArrow")
+            {
+                anim.SetTrigger("BowGroundSkill");
+                
+                // 쿨타임 적용
+                SkillCoolDown.Instance.TriggerSkill();
+            }
+            else
+                anim.SetTrigger("Skill");
 
             // update current state to attacking
             curState = PlayerState.Attacking;
-            
-            //// cannot move - freeze
-            //rig.velocity = Vector2.zero;
 
             // 스킬 관련 구현
-
             SkillCoolDown.Instance.TriggerSkill();
 
             if (equipment[0] != null)
             {
-                SkillCoolDown.Instance.TriggerSkill();
-                if(equipment[0].itemType != 3)
+                // 근접 무기 스킬
+                if (equipment[0].itemType == 1)
+                {
+                    SkillCoolDown.Instance.TriggerSkill();
                     SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
+                }
+
+                // 활 스킬은 애니메이션 delegate 쪽에서 호출 - onBowSkillStart 참조
+
+                //스태프 스킬
+                else if (equipment[0].itemType == 3)
+                    staff.Attack(equipment[0].skillName, false);
             }
-
-            //스태프 스킬
-            if (equipment[0].itemType == 3)
-                staff.Attack(equipment[0].skillName, false);
-
         }
         
         // dash input
@@ -266,7 +275,7 @@ public class Player : MonoBehaviour {
     public void AnimEventInit()
     {
         // 사망 시
-        playerAnimreciver.onDieComplete = () =>
+        playerAnimreceiver.onDieComplete = () =>
         {
             // hide character
             //gameObject.SetActive(false);
@@ -278,7 +287,7 @@ public class Player : MonoBehaviour {
         };
 
         // 공격 종료
-        playerAnimreciver.onAttackComplete = () =>
+        playerAnimreceiver.onAttackComplete = () =>
         {
             // update state
             curState = PlayerState.Normal;
@@ -294,7 +303,7 @@ public class Player : MonoBehaviour {
         };
 
         // 스킬 종료
-        playerAnimreciver.onSkillComplete = () =>
+        playerAnimreceiver.onSkillComplete = () =>
         {
             // update state
             curState = PlayerState.Normal;
@@ -310,16 +319,30 @@ public class Player : MonoBehaviour {
         };
 
         // 스턴 종료
-        playerAnimreciver.onStunComplete = () =>
+        playerAnimreceiver.onStunComplete = () =>
         {
             // 무적 시간 측정 시작
             StartCoroutine(NoHit(50));
         };
 
         // 화살 쏴야할 때
-        playerAnimreciver.onArrowShoot = () =>
+        playerAnimreceiver.onArrowShoot = () =>
         {
             arrowGen.Attack(equipment[0].effectName);
+        };
+        
+        // 활 스킬 시작해야 할 때
+        anim.GetComponent<PlayerAnimreceiver>().onBowSkillStart = () =>
+        {
+            SkillCoolDown.Instance.TriggerSkill();
+            SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
+        };
+        
+        // 활 스킬 중에서 화살 쏴야 할 때
+        anim.GetComponent<PlayerAnimreceiver>().onSkillArrowShoot = () =>
+        {
+            anim.SetBool("SkillFinished", false);
+            SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
         };
     }
 
@@ -372,6 +395,9 @@ public class Player : MonoBehaviour {
                 // Index 업데이트
                 equipment[4] = ItemManager.Instance.GetItem(0);
             }
+            
+            // 쏠 화살 변경
+            arrowGen.ChangeIndex(item.effectName);
         }
         
         // 스태프
@@ -504,9 +530,6 @@ public class Player : MonoBehaviour {
 
             // 넉백
             StartCoroutine(KnockBack(knockBackForce, direction));
-
-            // debug
-            print("Player's health : " + stat.hp);
         }
     }
     

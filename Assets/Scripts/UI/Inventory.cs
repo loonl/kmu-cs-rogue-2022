@@ -15,7 +15,6 @@ public class Inventory : MonoBehaviour
     public void UpdateGold(int diff)
     {
         gold += diff;
-        Debug.Log($"Update gold: {gold}");      // !!! TEMP
         // UIManager.Instance.UpdateGoldText(gold);
     }
 }

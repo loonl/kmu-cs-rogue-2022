@@ -3,21 +3,30 @@ using UnityEngine;
 
 public class Boss1 : RushZombie
 {
-    int rushStep = 0;
+    protected override void Init()
+    {
+        base.Init();
+        rushCoolTime = 3f;
+        lastRushTime = Time.time;
+        
+        Monstertype = MonsterType.RushZombie;
+        Sound = SoundManager.Instance.ZombieClip(Monstertype);
+    }
     
     // 스킬 수행
     protected override IEnumerator SkillCasting1()
     {
-        bool rushing = true;
+        int rushStep = 0;
         bool rushReady = true;
-        while (!isDead && Action == ActionList.SkillCasting1 && rushing)
+        
+        while (!isDead && Action == ActionList.SkillCasting1 && rushStep <=3)
         {
             if (Time.time < lastRushTime + timeForRushReady) // 대기
             {
-                rushReady = true;
+                UpdateEyes();
                 rigidbody2d.velocity = Vector2.zero;
             }
-            else if (rushReady == true) // 돌진
+            else if (rushReady) // 돌진
             {
                 rigidbody2d.AddForce(direction * 300f);
                 rushReady = false;
@@ -25,26 +34,16 @@ public class Boss1 : RushZombie
             }
             else if (Time.time >= lastRushTime + timeForRushReady + 0.7f) // 돌진 종료
             {
+                rushReady = true;
                 lastRushTime = Time.time;
-                if (rushStep <= 2)
-                {
-                    rushStep++;
-                    rushCoolTime = 0.9f;
-                    timeForRushReady = 0.1f;
-                }
-                else
-                {
-                    rushStep = 0;
-                    rushCoolTime = 5f;
-                    timeForRushReady = 1f;
-                    rushing = false;
-                }
+                rushStep++;
+                timeForRushReady = 0.1f;
             }
-
-            UpdateEyes();
+            
             yield return new WaitForSeconds(0.05f);
         }
 
+        timeForRushReady = 1f;
         actionFinished = true;
     }
 }

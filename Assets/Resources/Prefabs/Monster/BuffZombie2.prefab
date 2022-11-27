@@ -872,7 +872,7 @@ GameObject:
   - component: {fileID: 493391193884165628}
   - component: {fileID: 4843010636021720945}
   - component: {fileID: 1672687037820131973}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: BuffZombie2
   m_TagString: Monster
   m_Icon: {fileID: 0}
@@ -976,7 +976,7 @@ MonoBehaviour:
   goldTxt: {fileID: 0}
   canvas: {fileID: 0}
   animator: {fileID: 0}
-  id: 12
+  id: 13
   Sound: []
   isDead: 0
   isInvulnerable: 0
