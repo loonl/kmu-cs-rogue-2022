@@ -11,8 +11,10 @@ public abstract class BaseSkill : MonoBehaviour
     protected float knockbackPower;
     protected List<Collider2D> monsters = new List<Collider2D>();
     protected float animationLength;
-    protected WaitForSeconds colliderValidTime; // ¸ó½ºÅÍÀÇ ¹«Àû ½Ã°£ ¹× ¹üÀ§ Ãæµ¹ ÆÇÁ¤ ½Ã°£À¸·Î, ¹Ì¸® ¸¸µé¾î µÎ¾î ÄÚ·çÆ¾¿¡¼­ ¸Ş¸ğ¸® ³¶ºñ¸¦ ¹æÁö. ±âº» 0.1ÃÊ. ÀÌÆåÆ® ¾Ö´Ï¸ŞÀÌ¼Ç Áö¼Ó ½Ã°£ != Ãæµ¹ ÆÇÁ¤ ½Ã°£
-    protected float colliderValidTimeF = 0.1f; // ÆÇÁ¤ ½Ã°£À» 0.1ÃÊ ÀÌ¿ÜÀÇ °ªÀ¸·Î ÇÏ±â À§ÇØ »ç¿ë
+    protected WaitForSeconds colliderValidTime; // ëª¬ìŠ¤í„°ì˜ ë¬´ì  ì‹œê°„ ë° ë²”ìœ„ ì¶©ëŒ íŒì • ì‹œê°„ìœ¼ë¡œ, ë¯¸ë¦¬ ë§Œë“¤ì–´ ë‘ì–´ ì½”ë£¨í‹´ì—ì„œ ë©”ëª¨ë¦¬ ë‚­ë¹„ë¥¼ ë°©ì§€. ê¸°ë³¸ 0.1ì´ˆ. ì´í™íŠ¸ ì• ë‹ˆë©”ì´ì…˜ ì§€ì† ì‹œê°„ != ì¶©ëŒ íŒì • ì‹œê°„
+    [SerializeField]
+    protected float colliderValidTimeF = 0.1f; // íŒì • ì‹œê°„ì„ 0.1ì´ˆ ì´ì™¸ì˜ ê°’ìœ¼ë¡œ í•˜ê¸° ìœ„í•´ ì‚¬ìš©
+    
     protected virtual void Start()
     {
         init();
@@ -20,9 +22,9 @@ public abstract class BaseSkill : MonoBehaviour
         StartCoroutine(ExecuteSkill());
     }
 
-    protected virtual void init() // º¯¼ö ÃÊ±â°ª ¼³Á¤
+    protected virtual void init() // ë³€ìˆ˜ ì´ˆê¸°ê°’ ì„¤ì •
     {
-        player = GameObject.Find("Player").GetComponent<Player>();
+        player = GameManager.Instance.Player;
         gameObject.GetComponent<SpriteRenderer>().sortingLayerName = "Effect";
         weapon = player.equipment[0];
         animator = GetComponent<Animator>();
@@ -32,7 +34,7 @@ public abstract class BaseSkill : MonoBehaviour
         animationLength = GetAnimationLength();
     }
 
-    float GetAnimationLength() // ÀÌÆåÆ® ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ ±æÀÌ ¹İÈ¯
+    float GetAnimationLength() // ì´í™íŠ¸ ì• ë‹ˆë©”ì´ì…˜ì˜ ê¸¸ì´ ë°˜í™˜
     {
         if (animator == null) return 0;
         AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
@@ -46,18 +48,18 @@ public abstract class BaseSkill : MonoBehaviour
         return 0;
     }
 
-    protected abstract void SetPosition(); // ½ºÅ³ ¿ÀºêÁ§Æ® À§Ä¡ ¼³Á¤
+    protected abstract void SetPosition(); // ìŠ¤í‚¬ ì˜¤ë¸Œì íŠ¸ ìœ„ì¹˜ ì„¤ì •
 
-    protected virtual IEnumerator ExecuteSkill() // ½ºÅ³ ¹ßµ¿
+    protected virtual IEnumerator ExecuteSkill() // ìŠ¤í‚¬ ë°œë™
     {
         player.curState = PlayerState.Normal;
         yield return SkillAction();
     }
 
-    protected virtual IEnumerator SkillAction() // ½ÇÁ¦ ½ºÅ³ È¿°ú ±¸Çö
+    protected virtual IEnumerator SkillAction() // ì‹¤ì œ ìŠ¤í‚¬ íš¨ê³¼ êµ¬í˜„
     {
-        yield return GameManager.Instance.Setwfs(20); // ÇÃ·¹ÀÌ¾î ½ºÅ³ ¸ğ¼ÇÀÌ Ä®À» µé¾ú´Ù°¡ ³»·ÁÂï´Â ¸ğ¼ÇÀÌ±â ¶§¹®¿¡, ÀÚ¿¬½º·¯¿î ¿¬ÃâÀ» À§ÇØ ³»·ÁÂïÀ» Å¸ÀÌ¹Ö¿¡ ½ºÅ³À» ¹ßµ¿½ÃÄÑÁÖµµ·Ï Àá½Ã ´ë±â.
-        if (animator != null) // ÆÄÆ¼Å¬½Ã½ºÅÛÀ¸·Î ÀÌÆåÆ® ±¸Çö ½Ã ¾Ö´Ï¸ŞÀÌÅÍ°¡ ¾øÀ» ¼öµµ ÀÖÀ½.
+        yield return GameManager.Instance.Setwfs(20); // í”Œë ˆì´ì–´ ìŠ¤í‚¬ ëª¨ì…˜ì´ ì¹¼ì„ ë“¤ì—ˆë‹¤ê°€ ë‚´ë ¤ì°ëŠ” ëª¨ì…˜ì´ê¸° ë•Œë¬¸ì—, ìì—°ìŠ¤ëŸ¬ìš´ ì—°ì¶œì„ ìœ„í•´ ë‚´ë ¤ì°ì„ íƒ€ì´ë°ì— ìŠ¤í‚¬ì„ ë°œë™ì‹œì¼œì£¼ë„ë¡ ì ì‹œ ëŒ€ê¸°.
+        if (animator != null) // íŒŒí‹°í´ì‹œìŠ¤í…œìœ¼ë¡œ ì´í™íŠ¸ êµ¬í˜„ ì‹œ ì• ë‹ˆë©”ì´í„°ê°€ ì—†ì„ ìˆ˜ë„ ìˆìŒ.
         {
             animator.SetTrigger(weapon.skillName);
         }
@@ -65,21 +67,22 @@ public abstract class BaseSkill : MonoBehaviour
         yield return colliderValidTime;
         collid.enabled = false;
         monsters.Clear();
+        SkillManager.Instance.onGoingSkillInfo.Clear();
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Monster")) // ½ºÅ³ È÷Æ®¹Ú½º ³»ÀÇ ¸ó½ºÅÍ¸¦ ¸®½ºÆ®¿¡ ´ã±â
+        if (collision.gameObject.CompareTag("Monster")) // ìŠ¤í‚¬ íˆíŠ¸ë°•ìŠ¤ ë‚´ì˜ ëª¬ìŠ¤í„°ë¥¼ ë¦¬ìŠ¤íŠ¸ì— ë‹´ê¸°
         {
             monsters.Add(collision);
         }
     }
     protected virtual void OnTriggerStay2D(Collider2D collision)
     {   
-        if (monsters.Contains(collision)) // monsters ¸®½ºÆ®¿¡ ¾ø´Ù¸é ÀÌ´Â ¸ó½ºÅÍ°¡ ¾Æ´Ô.
+        if (monsters.Contains(collision)) // monsters ë¦¬ìŠ¤íŠ¸ì— ì—†ë‹¤ë©´ ì´ëŠ” ëª¬ìŠ¤í„°ê°€ ì•„ë‹˜.
         {
             Monster target = collision.gameObject.GetComponent<Monster>();
-            if(!target.isInvulnerable) target.OnDamage(weapon.stat.skillDamage, knockbackPower, invulnerabletime:colliderValidTime); // ´ë¹ÌÁö ÁÖ±â
+            if(!target.isInvulnerable) target.OnDamage(weapon.stat.skillDamage, knockbackPower, invulnerabletime:colliderValidTime); // ë°ë¯¸ì§€ ì£¼ê¸°
         }
         if (collision.gameObject.CompareTag("MapObject"))
         {

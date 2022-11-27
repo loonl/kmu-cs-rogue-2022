@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimreciver : MonoBehaviour
+public class PlayerAnimreceiver : MonoBehaviour
 {
     public System.Action onDieComplete;
     public System.Action onAttackComplete;
     public System.Action onSkillComplete;
     public System.Action onStunComplete;
     public System.Action onArrowShoot;
+    public System.Action onBowSkillStart;
+    public System.Action onSkillArrowShoot;
 
     // executed at the end of animation death
     public void OnDieComplete()
@@ -52,6 +54,24 @@ public class PlayerAnimreciver : MonoBehaviour
         if (onArrowShoot != null)
         {
             this.onArrowShoot();
+        }
+    }
+    
+    // executed at the time of skill using motion
+    public void OnBowSkillStart()
+    {
+        if (onBowSkillStart != null)
+        {
+            this.onBowSkillStart();
+        }
+    }
+    
+    // executed at the time of skill using motion
+    public void OnSkillArrowShoot()
+    {
+        if (onSkillArrowShoot != null)
+        {
+            this.onSkillArrowShoot();
         }
     }
 }

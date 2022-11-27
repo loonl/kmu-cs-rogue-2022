@@ -923,9 +923,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1145015837
-  m_SortingLayer: 5
-  m_SortingOrder: 0
+  m_SortingLayerID: -1304363675
+  m_SortingLayer: 4
+  m_SortingOrder: 3
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -3015,6 +3015,7 @@ MonoBehaviour:
   remainCool: 0
   dashCool: 0
   curState: 0
+  anim: {fileID: 0}
   wpnColl: {fileID: 0}
   spumMgr: {fileID: 0}
   arrowGen: {fileID: 0}
@@ -3046,8 +3047,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0036208632, y: 0.26657775}
-  m_Size: {x: 0.3479243, y: 0.5390839}
+  m_Offset: {x: 0.003620863, y: 0.17097144}
+  m_Size: {x: 0.3479243, y: 0.34787133}
   m_Direction: 0
 --- !u!50 &522375067236575485
 Rigidbody2D:
@@ -3097,7 +3098,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89325ac6a0df4d54dad3b513a1dbec3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StaffAttack: {fileID: 0}
+  EffectPrefab: {fileID: 4376019505141427452, guid: e742e058877eb4e4dba4f7483e5f9265, type: 3}
 --- !u!1 &6561307665398564036
 GameObject:
   m_ObjectHideFlags: 0
@@ -3838,7 +3839,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 2
 --- !u!95 &8772235718817774693
 Animator:
   serializedVersion: 4

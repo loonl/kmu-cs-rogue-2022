@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ArrowGenerate : MonoBehaviour
@@ -38,12 +39,10 @@ public class ArrowGenerate : MonoBehaviour
         {
             Queue<GameObject> temp = new Queue<GameObject>();
             
-            // 화살 2발씩 미리 로딩
-            for (int j = 0; j < 2; j++)
+            // 화살 넉넉하게 100발씩 미리 로딩
+            for (int j = 0; j < 100; j++)
             {
-                GameObject obj = Instantiate(arrowPrefabs[i]);
-                obj.SetActive(false);
-                obj.transform.SetParent(parent);
+                GameObject obj = CreateNewObject(i);
                 temp.Enqueue(obj);
             }
             
@@ -60,23 +59,22 @@ public class ArrowGenerate : MonoBehaviour
     // -------------------------------------------------------------
     public void Attack(string effectName)
     {
-        // 사용할 화살 이펙트 prefab index 결정
-        switch (effectName)
-        {
-            case "NormalArrow":
-                index = 0;
-                break;
-        }
-        
-        GameObject arrowPrefab = arrowPool[index].Dequeue();
+        GameObject arrowPrefab = GetObject();
         arrowPrefab.SetActive(true);
         
         // 화살 스폰 위치 조정
-        arrowPrefab.transform.position = player.transform.position;
+        arrowPrefab.transform.position = player.transform.position + new Vector3(0, 0.2f, 0);
+        
+        // 오토 에임 방향 저장
+        Vector2 shootDirection = NearestShootDirection();
+        
+        // 화살 회전 설정
+        float angle = Mathf.Atan2(shootDirection.y, shootDirection.x) * Mathf.Rad2Deg;
+        arrowPrefab.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         // 화살 발사 - 오토에임
         // TODO - 속도 조절
-        arrowPrefab.GetComponent<Rigidbody2D>().velocity = NearestShootDirection() * 5f;
+        arrowPrefab.GetComponent<Rigidbody2D>().velocity = shootDirection * 5f;
         
 
         /** PlayStore 출시할 때 오토에임 기능 Off 만든다고 결정되면 사용할 코드
@@ -87,6 +85,75 @@ public class ArrowGenerate : MonoBehaviour
          */
     }
     
+    // -------------------------------------------------------------
+    // 날아갈 방향을 지정해준 Arrow 공격
+    // -------------------------------------------------------------
+    public void Attack(string effectName, Vector2 dir)
+    {
+        GameObject arrowPrefab = GetObject();
+        arrowPrefab.SetActive(true);
+        
+        // 화살 스폰 위치 조정
+        arrowPrefab.transform.position = player.transform.position + new Vector3(0, 0.2f, 0);
+
+        // 화살 회전 설정
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        arrowPrefab.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+        // 화살 발사 - 오토에임
+        // TODO - 속도 조절
+        arrowPrefab.GetComponent<Rigidbody2D>().velocity = dir * 5f;
+    }
+
+    public void ChangeIndex(string effectName)
+    {
+        print(effectName);
+        int idx = -1;
+        switch (effectName)
+        {
+            case "NormalArrow":
+                idx = 0;
+                break;
+            case "FireArrow":
+                idx = 1;
+                break;
+            case "GreenArrow":
+                idx = 2;
+                break;
+            case "GoldArrow":
+                idx = 3;
+                break;
+            case "DiamondArrow":
+                idx = 4;
+                break;
+        }
+        
+        index = idx;
+    }
+
+    private GameObject CreateNewObject(int idx)
+    {
+        GameObject obj = Instantiate(arrowPrefabs[idx]);
+        obj.SetActive(false);
+        obj.transform.SetParent(parent);
+        return obj;
+    }
+
+    private GameObject GetObject()
+    {
+        if (arrowPool[index].Count > 0)
+        {
+            GameObject obj = arrowPool[index].Dequeue();
+            return obj;
+        }
+        else
+        {
+            GameObject obj = CreateNewObject(index);
+            obj.SetActive(true);
+            return obj;
+        }
+    }
+
     // -------------------------------------------------------------
     // 사용이 끝나고 다시 Pool 안에 반납
     // -------------------------------------------------------------
@@ -136,12 +203,12 @@ public class ArrowGenerate : MonoBehaviour
             return new Vector2(-player.transform.localScale.x, 0).normalized;
 
         // 조건을 만족하는 Monster들 중에서 가장 가까운 Monster 판별
-        Vector2 returnVal = monstersList[0].transform.position - player.transform.position;
+        Vector2 returnVal = monstersList[0].transform.position - player.transform.position - new Vector3(0, 0.2f, 0);
         float mini = returnVal.magnitude;
         for (int i = 1; i < monstersList.Count; i++)
         {
             Monster monster = monstersList[i];
-            Vector2 direction = monster.transform.position - player.transform.position;
+            Vector2 direction = monster.transform.position - player.transform.position - new Vector3(0, 0.2f, 0);
             if (direction.magnitude < mini)
             {
                 mini = direction.magnitude;
