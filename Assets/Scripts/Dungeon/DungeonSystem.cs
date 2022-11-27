@@ -153,20 +153,10 @@ public class DungeonSystem : MonoBehaviour
             );
             // !!! 아이템 가격 표 필요 (아이템 가격 1000 고정)
             Item randomItem = GameManager.Instance.GetRandomDropItem();
-            dropped.GetComponent<DroppedItem>().Set(randomItem, 15);
-            
-            // UI 함수화 필요(수정중)
-            GameObject canvas = Resources.Load<GameObject>("Prefabs/UI/MonsterHPCanvas");
-            canvas = Instantiate(canvas, dropped.transform.position, Quaternion.identity);
-            canvas.transform.SetParent(dropped.transform);
-            canvas.transform.localPosition = new Vector3(0, -1f, 0);
-            canvas.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-            GameObject hpBarPrefab = Resources.Load<GameObject>("Prefabs/UI/ShopTxt");
-            GameObject hpBar = Instantiate(hpBarPrefab, transform.position, Quaternion.identity);
-            hpBar.GetComponent<TextMeshProUGUI>().text = dropped.GetComponent<DroppedItem>()._price.ToString();
-            hpBar.transform.SetParent(canvas.transform);
-            hpBar.transform.localPosition = new Vector3(0, 0, 0);
-            hpBar.transform.localScale = new Vector3(0.01f, 0.01f,0);
+            DroppedItem item = dropped.GetComponent<DroppedItem>();
+            item.Set(randomItem, 15);
+            item.SetCanvas();
+
         }
         //물약 하나 상점에 추가
         GameObject droppedItem = GameManager.Instance.CreateGO

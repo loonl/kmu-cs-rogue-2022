@@ -25,7 +25,7 @@ public class MapObject : MonoBehaviour
             droppedItem.transform.position = this.transform.position;
         }
 
-        else if(Random.value < 0.3)
+        else if(Random.value < 0.4)
         {
             droppedItem = GameManager.Instance.CreateGO
             (

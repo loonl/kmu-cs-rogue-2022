@@ -735,7 +735,7 @@ public class RoomGenerator : MonoBehaviour
                 }
             }
             //장애물 생성
-            GenerateObstacle(check, i);
+            //GenerateObstacle(check, i);
         }
     }
 

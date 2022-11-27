@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class DroppedItem : Interact
@@ -10,9 +11,24 @@ public class DroppedItem : Interact
 
     private Item _item;
     public Item Item { get { return _item; } }
-    
+    private GameObject _canvas;
 
     public int _price = 0;
+
+    public void SetCanvas()
+    {
+        _canvas = Resources.Load<GameObject>("Prefabs/UI/MonsterHPCanvas");
+        _canvas = Instantiate(_canvas, gameObject.transform.position, Quaternion.identity);
+        _canvas.transform.SetParent(gameObject.transform);
+        _canvas.transform.localPosition = new Vector3(0, -1f, 0);
+        _canvas.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        GameObject hpBarPrefab = Resources.Load<GameObject>("Prefabs/UI/ShopTxt");
+        GameObject hpBar = Instantiate(hpBarPrefab, transform.position, Quaternion.identity);
+        hpBar.GetComponent<TextMeshProUGUI>().text = _price.ToString();
+        hpBar.transform.SetParent(_canvas.transform);
+        hpBar.transform.localPosition = new Vector3(0, 0, 0);
+        hpBar.transform.localScale = new Vector3(0.01f, 0.01f, 0);
+    }
 
     private void GetItem()
     {
@@ -34,7 +50,12 @@ public class DroppedItem : Interact
         {
             // 만약 기존 장착한 아이템이 있으면
             if (!temp.isEmpty())
+            {
+                if(_canvas != null)
+                    Destroy(_canvas);
+
                 Set(temp);
+            }
 
             // 없으면
             else
