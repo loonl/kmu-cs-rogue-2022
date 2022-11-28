@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SetupMonsters:
-  - {fileID: 4286653788150504434, guid: 1ef2b5c704bded849b536c50df5c2208, type: 3}
+  - {fileID: 8514087866775622149, guid: ca0380b6c8a96a44ba60775f90fc314d, type: 3}
   allMonsters: []
   aliveMonsters: []
   deadMonsters: []

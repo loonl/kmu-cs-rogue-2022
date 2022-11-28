@@ -93,12 +93,23 @@ public class DungeonSystem : MonoBehaviour
         List<Dictionary<string, object>> monsterSpawnerData = CSVReader.Read("Datas/MonsterSpawner");
         //List<Dictionary<string, object>> monsterSpawnerData = CSVReader.Read("Datas/TestMonsterSpawner"); // !!테스트 코드
         List<Dictionary<string, object>> monsterData = CSVReader.Read("Datas/Monster");
-
+        int[] BehindMonsterSpawnerNumArr = new int[4];
+        
         // 몬스터스포너 확률 리스트 생성
         List<float> monsterSpawnerProbList = new List<float>();
         for (int i = 0; i < monsterSpawnerData.Count; i++)
         {
-            if(Floor == int.Parse(monsterSpawnerData[i]["Floor"].ToString()))
+            if (int.Parse(monsterSpawnerData[i]["Floor"].ToString()) == 1)
+            {
+                BehindMonsterSpawnerNumArr[2]++;
+                BehindMonsterSpawnerNumArr[3]++;
+            }
+            else if (int.Parse(monsterSpawnerData[i]["Floor"].ToString()) == 2)
+            {
+                BehindMonsterSpawnerNumArr[3]++;
+            }
+            
+            if (Floor == int.Parse(monsterSpawnerData[i]["Floor"].ToString()))
             {
                 monsterSpawnerProbList.Add(float.Parse(monsterSpawnerData[i]["Prob"].ToString()));
             }
@@ -113,13 +124,13 @@ public class DungeonSystem : MonoBehaviour
             }
             else if (generator.BossIndex == roomIndex)
             {
-                MonsterSpawnerId = RandomSelect(monsterSpawnerProbList, true);
+                MonsterSpawnerId = RandomSelect(monsterSpawnerProbList, true) + BehindMonsterSpawnerNumArr[Floor];
             }
             else
             {
-                MonsterSpawnerId = RandomSelect(monsterSpawnerProbList, false);
+                MonsterSpawnerId = RandomSelect(monsterSpawnerProbList, false) + BehindMonsterSpawnerNumArr[Floor];
             }
-       
+            
             string MonsterSpawnerPath = monsterSpawnerData[MonsterSpawnerId]["Path"].ToString();
             GameObject goSpawner = GameManager.Instance.CreateGO(MonsterSpawnerPath, generator.Rooms[roomIndex].transform);
             MonsterSpawner spawner = goSpawner.GetComponent<MonsterSpawner>();
@@ -153,20 +164,10 @@ public class DungeonSystem : MonoBehaviour
             );
             // !!! 아이템 가격 표 필요 (아이템 가격 1000 고정)
             Item randomItem = GameManager.Instance.GetRandomDropItem();
-            dropped.GetComponent<DroppedItem>().Set(randomItem, 15);
-            
-            // UI 함수화 필요(수정중)
-            GameObject canvas = Resources.Load<GameObject>("Prefabs/UI/MonsterHPCanvas");
-            canvas = Instantiate(canvas, dropped.transform.position, Quaternion.identity);
-            canvas.transform.SetParent(dropped.transform);
-            canvas.transform.localPosition = new Vector3(0, -1f, 0);
-            canvas.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-            GameObject hpBarPrefab = Resources.Load<GameObject>("Prefabs/UI/ShopTxt");
-            GameObject hpBar = Instantiate(hpBarPrefab, transform.position, Quaternion.identity);
-            hpBar.GetComponent<TextMeshProUGUI>().text = dropped.GetComponent<DroppedItem>()._price.ToString();
-            hpBar.transform.SetParent(canvas.transform);
-            hpBar.transform.localPosition = new Vector3(0, 0, 0);
-            hpBar.transform.localScale = new Vector3(0.01f, 0.01f,0);
+            DroppedItem item = dropped.GetComponent<DroppedItem>();
+            item.Set(randomItem, 15);
+            item.SetCanvas();
+
         }
         //물약 하나 상점에 추가
         GameObject droppedItem = GameManager.Instance.CreateGO

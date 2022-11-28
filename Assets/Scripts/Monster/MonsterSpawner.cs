@@ -29,9 +29,8 @@ public class MonsterSpawner : MonoBehaviour
     {
         for (int i = 0; i < SetupMonsters.Count; i++)
         {
-            Monster monster = Instantiate(SetupMonsters[i]);
+            Monster monster = Instantiate(SetupMonsters[i], gameObject.transform, true);
             monster.monsterData = monsterData;
-            monster.transform.SetParent(gameObject.transform);
             Vector3 diff = new Vector3(
                 Random.Range(- 0.5f * horizontalRange, 0.5f * horizontalRange),
                 Random.Range(-0.5f * verticalRange, 0.5f * verticalRange),

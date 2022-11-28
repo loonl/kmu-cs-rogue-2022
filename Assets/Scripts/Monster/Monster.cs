@@ -208,7 +208,7 @@ public class Monster : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
 
-        StopCoroutine(currentActionCoroutine);
+        if(currentActionCoroutine != null) StopCoroutine(currentActionCoroutine);
         currentActionCoroutine = StartCoroutine(Dying());
     }
 
@@ -329,7 +329,7 @@ public class Monster : MonoBehaviour
         {
             if (Action != ActionList.SkillCasting1)
             {
-                if (Action == ActionList.OnDamaging)
+                if (Action == ActionList.OnDamaging && currentActionCoroutine != null)
                 {
                     StopCoroutine(currentActionCoroutine);
                 }
@@ -393,8 +393,8 @@ public class Monster : MonoBehaviour
         }
         else if (rigidbody2d.velocity.x < 0)
         {
-            hpBar.transform.localScale = new Vector3(0.01f, 0.01f, 1);
             transform.localScale = new Vector3(stat.scale, stat.scale, 1);
+            hpBar.transform.localScale = new Vector3(0.01f, 0.01f, 1);
         }
     }
 

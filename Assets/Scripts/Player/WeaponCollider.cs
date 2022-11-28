@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using static UnityEngine.UI.Image;
 
@@ -10,11 +9,20 @@ public class WeaponCollider : MonoBehaviour
     ArcCollider2D arc;
     Transform effectTransform; // for changing attack effect size or flipping
     public PolygonCollider2D poly;
-    //public List<Monster> monsters;
     public Animator effectanim;
     public List<Collider2D> monsters = new List<Collider2D>();
 
-    void Start()
+
+    private void Awake()
+    {
+        Init();
+    }
+    //void Start()
+    //{
+    //    Init();
+    //}
+
+    protected virtual void Init()
     {
         player = transform.GetComponentInParent<Player>();
         arc = GetComponent<ArcCollider2D>();
@@ -22,6 +30,7 @@ public class WeaponCollider : MonoBehaviour
         poly.enabled = false;
         effectanim = player.transform.GetChild(0).GetChild(2).GetComponent<Animator>();
         effectTransform = player.transform.GetChild(0).GetChild(2).GetComponent<Transform>();
+        
     }
 
     public void SetAttackRange(float value = 1)
@@ -47,10 +56,10 @@ public class WeaponCollider : MonoBehaviour
     public void SetUpEffect(string effectname = "NormalSlash2", Item item = null, float range = 1f)
     {
         if (item != null)
-        {
+        {   
             effectname = item.effectName;
             range = item.stat.range;
-            player.wpnColl.SetAttackRange(range); // 범위 설정
+            player.wpnColl.SetAttackRange(range); // 범위 설정  
         }
         switch (effectname)
         {

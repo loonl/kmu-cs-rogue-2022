@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 
@@ -32,8 +31,7 @@ public class ThunderDash: BaseSkill
 
         Vector3 vectorToTarget = PlayerChangedPos - PlayerOriginalPos;
         float angle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg; // 스킬 각도
-        Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward); // angle을 quaternion으로
-        transform.rotation = q; // rotation 설정
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward); // angle을 quaternion으로, rotation 설정
     }
 
     protected override IEnumerator ExecuteSkill() // 스킬 발동

@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 
@@ -27,7 +26,7 @@ public class ThunderStrike : BaseSkill
     private void GenerateEffects()
     {
         List<Monster> targets =
-            SkillManager.Instance.SortMonstersByDistance(SkillManager.Instance.GetMonstersInRoom(DungeonSystem.Instance.Currentroom));
+            SkillManager.Instance.SortMonstersByDistance(player.gameObject, SkillManager.Instance.GetMonstersInRoom(DungeonSystem.Instance.Currentroom));
 
         int count = Mathf.Min(targets.Count, 3);
         for (int i = 0; i<count; i++)

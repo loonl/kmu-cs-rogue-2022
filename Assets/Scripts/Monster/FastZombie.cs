@@ -35,8 +35,8 @@ public class FastZombie : Monster
                 stat.ChangeSpeed(3);
             if (Action != ActionList.SkillCasting1) // !! 스킬시전 중 스턴가능 여부 추가
             {
-                if (Action == ActionList.OnDamaging)
-                {
+                if (Action == ActionList.OnDamaging && currentActionCoroutine != null)
+                {   
                     StopCoroutine(currentActionCoroutine);
                 }
 
