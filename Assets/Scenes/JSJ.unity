@@ -2430,57 +2430,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7798428689776333278, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
-      propertyPath: boxPref
-      value: 
-      objectReference: {fileID: 173693975979182067, guid: 4f7938556870b8045ae2ecb912f279ba, type: 3}
-    - target: {fileID: 7798428689776333278, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
-      propertyPath: HolePref
-      value: 
-      objectReference: {fileID: 7273426238133812856, guid: f4c2bf0057902dc4fad995936ad3e1d8, type: 3}
-    - target: {fileID: 7798428689776333278, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
-      propertyPath: Firetorch
-      value: 
-      objectReference: {fileID: 6673026343859464302, guid: 2714d401f6e4a3e45bd01dbc372b8b4f, type: 3}
-    - target: {fileID: 7798428689776333278, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
-      propertyPath: boxesPref
-      value: 
-      objectReference: {fileID: 4213907741763695782, guid: e64da0e635fb11a46847f73a86fc2c72, type: 3}
-    - target: {fileID: 7798428689776333278, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
-      propertyPath: barrelPref
-      value: 
-      objectReference: {fileID: 2406086735455771086, guid: 2d60b5a16a08cfd45be9777e3698cf38, type: 3}
-    - target: {fileID: 7798428689776333278, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
-      propertyPath: portalPref
-      value: 
-      objectReference: {fileID: 4879275266409792026, guid: 602b8d9b309a61d49b13ccb5706507cf, type: 3}
-    - target: {fileID: 7798428689776333278, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
-      propertyPath: ObstaclePref
-      value: 
-      objectReference: {fileID: 8982910191797367760, guid: f90dd1af61bbe064498a557025f7208a, type: 3}
-    - target: {fileID: 7798428689776333278, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
-      propertyPath: BossGrounds.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7798428689776333278, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
-      propertyPath: BossGrounds.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: 4b554dd8c04c35a45a638c9872896ffe, type: 2}
     - target: {fileID: 7798428690168941553, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
       propertyPath: m_Name
       value: Dungeon System
-      objectReference: {fileID: 0}
-    - target: {fileID: 7798428690168941556, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
-      propertyPath: fadeimg
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 7798428690168941558, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
-      propertyPath: Floor
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7798428690168941558, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
-      propertyPath: DroppedItems
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7798428690168941559, guid: d6bed08182c7a9f4ba404c3b7da9e53d, type: 3}
       propertyPath: m_RootOrder
