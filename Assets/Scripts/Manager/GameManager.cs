@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
             _instance = this;
             DontDestroyOnLoad(this.gameObject);
             this.Player = GameObject.Find("Player").GetComponent<Player>();
+            if(NanooController.instance!=null)
+                NanooController.instance.SetPlugin();
         }
         else
         {

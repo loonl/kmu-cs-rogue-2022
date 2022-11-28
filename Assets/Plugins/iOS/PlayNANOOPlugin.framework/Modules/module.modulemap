@@ -1,0 +1,6 @@
+framework module PlayNANOOPlugin {
+  umbrella header "PlayNANOOPlugin.h"
+
+  export *
+  module * { export * }
+}

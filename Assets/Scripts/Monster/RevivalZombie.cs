@@ -4,7 +4,7 @@ using UnityEngine;
 public class RevivalZombie : Monster
 {
     protected PolygonCollider2D polygonCollider2D = new PolygonCollider2D();
-    Animator attackeffect;
+    protected Animator attackeffect;
 
     protected bool revived = false;
 
