@@ -15,6 +15,7 @@ public class StageUIManager : MonoBehaviour
 
     private Player player;
     private Stat boss;
+    private GameObject scoreUI;
 
     [SerializeField] private GameObject bossUI;
 
@@ -32,6 +33,8 @@ public class StageUIManager : MonoBehaviour
         backIMG.SetActive(false);
         statusFrame.SetActive(false);
         bossUI.SetActive(false);
+        scoreUI = Resources.Load<GameObject>("Prefabs/UI/ScoreTxt");
+        scoreUI = Instantiate(scoreUI, GameObject.FindWithTag("MainCanvas").transform);
     }
 
     public void init(Player player)
