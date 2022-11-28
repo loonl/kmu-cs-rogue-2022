@@ -11,6 +11,7 @@ public class Boss3 : RevivalZombie
 
         Monstertype = MonsterType.RevivalZombie;
         Sound = SoundManager.Instance.ZombieClip(Monstertype);
+        attackeffect = transform.GetChild(0).GetChild(2).GetComponent<Animator>();
     }
     
     // 스킬 수행
@@ -39,6 +40,7 @@ public class Boss3 : RevivalZombie
                 UpdateEyes();
                 SoundPlay(Sound[0]);
                 animator.SetTrigger("Skill_Normal");
+                attackeffect.SetTrigger("NormalSlash");
                 StartCoroutine(EnablepolygonCollider2D());
                 swingReady = false;
             }

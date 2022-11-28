@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using static UnityEngine.UI.Image;
 
@@ -13,10 +12,15 @@ public class WeaponCollider : MonoBehaviour
     public Animator effectanim;
     public List<Collider2D> monsters = new List<Collider2D>();
 
-    void Start()
+
+    private void Awake()
     {
         Init();
     }
+    //void Start()
+    //{
+    //    Init();
+    //}
 
     protected virtual void Init()
     {
@@ -52,10 +56,10 @@ public class WeaponCollider : MonoBehaviour
     public void SetUpEffect(string effectname = "NormalSlash2", Item item = null, float range = 1f)
     {
         if (item != null)
-        {
+        {   
             effectname = item.effectName;
             range = item.stat.range;
-            player.wpnColl.SetAttackRange(range); // 범위 설정
+            player.wpnColl.SetAttackRange(range); // 범위 설정  
         }
         switch (effectname)
         {

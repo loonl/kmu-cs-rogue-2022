@@ -6,8 +6,6 @@ using System.Linq;
 public class PlayerAttack : MonoBehaviour
 {
     Player player;
-    public Animator effectanim;
-    Transform effectTransform; // for changing attack effect size or flipping
 
     // !! meleeWeaponID, meleeWeaponIdx - 편한 테스트를 위한 코드 !!
     List<int> meleeWeaponID = new List<int>() { 1, 2, 3, 4, 21, 22, 23, 24, 25, 26, 27, 28, 29, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 76, 77, 78, 79 };
@@ -15,8 +13,6 @@ public class PlayerAttack : MonoBehaviour
     private void Start()
     {
         player = GetComponent<Player>();
-        effectanim = transform.GetChild(0).GetChild(2).GetComponent<Animator>();
-        effectTransform = transform.GetChild(0).GetChild(2).GetComponent<Transform>();
     }
     
     // !! 편한 테스트를 위한 코드 !!
