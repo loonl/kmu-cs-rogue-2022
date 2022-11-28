@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Windows.Speech;
-using static UnityEditor.Progress;
 
 public enum PlayerState {
     Normal = 0,
@@ -530,9 +529,6 @@ public class Player : MonoBehaviour {
 
             // 넉백
             StartCoroutine(KnockBack(knockBackForce, direction));
-
-            // debug
-            print("Player's health : " + stat.hp);
         }
     }
     
@@ -548,6 +544,7 @@ public class Player : MonoBehaviour {
         // TODO Death 사운드 적용
         
         // BestScore 저장 - TODO 온라인 연동 기능 추가
+        Instantiate(Resources.Load<GameObject>("Prefabs/UI/ScoreCanvas"));
 
         // change animation to death
         anim.SetTrigger("Die");

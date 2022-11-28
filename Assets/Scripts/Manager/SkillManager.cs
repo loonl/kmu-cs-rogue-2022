@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 public class SkillManager : MonoBehaviour
 {
     Player player;
-    public enum SkillInfo // ï¿½ï¿½ï¿½ï¿½ ï¿½ßµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½
+    public enum SkillInfo // ÇöÀç ¹ßµ¿ÁßÀÎ ½ºÅ³ Á¤º¸°¡ µÉ ¼ö ÀÖ´Â °Í
     {
         Name,
         Direction,
@@ -19,9 +19,13 @@ public class SkillManager : MonoBehaviour
     public enum DirectionName
     {
         Up,
+        RightUp,
         Right,
+        RightDown,
         Down,
-        Left
+        LeftDown,
+        Left,
+        LeftUp
     }
 
     private static SkillManager _instance = null;
@@ -31,9 +35,13 @@ public class SkillManager : MonoBehaviour
     public Dictionary<DirectionName, Vector2> DirectionDict = new Dictionary<DirectionName, Vector2>()
     {
         { DirectionName.Up, Vector2.up },
+        { DirectionName.RightUp, new Vector2(1, 1).normalized },
         { DirectionName.Right, Vector2.right },
+        { DirectionName.RightDown, new Vector2(1,-1).normalized },
         { DirectionName.Down, Vector2.down },
-        { DirectionName.Left, Vector2.left }
+        { DirectionName.LeftDown, new Vector2(-1,-1).normalized },
+        { DirectionName.Left, Vector2.left },
+        { DirectionName.LeftUp, new Vector2(-1,1).normalized },
     };
     private void Awake()
     {
@@ -57,7 +65,7 @@ public class SkillManager : MonoBehaviour
         GameObject skill = Instantiate(Resources.Load($"Prefabs/Skill/{skillname}")) as GameObject;
     }
 
-    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    // ¹æ ¾ÈÀÇ »ì¾ÆÀÖ´Â ¸ó½ºÅÍ ¸®½ºÆ®¸¦ °¡Á®¿È
     public List<Monster> GetMonstersInRoom(int roomindex)
     {
         List<Monster> monsters = new List<Monster>();
@@ -74,7 +82,7 @@ public class SkillManager : MonoBehaviour
         return monsters;
     }
 
-    // ï¿½ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+    // °ÔÀÓ¿ÀºêÁ§Æ®¿ÍÀÇ °Å¸®¿¡ µû¶ó ¸ó½ºÅÍ ¸®½ºÆ® Á¤·Ä
     public List<Monster> SortMonstersByDistance(GameObject obj, List<Monster> monsters)
     {
         monsters.Sort((m1, m2) =>
@@ -83,25 +91,26 @@ public class SkillManager : MonoBehaviour
         return monsters;
     }
 
-    // ï¿½ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    // °ÔÀÓ¿ÀºêÁ§Æ®·ÎºÎÅÍ ¸ó½ºÅÍ »çÀÌÀÇ °Å¸®¸¦ ±¸ÇÔ
     private float GetDistanceFromObject(GameObject obj, Monster monster)
     {
         return Vector2.Distance(monster.gameObject.transform.position, obj.transform.position);
     }
 
+    // ¿ÀºêÁ§Æ®·ÎºÎÅÍ °¡Àå °¡±î¿î ¸ó½ºÅÍ ¹ÝÈ¯
     public Monster GetClosestMonsterFromObject(GameObject obj)
     {
         List<Monster> monsters = SortMonstersByDistance(obj, GetMonstersInRoom(DungeonSystem.Instance.Currentroom));
         if (monsters.Count == 0) return null;
         return monsters[0];
     }
-    // ï¿½Óµï¿½ ï¿½Îµå·¯ï¿½ï¿½ ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+    // ¼Óµµ ºÎµå·¯¿î º¯È­¸¦ À§ÇØ »ç¿ë
     public IEnumerator VelocityLerp(Rigidbody2D rig, Vector2 source, Vector2 target, float overTime)
     {
         float startTime = Time.time;
         while (Time.time < startTime + overTime)
         {   
-            if(rig.velocity == Vector2.zero) // ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ï¿½, ï¿½ï¿½Ö¹ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ 0ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+            if(rig.velocity == Vector2.zero) // µµÁß¿¡ º®, Àå¾Ö¹° ºÎµúÇô¼­ ¼Óµµ°¡ 0ÀÌ µÇ¾î¹ö¸° °æ¿ì
             {
                 player.curState = PlayerState.Normal;
                 onGoingSkillInfo.Add(SkillInfo.PlayerChangedPos, player.transform.position);
@@ -113,7 +122,7 @@ public class SkillManager : MonoBehaviour
         rig.velocity = target;
     }
 
-    // normalizedï¿½ï¿½ sourceï¿½ï¿½ï¿½ï¿½ targetï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ normalizedï¿½ï¿½ vector ï¿½ï¿½È¯
+    // normalizedµÈ source¿¡¼­ targetÀ» °¡¸®Å°´Â normalizedµÈ vector ¹ÝÈ¯
     public Vector2 GetDirectionFromObject(Transform target, Transform source)
     {
         return (target.position - source.position).normalized;

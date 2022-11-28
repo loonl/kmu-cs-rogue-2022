@@ -47,7 +47,7 @@ public class FourWayExplosion : BaseSkill
         {
             yield return GameManager.Instance.Setwfs(20);
             List<DirectionName> dirs = new List<DirectionName>() { DirectionName.Up, DirectionName.Right, DirectionName.Down, DirectionName.Left };
-            for(int i = 0; i < 4; i++)
+            for(int i = 0; i < dirs.Count; i++)
             {
                 Vector2 direction = Instance.DirectionDict[dirs[i]];
                 Vector2 newpos = (Vector2)gameObject.transform.position + new Vector2(gameObject.transform.localScale.x / 2 * direction.x, gameObject.transform.localScale.y / 2 * direction.y);

@@ -31,11 +31,10 @@ public class RushZombie : Monster
     // 스킬1 수행
     protected override IEnumerator SkillCasting1()
     {
-        bool rushing = true;
+        int rushStep = 0;
         bool rushReady = true;
 
-
-        while (!isDead && Action == ActionList.SkillCasting1 && rushing)
+        while (!isDead && Action == ActionList.SkillCasting1 && rushStep == 0)
         {
             if (Time.time < lastRushTime + timeForRushReady) // 대기
             {
@@ -47,11 +46,12 @@ public class RushZombie : Monster
                 SoundPlay(Sound[0]);
                 rigidbody2d.AddForce(direction * rushPower);
                 rushReady = false;
+                print(1);
                 animator.SetTrigger("Attack_Normal");
             }
             else if (Time.time >= lastRushTime + timeForRushReady + 0.5f) // 돌진 종료
             {
-                rushing = false;
+                rushStep++;
             }
 
             yield return new WaitForSeconds(0.05f);

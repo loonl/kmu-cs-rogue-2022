@@ -20,6 +20,9 @@ public class MapTest : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.K))
             DungeonSystem.Instance.KillAll();
+
+        if(Input.GetKeyDown(KeyCode.M))
+            DungeonSystem.Instance.LevelClear();
     }
     
     private IEnumerator Restart()
