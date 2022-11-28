@@ -158,7 +158,7 @@ public class Player : MonoBehaviour {
             
             // 활 공격은 애니메이션 이벤트에서 행해짐
 
-            // TODO - play sound => 이상하면 고쳐야 함
+            // TODO - 공격 sound => 이상하면 고쳐야 함
             switch (equipment[0].effectName)
             {
                 case "NormalSlash":

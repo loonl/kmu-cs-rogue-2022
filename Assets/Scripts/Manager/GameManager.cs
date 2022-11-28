@@ -29,11 +29,23 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(this.gameObject);
+            print("hi");
         }
     }
 
     private void Start()
     {
+        InitGame();
+    }
+
+    // -------------------------------------------------------------
+    // 게임 시작
+    // -------------------------------------------------------------
+    public void InitGame()
+    {
+        if (Player == null)
+            Player = GameObject.Find("Player").GetComponent<Player>();
+        
         stageUIManager.init(Player);
         DungeonSystem.Instance.CreateDungeon();
         DungeonSystem.Instance.Rooms[0].Clear();    // 첫번째 방은 클리어 된 상태

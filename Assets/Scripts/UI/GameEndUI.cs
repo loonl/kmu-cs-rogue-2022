@@ -18,6 +18,8 @@ public class GameEndUI : MonoBehaviour
     public void Restart()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        // TODO - 임시 코드!!! 수정해야 됨
+        SoundManager.Instance.SoundPlay(SoundType.BGM, index: 0);
     }
     
     public void Quit()
