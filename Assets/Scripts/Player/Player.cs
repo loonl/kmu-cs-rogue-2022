@@ -519,6 +519,7 @@ public class Player : MonoBehaviour {
         // TODO Death 사운드 적용
         
         // BestScore 저장 - TODO 온라인 연동 기능 추가
+        Instantiate(Resources.Load<GameObject>("Prefabs/UI/ScoreCanvas"));
 
         // change animation to death
         anim.SetTrigger("Die");

@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/SHY.unity
+    guid: 640cc6b2cff9a7e48992493009225b48
+  - enabled: 1
+    path: Assets/Scenes/RankBoard.unity
+    guid: ef5e699e4fb769743ac562746ebd32db
   m_configObjects: {}
