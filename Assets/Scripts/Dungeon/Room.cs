@@ -43,6 +43,7 @@ public class Room
         emptyDirects = new List<RoomDirect>() { RoomDirect.Top, RoomDirect.Right, RoomDirect.Down, RoomDirect.Left };
         existDirects = new List<RoomDirect>();
     }
+    
 
     public void UpdateCoorinate(RoomDirect direct)
     {

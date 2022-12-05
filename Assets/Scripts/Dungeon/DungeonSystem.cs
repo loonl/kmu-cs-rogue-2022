@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DungeonSystem : MonoBehaviour
 {
     private static DungeonSystem instance = null;
-    public static DungeonSystem Instance { get { return instance; } }
+
+    public static DungeonSystem Instance
+    {
+        get { return instance; }
+    }
 
     public int Floor { get; private set; } = 1;
 
@@ -65,6 +70,7 @@ public class DungeonSystem : MonoBehaviour
             TileType.VineGround,
             TileType.VineMossGround
         };
+
         // 맵 생성
         generator.Generate(tempRoomCount + 3 * Floor, tileSeqence[(Floor - 1) % 4]);
         CreateMonsterSpawner();   // 몬스터스포너 생성

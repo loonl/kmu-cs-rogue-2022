@@ -76,7 +76,6 @@ public class SoundManager : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
-            // TODO - 임시코드!!! 수정 필요
             DontDestroyOnLoad(this.gameObject);
         }
         else

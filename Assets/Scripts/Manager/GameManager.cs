@@ -9,11 +9,10 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager _instance = null;
     public static GameManager Instance { get { return _instance; } }
-    public Player Player { get; private set; }
+    public Player Player { get; set; }
 
     Dictionary<int, WaitForSeconds> wfs = new Dictionary<int, WaitForSeconds>();
-
-    public StageUIManager stageUIManager;
+    
     public int score; // 게임 점수
 
     private void Awake()
@@ -22,31 +21,51 @@ public class GameManager : MonoBehaviour
         {
             _instance = this;
             DontDestroyOnLoad(this.gameObject);
-            this.Player = GameObject.Find("Player").GetComponent<Player>();
-            if(NanooController.instance!=null)
+            if (NanooController.instance != null)
                 NanooController.instance.SetPlugin();
         }
         else
         {
             Destroy(this.gameObject);
-            print("hi");
         }
     }
 
     private void Start()
     {
-        InitGame();
+        InitMain();
     }
+    // -------------------------------------------------------------
+    // MainScene 시작
+    // -------------------------------------------------------------
+    public void InitMain()
+    {
+        // Scene과 BGM 전환
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        SoundManager.Instance.SoundPlay(SoundType.BGM, index: 0);
+        
+        // 다음 게임 시작을 위해 null로 변경
+        Player = null;
+    }
+    
 
     // -------------------------------------------------------------
-    // 게임 시작
+    // Game 시작
     // -------------------------------------------------------------
     public void InitGame()
     {
-        if (Player == null)
-            Player = GameObject.Find("Player").GetComponent<Player>();
+        // GameScene 으로 변경
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
+
+        // BGM 변경
+        SoundManager.Instance.SoundPlay(SoundType.BGM, index: 1);
         
-        stageUIManager.init(Player);
+        // 로딩할 시간 부여
+        Invoke("InitGame2", 0.5f);
+    }
+
+    private void InitGame2()
+    {
+        // 던전 만들어주기
         DungeonSystem.Instance.CreateDungeon();
         DungeonSystem.Instance.Rooms[0].Clear();    // 첫번째 방은 클리어 된 상태
         score = 0;
