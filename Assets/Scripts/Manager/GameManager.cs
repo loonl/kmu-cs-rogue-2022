@@ -21,8 +21,6 @@ public class GameManager : MonoBehaviour
         {
             _instance = this;
             DontDestroyOnLoad(this.gameObject);
-            if (NanooController.instance != null)
-                NanooController.instance.SetPlugin();
         }
         else
         {
@@ -69,6 +67,9 @@ public class GameManager : MonoBehaviour
         DungeonSystem.Instance.CreateDungeon();
         DungeonSystem.Instance.Rooms[0].Clear();    // 첫번째 방은 클리어 된 상태
         score = 0;
+        
+        // test code - TODO
+        NanooController.instance.SetPlugin();
     }
 
     // -------------------------------------------------------------
