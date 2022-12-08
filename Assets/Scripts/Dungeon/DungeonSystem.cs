@@ -90,8 +90,8 @@ public class DungeonSystem : MonoBehaviour
     private void CreateMonsterSpawner()
     {
         int MonsterSpawnerId;
-        //List<Dictionary<string, object>> monsterSpawnerData = CSVReader.Read("Datas/MonsterSpawner");
-        List<Dictionary<string, object>> monsterSpawnerData = CSVReader.Read("Datas/TestMonsterSpawner"); // !!테스트 코드
+        List<Dictionary<string, object>> monsterSpawnerData = CSVReader.Read("Datas/MonsterSpawner");
+        //List<Dictionary<string, object>> monsterSpawnerData = CSVReader.Read("Datas/TestMonsterSpawner"); // !!테스트 코드
         List<Dictionary<string, object>> monsterData = CSVReader.Read("Datas/Monster");
         int[] BehindMonsterSpawnerNumArr = new int[4];
         
