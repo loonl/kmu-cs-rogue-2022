@@ -38,7 +38,6 @@ public class RushZombie : Monster
         {
             if (Time.time < lastRushTime + timeForRushReady) // 대기
             {
-                UpdateEyes();
                 rigidbody2d.velocity = Vector2.zero;
             }
             else if (rushReady) // 돌진
@@ -46,7 +45,6 @@ public class RushZombie : Monster
                 SoundPlay(Sound[0]);
                 rigidbody2d.AddForce(direction * rushPower);
                 rushReady = false;
-                print(1);
                 animator.SetTrigger("Attack_Normal");
             }
             else if (Time.time >= lastRushTime + timeForRushReady + 0.5f) // 돌진 종료
@@ -57,6 +55,7 @@ public class RushZombie : Monster
             yield return new WaitForSeconds(0.05f);
         }
 
+        UpdateEyes();
         actionFinished = true;
     }
 

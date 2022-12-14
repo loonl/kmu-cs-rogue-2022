@@ -75,11 +75,11 @@ id,name,type,rarity,dmg,range,skilldmg,cooltime,hp,knockbackforce,speed,price,ef
 73,pants16,6,SR,0,0,0,0,160,0,0,120,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/3_Pant/New_Pant_12.png
 74,shield5,7,SR,0,0,0,0,240,0,0,100,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver121/6_Weapons/SteelShield1.png
 75,shield8,7,SR,0,0,0,0,270,0,0,110,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Shield_03.png
-76,sword7,1,SSR,50,2,70,7,0,1,0,150,FireSlash2,EightWayFireExplosion,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_01.png
-77,sword11,1,SSR,49,2,70,10,0,1,0,160,ElectricSlash3,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_13.png
-78,axe5,1,SSR,48,2,70,7,0,1,0,170,FireClaw,InfiniteClaw,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_02.png
-79,spear5,1,SSR,47,2,70,8,0,1,0,180,ElectricSlash,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_16.png
-80,bow4,2,SSR,30,10,30,7,0,1,0,190,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_15.png
+76,sword7,1,SSR,40,2,28,7,0,1,0,150,FireSlash2,EightWayFireExplosion,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_01.png
+77,sword11,1,SSR,20,2,40,10,0,1,0,160,ElectricSlash3,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_13.png
+78,axe5,1,SSR,16,2,50,7,0,1,0,170,FireClaw,InfiniteClaw,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_02.png
+79,spear5,1,SSR,20,2,19,8,0,1,0,180,ElectricSlash,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_16.png
+80,bow4,2,SSR,40,10,28,7,0,1,0,190,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/6_Weapons/New_Weapon_15.png
 81,helmet13,4,SSR,0,0,0,0,400,0,0,150,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/4_Helmet/New_Helmet_01.png
 82,helmet16,4,SSR,0,0,0,0,160,0,0,160,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/4_Helmet/New_Helmet_04.png
 83,helmet19,4,SSR,0,0,0,0,190,0,0,170,,,Assets/Resources/SPUM/SPUM_Sprites/Packages/Ver300/4_Helmet/New_Helmet_07.png
