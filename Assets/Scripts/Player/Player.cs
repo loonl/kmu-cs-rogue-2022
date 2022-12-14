@@ -50,11 +50,14 @@ public class Player : MonoBehaviour {
 
     private void Awake()
     {
-        this.Inventory = GameObject.Find("Inventory").GetComponent<Inventory>();    
+        this.Inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
     }
 
     void Start()
     {
+        // GameManager에 Player 할당
+        GameManager.Instance.Player = this;
+        
         anim = transform.GetChild(0).gameObject.GetComponent<Animator>();
         playerAnimreceiver = anim.GetComponent<PlayerAnimreceiver>();
         wpnColl = transform.GetChild(0).gameObject.GetComponent<WeaponCollider>();
@@ -230,7 +233,7 @@ public class Player : MonoBehaviour {
             Equip(ItemManager.Instance.GetItem(31));
         // test code - change equipments
         if (Input.GetKeyDown(KeyCode.Alpha9)) // bow
-            Equip(ItemManager.Instance.GetItem(5));
+            Equip(ItemManager.Instance.GetItem(59));
         if (Input.GetKeyDown(KeyCode.Alpha0)) // staff
             Equip(ItemManager.Instance.GetItem(60));
         if (Input.GetKeyDown(KeyCode.Alpha1)) // 1 - sword1

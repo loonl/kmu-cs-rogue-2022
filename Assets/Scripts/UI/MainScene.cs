@@ -23,10 +23,8 @@ public class MainScene : MonoBehaviour
     {
         light.SetActive(false);
         light2.SetActive(false);
-        
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
-        // TODO - 임시 코드 !!! 수정 바람
-        SoundManager.Instance.SoundPlay(SoundType.BGM, index: 1);
+
+        GameManager.Instance.InitGame();
     }
     
     public void LoadScoreScene()

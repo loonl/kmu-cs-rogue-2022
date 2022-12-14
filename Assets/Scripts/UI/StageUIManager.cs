@@ -27,9 +27,10 @@ public class StageUIManager : MonoBehaviour
     private bool openStatus = false;
     void Start()
     {
+        // GM Player로 받아오려면 null 레퍼런스 에러 발생
+        player = GameObject.Find("Player").GetComponent<Player>();
         bossHpbar = bossUI.GetComponent<Slider>();
         hpbar = playerUI.GetComponent<Slider>();
-
         backIMG.SetActive(false);
         statusFrame.SetActive(false);
         bossUI.SetActive(false);

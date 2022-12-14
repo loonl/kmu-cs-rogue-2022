@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 public class SkillManager : MonoBehaviour
 {
     Player player;
-    public enum SkillInfo // ÇöÀç ¹ßµ¿ÁßÀÎ ½ºÅ³ Á¤º¸°¡ µÉ ¼ö ÀÖ´Â °Í
+    public enum SkillInfo // í˜„ì¬ ë°œë™ì¤‘ì¸ ìŠ¤í‚¬ ì •ë³´ê°€ ë  ìˆ˜ ìˆëŠ” ê²ƒ
     {
         Name,
         Direction,
@@ -43,6 +43,7 @@ public class SkillManager : MonoBehaviour
         { DirectionName.Left, Vector2.left },
         { DirectionName.LeftUp, new Vector2(-1,1).normalized },
     };
+    
     private void Awake()
     {
         if (_instance == null)
@@ -54,6 +55,7 @@ public class SkillManager : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+    
     void Start()
     {
         player = GameObject.Find("Player").GetComponent<Player>();
@@ -65,7 +67,7 @@ public class SkillManager : MonoBehaviour
         GameObject skill = Instantiate(Resources.Load($"Prefabs/Skill/{skillname}")) as GameObject;
     }
 
-    // ¹æ ¾ÈÀÇ »ì¾ÆÀÖ´Â ¸ó½ºÅÍ ¸®½ºÆ®¸¦ °¡Á®¿È
+    // ë°© ì•ˆì˜ ì‚´ì•„ìˆëŠ” ëª¬ìŠ¤í„° ë¦¬ìŠ¤íŠ¸ë¥¼ ê°€ì ¸ì˜´
     public List<Monster> GetMonstersInRoom(int roomindex)
     {
         List<Monster> monsters = new List<Monster>();
@@ -82,7 +84,7 @@ public class SkillManager : MonoBehaviour
         return monsters;
     }
 
-    // °ÔÀÓ¿ÀºêÁ§Æ®¿ÍÀÇ °Å¸®¿¡ µû¶ó ¸ó½ºÅÍ ¸®½ºÆ® Á¤·Ä
+    // ê²Œì„ì˜¤ë¸Œì íŠ¸ì™€ì˜ ê±°ë¦¬ì— ë”°ë¼ ëª¬ìŠ¤í„° ë¦¬ìŠ¤íŠ¸ ì •ë ¬
     public List<Monster> SortMonstersByDistance(GameObject obj, List<Monster> monsters)
     {
         monsters.Sort((m1, m2) =>
@@ -91,26 +93,27 @@ public class SkillManager : MonoBehaviour
         return monsters;
     }
 
-    // °ÔÀÓ¿ÀºêÁ§Æ®·ÎºÎÅÍ ¸ó½ºÅÍ »çÀÌÀÇ °Å¸®¸¦ ±¸ÇÔ
+    // ê²Œì„ì˜¤ë¸Œì íŠ¸ë¡œë¶€í„° ëª¬ìŠ¤í„° ì‚¬ì´ì˜ ê±°ë¦¬ë¥¼ êµ¬í•¨
     private float GetDistanceFromObject(GameObject obj, Monster monster)
     {
         return Vector2.Distance(monster.gameObject.transform.position, obj.transform.position);
     }
 
-    // ¿ÀºêÁ§Æ®·ÎºÎÅÍ °¡Àå °¡±î¿î ¸ó½ºÅÍ ¹İÈ¯
+    // ì˜¤ë¸Œì íŠ¸ë¡œë¶€í„° ê°€ì¥ ê°€ê¹Œìš´ ëª¬ìŠ¤í„° ë°˜í™˜
     public Monster GetClosestMonsterFromObject(GameObject obj)
     {
         List<Monster> monsters = SortMonstersByDistance(obj, GetMonstersInRoom(DungeonSystem.Instance.Currentroom));
         if (monsters.Count == 0) return null;
         return monsters[0];
     }
-    // ¼Óµµ ºÎµå·¯¿î º¯È­¸¦ À§ÇØ »ç¿ë
+    
+    // ì†ë„ ë¶€ë“œëŸ¬ìš´ ë³€í™”ë¥¼ ìœ„í•´ ì‚¬ìš©
     public IEnumerator VelocityLerp(Rigidbody2D rig, Vector2 source, Vector2 target, float overTime)
     {
         float startTime = Time.time;
         while (Time.time < startTime + overTime)
         {   
-            if(rig.velocity == Vector2.zero) // µµÁß¿¡ º®, Àå¾Ö¹° ºÎµúÇô¼­ ¼Óµµ°¡ 0ÀÌ µÇ¾î¹ö¸° °æ¿ì
+            if(rig.velocity == Vector2.zero) // ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ï¿½, ï¿½ï¿½Ö¹ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ 0ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             {
                 player.curState = PlayerState.Normal;
                 onGoingSkillInfo.Add(SkillInfo.PlayerChangedPos, player.transform.position);
@@ -122,7 +125,7 @@ public class SkillManager : MonoBehaviour
         rig.velocity = target;
     }
 
-    // normalizedµÈ source¿¡¼­ targetÀ» °¡¸®Å°´Â normalizedµÈ vector ¹İÈ¯
+    // normalizedëœ sourceì—ì„œ targetì„ ê°€ë¦¬í‚¤ëŠ” normalizedëœ vector ë°˜í™˜
     public Vector2 GetDirectionFromObject(Transform target, Transform source)
     {
         return (target.position - source.position).normalized;
