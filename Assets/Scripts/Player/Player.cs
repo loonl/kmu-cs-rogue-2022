@@ -50,11 +50,14 @@ public class Player : MonoBehaviour {
 
     private void Awake()
     {
-        this.Inventory = GameObject.Find("Inventory").GetComponent<Inventory>();    
+        this.Inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
     }
 
     void Start()
     {
+        // GameManager에 Player 할당
+        GameManager.Instance.Player = this;
+        
         anim = transform.GetChild(0).gameObject.GetComponent<Animator>();
         playerAnimreceiver = anim.GetComponent<PlayerAnimreceiver>();
         wpnColl = transform.GetChild(0).gameObject.GetComponent<WeaponCollider>();
@@ -158,7 +161,7 @@ public class Player : MonoBehaviour {
             
             // 활 공격은 애니메이션 이벤트에서 행해짐
 
-            // TODO - play sound => 이상하면 고쳐야 함
+            // TODO - 공격 sound => 이상하면 고쳐야 함
             switch (equipment[0].effectName)
             {
                 case "NormalSlash":
@@ -230,7 +233,7 @@ public class Player : MonoBehaviour {
             Equip(ItemManager.Instance.GetItem(31));
         // test code - change equipments
         if (Input.GetKeyDown(KeyCode.Alpha9)) // bow
-            Equip(ItemManager.Instance.GetItem(5));
+            Equip(ItemManager.Instance.GetItem(59));
         if (Input.GetKeyDown(KeyCode.Alpha0)) // staff
             Equip(ItemManager.Instance.GetItem(60));
         if (Input.GetKeyDown(KeyCode.Alpha1)) // 1 - sword1

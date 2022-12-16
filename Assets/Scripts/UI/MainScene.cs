@@ -23,8 +23,8 @@ public class MainScene : MonoBehaviour
     {
         light.SetActive(false);
         light2.SetActive(false);
-            
-        UnityEngine.SceneManagement.SceneManager.LoadScene("SHY");
+
+        GameManager.Instance.InitGame();
     }
     
     public void LoadScoreScene()

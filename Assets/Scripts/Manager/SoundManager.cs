@@ -21,7 +21,8 @@ public enum SoundType
     PlayerAttack_Fire,
     PlayerAttack_Electric,
     Boss,
-    BGM
+    BGM,
+    GameOver,
 }
 
 public class SoundManager : MonoBehaviour
@@ -58,6 +59,9 @@ public class SoundManager : MonoBehaviour
     private List<AudioClip> _PlayerAttackclips = new List<AudioClip>();
     
     [SerializeField]
+    private List<AudioClip> _GameOverclips = new List<AudioClip>();
+    
+    [SerializeField]
     private List<AudioClip> _BGMclips = new List<AudioClip>();
 
     private int i;
@@ -72,6 +76,7 @@ public class SoundManager : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
+            DontDestroyOnLoad(this.gameObject);
         }
         else
         {
@@ -109,7 +114,7 @@ public class SoundManager : MonoBehaviour
             if(_Doorclips == null)
                 DoorClip();
 
-            totalvolume = bgmvolume = effectvolume = 0;
+            totalvolume = bgmvolume = effectvolume = 1;
         }
     }
 
@@ -156,12 +161,12 @@ public class SoundManager : MonoBehaviour
         _Doorclips.Add(Resources.Load<AudioClip>("Sounds/Effect/Door/Door 3 Open"));
     }
 
-    public void SoundPlay(SoundType st, Sound type = Sound.Effect, float pitch = 1.0f)
+    public void SoundPlay(SoundType st, Sound type = Sound.Effect, int index = 0, float pitch = 1.0f)
     {
         switch (st)
         {
             case SoundType.BGM:
-                Play(_BGMclips[0], Sound.Bgm);
+                Play(_BGMclips[index], Sound.Bgm);
                 break;
 
             case SoundType.Box:
@@ -193,6 +198,7 @@ public class SoundManager : MonoBehaviour
                 break;
             
             case SoundType.PlayerAttack_Normal:
+                print(_PlayerAttackclips.Count);
                 Play(_PlayerAttackclips[0]);
                 break;
             
@@ -216,9 +222,7 @@ public class SoundManager : MonoBehaviour
 
             audioSource.pitch = pitch;
             audioSource.clip = audioClip;
-            // TODO - 변경해주기
-            //audioSource.volume = bgmvolume * totalvolume;
-            audioSource.volume = 1;
+            audioSource.volume = bgmvolume * totalvolume;
             audioSource.Play();
         }
 

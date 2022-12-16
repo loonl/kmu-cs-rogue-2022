@@ -17,7 +17,8 @@ public class GameEndUI : MonoBehaviour
     
     public void Restart()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        // MainScene으로 이동
+        GameManager.Instance.InitMain();
     }
     
     public void Quit()

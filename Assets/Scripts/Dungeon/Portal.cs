@@ -71,7 +71,10 @@ public class Portal : MonoBehaviour
         {
             DungeonSystem.Instance.Rooms[_connectedRoomId].Enter(_outDirect, exiting);
             DungeonSystem.Instance.Currentroom = _connectedRoomId;
-            StartCoroutine(GameManager.Instance.Player.NoHit(80));
+            if (_connectedRoomId == DungeonSystem.Instance.generator.BossIndex)
+                SoundManager.Instance.SoundPlay(SoundType.BGM, index: 4);
+
+                StartCoroutine(GameManager.Instance.Player.NoHit(30));
         }
 
         else
