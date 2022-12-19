@@ -23,7 +23,6 @@ public class Boss1 : RushZombie
         {
             if (Time.time < lastRushTime + timeForRushReady) // 대기
             {
-                UpdateEyes();
                 rigidbody2d.velocity = Vector2.zero;
             }
             else if (rushReady) // 돌진
@@ -40,6 +39,7 @@ public class Boss1 : RushZombie
                 timeForRushReady = 0.1f;
             }
             
+            UpdateEyes();
             yield return new WaitForSeconds(0.05f);
         }
 
