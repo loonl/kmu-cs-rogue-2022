@@ -102,7 +102,12 @@ public class Player : MonoBehaviour {
 
         // should not work in dead condition
         if (curState == PlayerState.Dead)
+        {
+            if (rig.velocity.magnitude > 0.0f)
+                rig.velocity = Vector2.zero;
+            
             return;
+        }
 
         // get move-related input
         Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0).normalized;
@@ -136,7 +141,7 @@ public class Player : MonoBehaviour {
         */
 
         // Attack Input
-        if (Input.GetButtonDown("Fire1") && curState != PlayerState.Attacking)
+        if (Input.GetButtonDown("Fire1") && (curState == PlayerState.Normal || curState == PlayerState.Invincible))
         {
             // update weapon state
             anim.SetInteger("WpnState", equipment[0].itemType);
@@ -186,7 +191,7 @@ public class Player : MonoBehaviour {
         }
 
         // test skill input
-        if (Input.GetButtonDown("Fire2") && remainCool <= 0.0f && curState != PlayerState.Attacking)
+        if (Input.GetButtonDown("Fire2") && remainCool <= 0.0f && (curState == PlayerState.Normal || curState == PlayerState.Invincible))
         {
             // update weapon state
             anim.SetInteger("WpnState", equipment[0].itemType);
@@ -226,7 +231,7 @@ public class Player : MonoBehaviour {
         }
         
         // dash input
-        if (Input.GetKeyDown(KeyCode.LeftShift) && dashCool <= 0.0f && moveInput.magnitude != 0 && curState == PlayerState.Normal)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && dashCool <= 0.0f && moveInput.magnitude != 0 && (curState == PlayerState.Normal || curState == PlayerState.Invincible))
             StartCoroutine(Dash());
 
         if (Input.GetKeyDown(KeyCode.Alpha8)) // bow
@@ -277,7 +282,7 @@ public class Player : MonoBehaviour {
     public void AnimEventInit()
     {
         // 사망 시
-        playerAnimreceiver.onDieComplete = () =>
+        playerAnimreceiver.onDieStart = () =>
         {
             // hide character
             //gameObject.SetActive(false);

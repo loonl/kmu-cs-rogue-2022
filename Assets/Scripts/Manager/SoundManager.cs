@@ -166,6 +166,7 @@ public class SoundManager : MonoBehaviour
         switch (st)
         {
             case SoundType.BGM:
+                print(index);
                 Play(_BGMclips[index], Sound.Bgm);
                 break;
 
