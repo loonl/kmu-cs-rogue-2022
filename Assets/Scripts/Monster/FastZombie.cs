@@ -7,7 +7,7 @@ public class FastZombie : Monster
     {
         base.Init();
         Monstertype = MonsterType.FastZombie;
-        Sound = SoundManager.Instance.ZombieClip(Monstertype);
+        sound = SoundManager.Instance.ZombieClip(Monstertype);
     }
 
     // 피격 시 실행
@@ -45,7 +45,7 @@ public class FastZombie : Monster
                 Action = ActionList.OnDamaging;
             }
 
-            SoundPlay(Sound[1]);
+            SoundPlay(Random.Range(2, 5));
         }
     }
 }

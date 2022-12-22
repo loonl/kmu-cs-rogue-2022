@@ -10,7 +10,7 @@ public class Boss3 : RevivalZombie
         base.Init();
 
         Monstertype = MonsterType.RevivalZombie;
-        Sound = SoundManager.Instance.ZombieClip(Monstertype);
+        sound = SoundManager.Instance.ZombieClip(Monstertype);
         attackeffect = transform.GetChild(0).GetChild(2).GetComponent<Animator>();
     }
     
@@ -38,7 +38,7 @@ public class Boss3 : RevivalZombie
             {
                 print(swingStep);
                 UpdateEyes();
-                SoundPlay(Sound[0]);
+                SoundPlay(Random.Range(0, 2));
                 animator.SetTrigger("Skill_Normal");
                 attackeffect.SetTrigger("NormalSlash");
                 StartCoroutine(EnablepolygonCollider2D());

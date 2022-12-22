@@ -13,7 +13,7 @@ public class Boss2 : Monster
         lastSkillTime = Time.time;
 
         Monstertype = MonsterType.RushZombie;
-        Sound = SoundManager.Instance.ZombieClip(Monstertype);
+        sound = SoundManager.Instance.ZombieClip(Monstertype);
     }
 
     protected override IEnumerator Chasing() 
@@ -48,7 +48,7 @@ public class Boss2 : Monster
             spawner.deadMonsters.Remove(monster);
 
             monster.animator.SetTrigger("Revive");
-            monster.SoundPlay(Sound[0]);
+            monster.SoundPlay(Random.Range(0, 2));
         }
 
         animator.SetTrigger("Skill_Magic");
