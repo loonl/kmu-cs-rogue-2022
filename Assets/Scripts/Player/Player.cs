@@ -137,6 +137,7 @@ public class Player : MonoBehaviour {
          
         */ 
         // Attack Input
+
         // if (Input.GetButtonDown("Fire1") && curState != PlayerState.Attacking)
         // {
         //     // update weapon state
@@ -179,6 +180,7 @@ public class Player : MonoBehaviour {
         //             break;
         //     }
         // }
+
         
         // test debugging skill cool-time
         if (Input.GetButtonDown("Fire2"))
