@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DungeonSystem : MonoBehaviour
 {
     private static DungeonSystem instance = null;
-    public static DungeonSystem Instance { get { return instance; } }
+
+    public static DungeonSystem Instance
+    {
+        get { return instance; }
+    }
 
     public int Floor { get; private set; } = 1;
 
     [SerializeField]
-    private RoomGenerator generator;
+    public RoomGenerator generator;
 
     [SerializeField]
     private Image fadeimg;
@@ -21,7 +26,7 @@ public class DungeonSystem : MonoBehaviour
 
     private int tempRoomCount;
 
-    public GameObject DroppedItems;        // 떨어진 아이템 parent
+    public GameObject DroppedItems; // 떨어진 아이템 parent
 
     public List<DungeonRoom> Rooms { get { return generator.Rooms; } }
     public Dictionary<int, MonsterSpawner> monsterSpawners = new Dictionary<int, MonsterSpawner>(); // key: 방 번호, MonsterSpawner: 해당 방의 MonsterSpawner
@@ -65,6 +70,7 @@ public class DungeonSystem : MonoBehaviour
             TileType.VineGround,
             TileType.VineMossGround
         };
+
         // 맵 생성
         generator.Generate(tempRoomCount + 3 * Floor, tileSeqence[(Floor - 1) % 4]);
         CreateMonsterSpawner();   // 몬스터스포너 생성
@@ -217,6 +223,8 @@ public class DungeonSystem : MonoBehaviour
     public void LevelClear()
     {
         StartCoroutine(Clear());
+        // TODO - 임시 코드 !!!! 수정 필요
+        SoundManager.Instance.SoundPlay(SoundType.BGM, index: Floor + 1);
     }
 
     private IEnumerator Clear()

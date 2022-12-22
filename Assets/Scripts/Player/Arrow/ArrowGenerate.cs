@@ -203,12 +203,12 @@ public class ArrowGenerate : MonoBehaviour
             return new Vector2(-player.transform.localScale.x, 0).normalized;
 
         // 조건을 만족하는 Monster들 중에서 가장 가까운 Monster 판별
-        Vector2 returnVal = monstersList[0].transform.position - player.transform.position - new Vector3(0, 0.2f, 0);
+        Vector2 returnVal = monstersList[0].transform.position - player.transform.position;
         float mini = returnVal.magnitude;
         for (int i = 1; i < monstersList.Count; i++)
         {
             Monster monster = monstersList[i];
-            Vector2 direction = monster.transform.position - player.transform.position - new Vector3(0, 0.2f, 0);
+            Vector2 direction = monster.transform.position - player.transform.position;
             if (direction.magnitude < mini)
             {
                 mini = direction.magnitude;

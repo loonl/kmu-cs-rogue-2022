@@ -21,7 +21,7 @@ public class SkillCoolDown : MonoBehaviour
     void Start()
     {
         InitUI();
-        TriggerSkill();
+        //TriggerSkill();
     }
 
     void Update()
