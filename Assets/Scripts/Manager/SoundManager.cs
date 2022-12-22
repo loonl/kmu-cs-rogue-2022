@@ -41,12 +41,6 @@ public class SoundManager : MonoBehaviour
     private List<AudioClip> _Zombieclips = new List<AudioClip>();
 
     [SerializeField]
-    private List<AudioClip> _RushZombieclips = new List<AudioClip>();
-
-    [SerializeField]
-    private List<AudioClip> _RevivalZombieclips = new List<AudioClip>();
-
-    [SerializeField]
     private List<AudioClip> _Portionclips = new List<AudioClip>();
 
     [SerializeField]
@@ -119,32 +113,9 @@ public class SoundManager : MonoBehaviour
     }
 
     //좀비 사운드를 넣어준다
-    public AudioClip[] ZombieClip(MonsterType type = MonsterType.Zombie)
+    public List<AudioClip> ZombieClip(MonsterType type = MonsterType.Zombie)
     {
-        AudioClip[] clip = new AudioClip[3];
-
-        switch (type)
-        {
-            case MonsterType.RushZombie:
-                int rand = Random.Range(0, 1) * 3;
-                clip[0] = _RushZombieclips[rand];
-                clip[1] = _RushZombieclips[rand + 1];
-                clip[2] = _RushZombieclips[rand + 2];
-                break;
-
-            case MonsterType.RevivalZombie:
-                clip[0] = _RevivalZombieclips[0];
-                clip[1] = _RevivalZombieclips[1];
-                clip[2] = _RevivalZombieclips[2];
-                break;
-
-            default:
-                clip[1] = _Zombieclips[Random.Range(0, 1) * 2];
-                clip[2] = _Zombieclips[1];
-                break;
-        }
-
-        return clip;
+        return _Zombieclips;
     }
     
     //만약 박스 클립이 할당되지 않을 경우

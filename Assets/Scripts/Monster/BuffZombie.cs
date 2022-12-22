@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BuffZombie : Monster
@@ -13,7 +12,7 @@ public class BuffZombie : Monster
         lastSkillTime = Time.time;
         
         Monstertype = MonsterType.RushZombie;
-        Sound = SoundManager.Instance.ZombieClip(Monstertype);
+        sound = SoundManager.Instance.ZombieClip(Monstertype);
     }
     
     protected override IEnumerator Chasing() 

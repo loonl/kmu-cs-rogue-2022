@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Random = UnityEngine.Random;
 using Slider = UnityEngine.UI.Slider;
 
 // 행동 목록
@@ -41,7 +42,7 @@ public class Monster : MonoBehaviour
     public int id; // 몬스터 Id
 
     public MonsterStat stat; // 몬스터 스텟
-    public AudioClip[] Sound; // 0 공격 혹은 부활 시 재생소리(일반좀비는 null) 1 피격시 재생 소리 2 사망시 재생 소리
+    public List<AudioClip> sound; // 0 공격 혹은 부활 시 재생소리(일반좀비는 null) 1 피격시 재생 소리 2 사망시 재생 소리
     protected Player player; // 플레이어
     protected MonsterSpawner spawner; // 부모 스포너 객체
     
@@ -98,23 +99,24 @@ public class Monster : MonoBehaviour
         canvas = Resources.Load<GameObject>("Prefabs/UI/MonsterHPCanvas");
     }
 
+    protected void Start()
+    {
+        Init(); // 몬스터 초기화
+    }
+    
     // 몬스터 초기화
     protected virtual void Init()
     {
         stat = new MonsterStat(monsterData, id); // !! 고칠 코드
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         spawner = transform.GetComponentInParent<MonsterSpawner>();
-
-        Sound = new AudioClip[3];
+        
         gameObject.GetComponentInChildren<SortingGroup>().sortingOrder = 2;
         
         Generate(); // 몬스터 생성
     }
 
-    protected void Start()
-    {
-        Init();
-    }
+
 
     // 몬스터 활성화
     public virtual void Generate()
@@ -141,8 +143,7 @@ public class Monster : MonoBehaviour
         }
 
         hpBar.SetActive(false);
-
-        Sound = new AudioClip[3];
+        
         stat.healthToMax();
 
         StartCoroutine(UpdatePath());
@@ -336,8 +337,8 @@ public class Monster : MonoBehaviour
                 knockBackDirection = _knockBackDirection;
                 Action = ActionList.OnDamaging;
             }
-
-            SoundPlay(Sound[1]);
+            
+            SoundPlay(Random.Range(2, 5));
         }
     }
 
@@ -349,15 +350,13 @@ public class Monster : MonoBehaviour
 
         DropGold();
         spawner.aliveMonsters.Remove(this);
-
-
         spawner.deadMonsters.Add(this);
         spawner.CheckRemainEnemy();
 
         hpBar.SetActive(false);
 
         animator.SetTrigger("Die");
-        SoundPlay(Sound[2]);
+        SoundPlay(Random.Range(5, 7));
     }
 
     // 소지금에 골드 추가
@@ -408,17 +407,18 @@ public class Monster : MonoBehaviour
         {
             lastAttackTime = Time.time;
             player.OnDamage(stat.damage, 5f, (other.transform.position - transform.position).normalized);
-
+            
             animator.SetTrigger("Attack_Normal");
+            SoundPlay(Random.Range(0, 2));
         }
     }
 
-    public void SoundPlay(AudioClip clip)
+    public void SoundPlay(int soundNum)
     {
         if (audioPlayer.isPlaying)
             audioPlayer.Stop();
 
-        audioPlayer.clip = clip;
+        audioPlayer.clip = sound[soundNum];
         audioPlayer.volume = SoundManager.Instance.effectvolume * SoundManager.Instance.totalvolume;
         audioPlayer.Play();
     }

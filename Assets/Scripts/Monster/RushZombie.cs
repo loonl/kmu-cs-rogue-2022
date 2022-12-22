@@ -24,7 +24,7 @@ public class RushZombie : Monster
         lastRushTime = Time.time;
         
         Monstertype = MonsterType.RushZombie;
-        Sound = SoundManager.Instance.ZombieClip(Monstertype);
+        sound = SoundManager.Instance.ZombieClip(Monstertype);
     }
 
 
@@ -42,7 +42,7 @@ public class RushZombie : Monster
             }
             else if (rushReady) // 돌진
             {
-                SoundPlay(Sound[0]);
+                SoundPlay(Random.Range(0, 2));
                 rigidbody2d.AddForce(direction * rushPower);
                 rushReady = false;
                 animator.SetTrigger("Attack_Normal");

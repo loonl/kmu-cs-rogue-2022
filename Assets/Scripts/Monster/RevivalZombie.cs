@@ -32,7 +32,7 @@ public class RevivalZombie : Monster
         base.Init();
         
         Monstertype = MonsterType.RevivalZombie;
-        Sound = SoundManager.Instance.ZombieClip(Monstertype);
+        sound = SoundManager.Instance.ZombieClip(Monstertype);
     }
     
     protected override IEnumerator Chasing() 
@@ -64,7 +64,7 @@ public class RevivalZombie : Monster
             
             if (Time.time > lastSwingTime + timeForSwingReady && swingReady) // 스윙
             {
-                SoundPlay(Sound[0]);
+                SoundPlay(Random.Range(0, 2));
                 animator.SetTrigger("Skill_Normal");
                 attackeffect.SetTrigger("NormalSlash");
                 StartCoroutine(EnablepolygonCollider2D());
@@ -107,7 +107,7 @@ public class RevivalZombie : Monster
         }
 
         animator.SetTrigger("Die");
-        SoundPlay(Sound[2]);
+        SoundPlay(Random.Range(5, 7));
     }
 
     // 부활 시 실행
@@ -116,7 +116,7 @@ public class RevivalZombie : Monster
         Generate();
 
         animator.SetTrigger("Revive");
-        SoundPlay(Sound[0]);
+        SoundPlay(7);
     }
 
     // 시체 상태 수행 후 부활 처리
