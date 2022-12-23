@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions;
-using UnityEngine.Windows.Speech;
 
 public enum PlayerState {
     Normal = 0,
@@ -28,12 +26,14 @@ public class Player : MonoBehaviour {
     // equipments => 0 : Weapon, 1 : Helmet, 2 : Armor, 3 : Pants, 4 : Shield
     [HideInInspector]
     public List<Item> equipment;
-
+    [HideInInspector]
     public Animator anim;
+    [HideInInspector]
     public WeaponCollider wpnColl;
     Rigidbody2D rig;
     [HideInInspector]
     public SPUM_SpriteList spumMgr;
+    [HideInInspector]
     public ArrowGenerate arrowGen;
     Staff staff;
 
@@ -44,6 +44,7 @@ public class Player : MonoBehaviour {
     public Interact _interact;
     
     // 이동정보
+    [HideInInspector]
     public Vector3 moveInfo;
 
     PlayerAnimreceiver playerAnimreceiver;
@@ -144,6 +145,7 @@ public class Player : MonoBehaviour {
         //     anim.SetInteger("WpnState", equipment[0].itemType);
         //
         //     // change animation to attack
+        //     // change animation to attack
         //     anim.SetTrigger("Attack");
         //     
         //     // update current state to attacking
@@ -183,10 +185,10 @@ public class Player : MonoBehaviour {
 
         
         // test debugging skill cool-time
-        if (Input.GetButtonDown("Fire2"))
-        {
-            print("remaining skill cool : " + remainCool);
-        }
+        //if (Input.GetButtonDown("Fire2"))
+        //{
+        //    print("remaining skill cool : " + remainCool);
+        //}
 
         // test skill input
         // if (Input.GetButtonDown("Fire2") && remainCool <= 0.0f && curState != PlayerState.Attacking)
@@ -231,7 +233,8 @@ public class Player : MonoBehaviour {
         // dash input
         // if (Input.GetKeyDown(KeyCode.LeftShift) && dashCool <= 0.0f && moveInput.magnitude != 0 && curState == PlayerState.Normal)
         //     StartCoroutine(Dash());
-
+        
+        /**
         if (Input.GetKeyDown(KeyCode.Alpha8)) // bow
             Equip(ItemManager.Instance.GetItem(31));
         // test code - change equipments
@@ -271,7 +274,7 @@ public class Player : MonoBehaviour {
             }
 
             this._interact.InteractEvent();
-        }
+        }*/
     }
     
     // -------------------------------------------------------------
@@ -685,14 +688,14 @@ public class Player : MonoBehaviour {
     {
         if(dashCool <= 0.0f && moveInput.magnitude != 0 && curState == PlayerState.Normal)
         {
-            print(123);
+            //print(123);
             StartCoroutine(Dash());
         }
     }
 
     public void SkillBtn()
     {
-        if (remainCool <= 0.0f && curState != PlayerState.Attacking)
+        if (remainCool <= 0.0f && (curState == PlayerState.Normal || curState == PlayerState.Invincible))
         {
             // update weapon state
             anim.SetInteger("WpnState", equipment[0].itemType);
@@ -740,7 +743,7 @@ public class Player : MonoBehaviour {
         }
         else
         {
-            if (curState != PlayerState.Attacking)
+            if (curState == PlayerState.Normal || curState == PlayerState.Invincible)
             {
                 // update weapon state
                 anim.SetInteger("WpnState", equipment[0].itemType);
