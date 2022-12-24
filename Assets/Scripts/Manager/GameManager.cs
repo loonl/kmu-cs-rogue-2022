@@ -69,7 +69,9 @@ public class GameManager : MonoBehaviour
         score = 0;
         
         // test code - TODO
-        NanooController.instance.SetPlugin();
+
+        //NanooController.instance.SetPlugin();
+
     }
 
     // -------------------------------------------------------------

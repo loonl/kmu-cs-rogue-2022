@@ -10,7 +10,7 @@ public class Boss1 : RushZombie
         lastRushTime = Time.time;
         
         Monstertype = MonsterType.RushZombie;
-        Sound = SoundManager.Instance.ZombieClip(Monstertype);
+        sound = SoundManager.Instance.ZombieClip(Monstertype);
     }
     
     // 스킬 수행
@@ -27,6 +27,7 @@ public class Boss1 : RushZombie
             }
             else if (rushReady) // 돌진
             {
+                SoundPlay(Random.Range(0, 2));
                 rigidbody2d.AddForce(direction * 300f);
                 rushReady = false;
                 animator.SetTrigger("Attack_Normal");

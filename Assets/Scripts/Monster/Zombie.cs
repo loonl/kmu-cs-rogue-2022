@@ -25,7 +25,7 @@ public class Zombie : Monster
         lastRushTime = Time.time;
         
         Monstertype = MonsterType.Zombie;
-        Sound = SoundManager.Instance.ZombieClip(Monstertype);
+        sound = SoundManager.Instance.ZombieClip(Monstertype);
     }
 
     // 스킬 수행
@@ -43,7 +43,7 @@ public class Zombie : Monster
             }
             else if (rushReady) // 돌진
             {
-                SoundPlay(Sound[0]);
+                SoundPlay(Random.Range(0, 2));
                 rigidbody2d.AddForce(direction * rushPower);
                 rushReady = false;
                 animator.SetTrigger("Attack_Normal");
