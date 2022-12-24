@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -85,7 +86,10 @@ public class GameManager : MonoBehaviour
 
         return go;
     }
-
+    
+    // -------------------------------------------------------------
+    // 랜덤으로 선택된 아이템 리스트 반환
+    // -------------------------------------------------------------
     public List<Item> GetRandomItemList(int Level = 0, float N = 0f, float R = 0f, float SR = 0f, float SSR = 0f)
     {
         List<Item> itemList = new List<Item>();
@@ -98,7 +102,7 @@ public class GameManager : MonoBehaviour
             SR += R;
             SSR += SR;
         }
-        else // Level만 지정해줬다면 사전 설정한 값에 의해 설정
+        else // Floor만 지정해줬다면 사전 설정한 값에 의해 설정
         {
             switch (DungeonSystem.Instance.Floor)
             {
@@ -109,93 +113,155 @@ public class GameManager : MonoBehaviour
                     SSR = SR + 0.0f;
                     break;
                 case 2:
-                    N = 0.45f;
-                    R = N + 0.3f;
-                    SR = R + 0.2f;
+                    N = 0.1f;
+                    R = N + 0.5f;
+                    SR = R + 0.35f;
                     SSR = SR + 0.05f;
                     break;
-                default:
-                    N = 0.3f;
-                    R = N + 0.25f;
-                    SR = R + 0.35f;
-                    SSR = SR + 0.1f;
-                    break;
-            }
-        }
-
-        int number = UnityEngine.Random.Range(3, 6);
-        for (int i = 0; i < number; i++)
-        {
-            int rarity;
-
-            float temp = Random.Range(0f, 1f);
-            if (temp <= N)
-                rarity = 0;
-            else if (N < temp && temp <= R)
-                rarity = 1;
-            else if (R < temp && temp <= SR)
-                rarity = 2;
-            else
-                rarity = 3;
-
-            int itemIndex = -1;
-            switch (rarity)
-            {
-                case 0:
-                    itemIndex = Random.Range(2, 22);
-
-                    while (indexList.Contains(itemIndex))
-                    {
-                        itemIndex++;
-                        if (itemIndex > 21)
-                            itemIndex = 2;
-                    }
-
-                    break;
-                case 1:
-                    itemIndex = Random.Range(22, 50);
-
-                    while (indexList.Contains(itemIndex))
-                    {
-                        itemIndex++;
-                        if (itemIndex > 49)
-                            itemIndex = 22;
-                    }
-
-                    break;
-                case 2:
-                    itemIndex = Random.Range(50, 77);
-
-                    while (indexList.Contains(itemIndex))
-                    {
-                        itemIndex++;
-                        if (itemIndex > 76)
-                            itemIndex = 50;
-                    }
-
-                    break;
                 case 3:
-                    itemIndex = Random.Range(77, 90);
-
-                    while (indexList.Contains(itemIndex))
-                    {
-                        itemIndex++;
-                        if (itemIndex > 89)
-                            itemIndex = 77;
-                    }
-
+                    N = 0f;
+                    R = N + 0f;
+                    SR = R + 0.75f;
+                    SSR = SR + 0.25f;
                     break;
             }
-
-            indexList.Add(itemIndex);
         }
 
+        int start = 0, end = 0;
+        // 각 부위별로 하나씩 담아주기
+        
+        // 1. 무기
+        string weaponRarity = GetRarity(N, R, SR, SSR);
+        switch (weaponRarity)
+        {
+            // TODO - 임시로 하드코딩 :: 이거도 CSV로 관리하면 좋을 듯?
+            case "N":
+                start = 5;
+                end = 9;
+                break;
+            case "R":
+                start = 9;
+                end = 20;
+                break;
+            case "SR":
+                start = 20;
+                end = 31;
+                break;
+            case "SSR":
+                start = 31;
+                end = 34;
+                break;
+        }
+        
+        indexList.Add(Random.Range(start, end));
+        
+        // 2. 투구
+        string helmetRarity = GetRarity(N, R, SR, SSR);
+        switch (helmetRarity)
+        {
+            case "N":
+                start = 34;
+                end = 36;
+                break;
+            case "R":
+                start = 46;
+                end = 51;
+                break;
+            case "SR":
+                start = 62;
+                end = 68;
+                break;
+            case "SSR":
+                start = 77;
+                end = 81;
+                break;
+        }
+        
+        indexList.Add(Random.Range(start, end));
+        
+        // 3. 방어구
+        string armorRarity = GetRarity(N, R, SR, SSR);
+        switch (armorRarity)
+        {
+            case "N":
+                start = 36;
+                end = 40;
+                break;
+            case "R":
+                start = 51;
+                end = 55;
+                break;
+            case "SR":
+                start = 68;
+                end = 71;
+                break;
+            case "SSR":
+                start = 81;
+                end = 82;
+                break;
+        }
+        
+        indexList.Add(Random.Range(start, end));
+        
+        // 4. 바지
+        string pantsRarity = GetRarity(N, R, SR, SSR);
+        switch (pantsRarity)
+        {
+            case "N":
+                start = 40;
+                end = 43;
+                break;
+            case "R":
+                start = 55;
+                end = 59;
+                break;
+            case "SR":
+                start = 71;
+                end = 75;
+                break;
+            case "SSR":
+                start = 82;
+                end = 84;
+                break;
+        }
+        
+        indexList.Add(Random.Range(start, end));
+        
+        // 5. 방패
+        string shieldRarity = GetRarity(N, R, SR, SSR);
+        switch (shieldRarity)
+        {
+            case "N":
+                start = 43;
+                end = 46;
+                break;
+            case "R":
+                start = 59;
+                end = 62;
+                break;
+            case "SR":
+                start = 75;
+                end = 77;
+                break;
+            case "SSR":
+                start = 84;
+                end = 85;
+                break;
+        }
+        
+        indexList.Add(Random.Range(start, end));
+        
+        // 뽑은 Index를 바탕으로 Item 생성 후 담아주기
         foreach (int idx in indexList) 
             itemList.Add(ItemManager.Instance.GetItem(idx));
 
         return itemList;
     }
-
+    
+    
+    // -------------------------------------------------------------
+    // 랜덤으로 선택된 아이템 반환
+    // -------------------------------------------------------------
     public Item GetRandomDropItem(int floor = 0)
     {
         List<Item> randomList = GetRandomItemList(floor);
@@ -217,5 +283,21 @@ public class GameManager : MonoBehaviour
             wfs.Add(time, new WaitForSeconds(time * 0.01f));
             return wfs[time];
         }
+    }
+    
+    // -------------------------------------------------------------
+    // Rarity 골라주는 함수
+    // -------------------------------------------------------------
+    private string GetRarity(float N, float R, float SR, float SSR)
+    {
+        float temp = Random.Range(0f, 1f);
+        if (temp <= N)
+            return "N";
+        else if (temp > N && temp <= R)
+            return "R";
+        else if (temp > R && temp <= SR)
+            return "SR";
+        else
+            return "SSR";
     }
 }
