@@ -78,9 +78,13 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void OnEnable()
     {
         Init();
+    }
+
+    private void Start()
+    {
     }
 
     private void Init()

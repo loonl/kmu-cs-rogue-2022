@@ -11,6 +11,7 @@ public class PlayerAnimreceiver : MonoBehaviour
     public System.Action onArrowShoot;
     public System.Action onBowSkillStart;
     public System.Action onSkillArrowShoot;
+    public System.Action onMoveStart;
 
     // executed at the end of animation death
     public void OnDieComplete()
@@ -73,5 +74,16 @@ public class PlayerAnimreceiver : MonoBehaviour
         {
             this.onSkillArrowShoot();
         }
+    }
+    
+    // executed at the start of move motion
+    // catch bug about arrow attack
+    public void OnMoveStart()
+    {
+        if (onMoveStart != null)
+        {
+            this.onMoveStart();
+        }
+            
     }
 }

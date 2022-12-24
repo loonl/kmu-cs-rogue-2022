@@ -94,6 +94,7 @@ public class Player : MonoBehaviour {
 
     void Update()
     {
+        Debug.Log((int)curState);
         remainCool -= Time.deltaTime;
         if (remainCool < -100.0f)
             remainCool = -1.0f;
@@ -319,11 +320,8 @@ public class Player : MonoBehaviour {
             //// disable attack collider
             //wpnColl.poly.enabled = false;
 
-            // reset elasped skill cool-time
-            //remainCool = equipment[0].stat.coolTime;
-
             // !!!!!!!! 테스트용 코드 - 스킬 쿨타임 0 !!!!!!!!!
-            remainCool = 0;
+            //remainCool = 0;
         };
 
         // 스턴 종료
@@ -340,17 +338,25 @@ public class Player : MonoBehaviour {
         };
         
         // 활 스킬 시작해야 할 때
-        anim.GetComponent<PlayerAnimreceiver>().onBowSkillStart = () =>
+        playerAnimreceiver.onBowSkillStart = () =>
         {
             SkillCoolDown.Instance.TriggerSkill();
             SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
         };
         
         // 활 스킬 중에서 화살 쏴야 할 때
-        anim.GetComponent<PlayerAnimreceiver>().onSkillArrowShoot = () =>
+        playerAnimreceiver.onSkillArrowShoot = () =>
         {
             anim.SetBool("SkillFinished", false);
             SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
+        };
+        
+        // 움직이기 시작할 때 
+        // 화살 쏘고 나서 가끔 Attacking으로 남아있는 버그 존재해서 추가한 코드
+        playerAnimreceiver.onMoveStart = () =>
+        {
+            if (curState == PlayerState.Attacking)
+                curState = PlayerState.Normal;
         };
     }
 
@@ -359,7 +365,7 @@ public class Player : MonoBehaviour {
     // -------------------------------------------------------------
     public void EquipInit()
     {
-        equipment = new List<Item> { ItemManager.Instance.GetItem(1), // weapon
+        equipment = new List<Item> { ItemManager.Instance.GetItem(59), // weapon
                                      ItemManager.Instance.GetItem(6), // helmet
                                      ItemManager.Instance.GetItem(9), // armor
                                      ItemManager.Instance.GetItem(14), // pants
@@ -520,9 +526,11 @@ public class Player : MonoBehaviour {
     {
         if (curState == PlayerState.Invincible || curState == PlayerState.Stunned || curState == PlayerState.Dead || curState == PlayerState.Dashing)
             return;
-
+        
+        // 피격당했음
+        curState = PlayerState.Stunned;
         stat.Damaged(damage);
-
+        
         // trigger die if health is below 0
         if (stat.hp == 0)
             Die();
@@ -532,10 +540,7 @@ public class Player : MonoBehaviour {
 
             // change animation to stunned
             anim.SetTrigger("Hit");
-
-            // 피격당했음
-            curState = PlayerState.Stunned;
-
+            
             // 넉백
             StartCoroutine(KnockBack(knockBackForce, direction));
         }
@@ -594,9 +599,9 @@ public class Player : MonoBehaviour {
                 
         // 같은 위치 혹은 그 옆에 생성
         if (beside)
-            GO.transform.position = this.gameObject.transform.position;
-        else
             GO.transform.position = this.gameObject.transform.position + new Vector3(2f, 0, 0);
+        else
+            GO.transform.position = this.gameObject.transform.position;
         
         GO.GetComponent<DroppedItem>().Set(item);
     }
@@ -619,7 +624,7 @@ public class Player : MonoBehaviour {
         // 속도가 0일 때까지 0.05초마다 힘 가해서 감속
         // TODO 버그 존재
         while (((orig.x > 0 && rig.velocity.x > 0) || (orig.x < 0 && rig.velocity.x < 0))
-               && ((orig.y > 0 && rig.velocity.y > 0) || (orig.y < 0 && rig.velocity.y < 0)))
+                && ((orig.y > 0 && rig.velocity.y > 0) || (orig.y < 0 && rig.velocity.y < 0)))
         {
             rig.AddForce(-7 * direction * knockBackForce, ForceMode2D.Force);
             yield return GameManager.Instance.Setwfs(5);
@@ -681,7 +686,6 @@ public class Player : MonoBehaviour {
     public void SetAngle(Vector2 Dir)
     {
         moveInput = Dir;
-
     }
 
     public void DashBtn()
@@ -697,6 +701,9 @@ public class Player : MonoBehaviour {
     {
         if (remainCool <= 0.0f && (curState == PlayerState.Normal || curState == PlayerState.Invincible))
         {
+            // reset elasped skill cool-time
+            remainCool = equipment[0].stat.coolTime;
+            
             // update weapon state
             anim.SetInteger("WpnState", equipment[0].itemType);
 
