@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerAnimreceiver : MonoBehaviour
 {
-    public System.Action onDieComplete;
+    public System.Action onDieStart;
     public System.Action onAttackComplete;
     public System.Action onSkillComplete;
     public System.Action onStunComplete;
@@ -14,11 +14,11 @@ public class PlayerAnimreceiver : MonoBehaviour
     public System.Action onMoveStart;
 
     // executed at the end of animation death
-    public void OnDieComplete()
+    public void OnDieStart()
     {
-        if (onDieComplete != null)
+        if (onDieStart != null)
         {
-            this.onDieComplete();
+            this.onDieStart();
         }
     }
 

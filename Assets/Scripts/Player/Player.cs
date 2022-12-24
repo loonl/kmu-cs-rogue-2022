@@ -94,7 +94,6 @@ public class Player : MonoBehaviour {
 
     void Update()
     {
-        Debug.Log((int)curState);
         remainCool -= Time.deltaTime;
         if (remainCool < -100.0f)
             remainCool = -1.0f;
@@ -133,149 +132,6 @@ public class Player : MonoBehaviour {
             // change animation depending on speed
             anim.SetFloat("Speed", moveInput.magnitude * stat.speed);
         }
-
-        /**
-        * Input Handling
-         
-        */ 
-        // Attack Input
-
-        // if (Input.GetButtonDown("Fire1") && curState != PlayerState.Attacking)
-        // {
-        //     // update weapon state
-        //     anim.SetInteger("WpnState", equipment[0].itemType);
-        //
-        //     // change animation to attack
-        //     // change animation to attack
-        //     anim.SetTrigger("Attack");
-        //     
-        //     // update current state to attacking
-        //     curState = PlayerState.Attacking;
-        //
-        //     //// cannot move - freeze
-        //     //rig.velocity = Vector2.zero;
-        //
-        //     // play effect
-        //     if (equipment[0].itemType == 1)
-        //     {
-        //         wpnColl.Attack(equipment[0].effectName);
-        //     }
-        //
-        //     else if (equipment[0].itemType == 3)
-        //         staff.Attack(equipment[0].effectName);
-        //     
-        //     // 활 공격은 애니메이션 이벤트에서 행해짐
-        //
-        //     // TODO - 공격 sound => 이상하면 고쳐야 함
-        //     switch (equipment[0].effectName)
-        //     {
-        //         case "NormalSlash":
-        //         case "NormalSlash2":
-        //             SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Normal);
-        //             break;
-        //         
-        //         case "ElectricSlash":
-        //             SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Electric);
-        //             break;
-        //         
-        //         case "FireSlash":
-        //             SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Fire);
-        //             break;
-        //     }
-        // }
-
-        
-        // test debugging skill cool-time
-        //if (Input.GetButtonDown("Fire2"))
-        //{
-        //    print("remaining skill cool : " + remainCool);
-        //}
-
-        // test skill input
-        // if (Input.GetButtonDown("Fire2") && remainCool <= 0.0f && curState != PlayerState.Attacking)
-        // {
-        //     // update weapon state
-        //     anim.SetInteger("WpnState", equipment[0].itemType);
-        //
-        //     // change animation to skill
-        //     if (equipment[0].skillName == "RapidArrow")
-        //     {
-        //         anim.SetTrigger("BowGroundSkill");
-        //         
-        //         // 쿨타임 적용
-        //         SkillCoolDown.Instance.TriggerSkill();
-        //     }
-        //     else
-        //         anim.SetTrigger("Skill");
-        //
-        //     // update current state to attacking
-        //     curState = PlayerState.Attacking;
-        //
-        //     // 스킬 관련 구현
-        //     SkillCoolDown.Instance.TriggerSkill();
-        //
-        //     if (equipment[0] != null)
-        //     {
-        //         // 근접 무기 스킬
-        //         if (equipment[0].itemType == 1)
-        //         {
-        //             SkillCoolDown.Instance.TriggerSkill();
-        //             SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
-        //         }
-        //
-        //         // 활 스킬은 애니메이션 delegate 쪽에서 호출 - onBowSkillStart 참조
-        //
-        //         //스태프 스킬
-        //         else if (equipment[0].itemType == 3)
-        //             staff.Attack(equipment[0].skillName, false);
-        //     }
-        // }
-        
-        // dash input
-        // if (Input.GetKeyDown(KeyCode.LeftShift) && dashCool <= 0.0f && moveInput.magnitude != 0 && curState == PlayerState.Normal)
-        //     StartCoroutine(Dash());
-        
-        /**
-        if (Input.GetKeyDown(KeyCode.Alpha8)) // bow
-            Equip(ItemManager.Instance.GetItem(31));
-        // test code - change equipments
-        if (Input.GetKeyDown(KeyCode.Alpha9)) // bow
-            Equip(ItemManager.Instance.GetItem(59));
-        if (Input.GetKeyDown(KeyCode.Alpha0)) // staff
-            Equip(ItemManager.Instance.GetItem(60));
-        if (Input.GetKeyDown(KeyCode.Alpha1)) // 1 - sword1
-            Equip(ItemManager.Instance.GetItem(1));
-        if (Input.GetKeyDown(KeyCode.Alpha2)) // 2 - sword2
-            Equip(ItemManager.Instance.GetItem(2));
-        if (Input.GetKeyDown(KeyCode.Alpha3)) // 3 - sword6
-            Equip(ItemManager.Instance.GetItem(3));
-        if (Input.GetKeyDown(KeyCode.Alpha4)) // 4 - sword8
-            Equip(ItemManager.Instance.GetItem(4));
-        if (Input.GetKeyDown(KeyCode.Alpha5)) // 5 - sword3 (rare)
-            Equip(ItemManager.Instance.GetItem(21));
-        if (Input.GetKeyDown(KeyCode.Alpha6)) // 6 - Cheat Weapon
-            Equip(ItemManager.Instance.GetItem(89));
-        if (Input.GetKeyDown(KeyCode.Equals))
-            stat.hp = stat.maxHp;
-        
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            print("MaxHP : " + stat.maxHp + "\nHP : " + stat.hp + "\nAttackPower : " + stat.damage
-               + "\nAttackRange : " + stat.range + "\nSkillPower : " + stat.skillDamage
-               + "\nSpeed : " + stat.speed + "\nKnockBackForce : " + stat.knockBackForce 
-               + "\nCoolTime : " + stat.coolTime + "\nGameScore : " + GameManager.Instance.score);
-        }
-
-        // 상호작용
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (this._interact == null)
-            {
-                return;
-            }
-
-            this._interact.InteractEvent();
-        }*/
     }
     
     // -------------------------------------------------------------
@@ -284,7 +140,7 @@ public class Player : MonoBehaviour {
     public void AnimEventInit()
     {
         // 사망 시
-        playerAnimreceiver.onDieComplete = () =>
+        playerAnimreceiver.onDieStart = () =>
         {
             // hide character
             //gameObject.SetActive(false);
@@ -365,10 +221,10 @@ public class Player : MonoBehaviour {
     // -------------------------------------------------------------
     public void EquipInit()
     {
-        equipment = new List<Item> { ItemManager.Instance.GetItem(59), // weapon
-                                     ItemManager.Instance.GetItem(6), // helmet
-                                     ItemManager.Instance.GetItem(9), // armor
-                                     ItemManager.Instance.GetItem(14), // pants
+        equipment = new List<Item> { ItemManager.Instance.GetItem(1), // weapon
+                                     ItemManager.Instance.GetItem(2), // helmet
+                                     ItemManager.Instance.GetItem(3), // armor
+                                     ItemManager.Instance.GetItem(4), // pants
                                      ItemManager.Instance.GetItem(0)  // shield
                                     };
         for (int i = 0; i < equipment.Count; i++)
@@ -557,7 +413,7 @@ public class Player : MonoBehaviour {
         
         // TODO Death 사운드 적용
         
-        // BestScore 저장 - TODO 온라인 연동 기능 추가
+        // BestScore 저장
         GameObject.Find("MainCanvas").SetActive(false);
         GameObject.Find("MobileCanvas").SetActive(false);
         GameObject.Find("DynamicCanvas(Clone)").SetActive(false);
@@ -739,6 +595,11 @@ public class Player : MonoBehaviour {
                 else if (equipment[0].itemType == 3)
                     staff.Attack(equipment[0].skillName, false);
             }
+            
+            // TODO - 스킬 sound
+            switch (equipment[0].skillName)
+            {
+            }
         }
     }
 
@@ -780,14 +641,21 @@ public class Player : MonoBehaviour {
                 {
                     case "NormalSlash":
                     case "NormalSlash2":
+                    case "NormalSlash3":
                         SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Normal);
                         break;
 
                     case "ElectricSlash":
+                    case "ElectricSlash2": 
+                    case "ElectricSlash3":
+                    case "ElectricClaw":
                         SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Electric);
                         break;
 
                     case "FireSlash":
+                    case "FireSlash2":
+                    case "FireSlash3":
+                    case "FireClaw":
                         SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Fire);
                         break;
                 }

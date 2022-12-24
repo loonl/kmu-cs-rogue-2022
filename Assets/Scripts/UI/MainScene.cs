@@ -48,6 +48,10 @@ public class MainScene : MonoBehaviour
     //게임 종료
     public void QuitGame()
     {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
         Application.Quit();
+#endif
     }
 }

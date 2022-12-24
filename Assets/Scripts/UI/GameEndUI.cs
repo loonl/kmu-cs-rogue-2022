@@ -23,7 +23,7 @@ public class GameEndUI : MonoBehaviour
     
     public void Quit()
     {
-        Application.Quit();
+        GameManager.Instance.InitMain();
     }
     
     public void SaveScore()
