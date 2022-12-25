@@ -173,7 +173,6 @@ public class SoundManager : MonoBehaviour
                 break;
             
             case SoundType.PlayerAttack_Normal:
-                print(_PlayerAttackclips.Count);
                 Play(_PlayerAttackclips[0]);
                 break;
             
