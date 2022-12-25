@@ -147,4 +147,12 @@ public class StageUIManager : MonoBehaviour
             Time.timeScale = 1;
         }
     }
+
+    private void Centralize(float startX, float startY, float sizeX, float sizeY, int index)
+    {
+        switch (index)
+        {
+            //case 0:
+        }
+    }
 }
