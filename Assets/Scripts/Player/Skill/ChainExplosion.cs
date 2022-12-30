@@ -30,9 +30,21 @@ public class ChainExplosion : BaseSkill
             return;
         }
         firstgenerated = true;
-        Vector2 mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        direction = (mousepos - (Vector2)player.transform.position).normalized; // 마우스 위치를 가리키는 방향 벡터
-        Debug.Log(direction.magnitude);
+        //Vector2 mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //direction = (mousepos - (Vector2)player.transform.position).normalized; // 마우스 위치를 가리키는 방향 벡터
+        //Debug.Log(direction.magnitude);
+        direction = player.GetComponent<Rigidbody2D>().velocity.normalized;
+        if (direction == Vector2.zero)
+        {
+            if (player.transform.localScale.x < 0)// 플레이어가 오른쪽 바라보고 있음
+            {
+                direction = new Vector2(1, 0);
+            }
+            else
+            {
+                direction = new Vector2(-1, 0);
+            }
+        }
         SkillManager.Instance.onGoingSkillInfo.Add(SkillManager.SkillInfo.Direction, direction); // 처음 생성된 이펙트 - 스킬 정보에 방향 저장
 
         SetPosition();

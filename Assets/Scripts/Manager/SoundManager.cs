@@ -78,9 +78,13 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void OnEnable()
     {
         Init();
+    }
+
+    private void Start()
+    {
     }
 
     private void Init()
@@ -169,7 +173,6 @@ public class SoundManager : MonoBehaviour
                 break;
             
             case SoundType.PlayerAttack_Normal:
-                print(_PlayerAttackclips.Count);
                 Play(_PlayerAttackclips[0]);
                 break;
             

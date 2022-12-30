@@ -4,20 +4,21 @@ using UnityEngine;
 
 public class PlayerAnimreceiver : MonoBehaviour
 {
-    public System.Action onDieComplete;
+    public System.Action onDieStart;
     public System.Action onAttackComplete;
     public System.Action onSkillComplete;
     public System.Action onStunComplete;
     public System.Action onArrowShoot;
     public System.Action onBowSkillStart;
     public System.Action onSkillArrowShoot;
+    public System.Action onMoveStart;
 
     // executed at the end of animation death
-    public void OnDieComplete()
+    public void OnDieStart()
     {
-        if (onDieComplete != null)
+        if (onDieStart != null)
         {
-            this.onDieComplete();
+            this.onDieStart();
         }
     }
 
@@ -73,5 +74,16 @@ public class PlayerAnimreceiver : MonoBehaviour
         {
             this.onSkillArrowShoot();
         }
+    }
+    
+    // executed at the start of move motion
+    // catch bug about arrow attack
+    public void OnMoveStart()
+    {
+        if (onMoveStart != null)
+        {
+            this.onMoveStart();
+        }
+            
     }
 }

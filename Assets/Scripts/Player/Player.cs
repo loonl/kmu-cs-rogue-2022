@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions;
-using UnityEngine.Windows.Speech;
 
 public enum PlayerState {
     Normal = 0,
@@ -28,12 +26,14 @@ public class Player : MonoBehaviour {
     // equipments => 0 : Weapon, 1 : Helmet, 2 : Armor, 3 : Pants, 4 : Shield
     [HideInInspector]
     public List<Item> equipment;
-
+    [HideInInspector]
     public Animator anim;
+    [HideInInspector]
     public WeaponCollider wpnColl;
     Rigidbody2D rig;
     [HideInInspector]
     public SPUM_SpriteList spumMgr;
+    [HideInInspector]
     public ArrowGenerate arrowGen;
     Staff staff;
 
@@ -44,9 +44,11 @@ public class Player : MonoBehaviour {
     public Interact _interact;
     
     // 이동정보
+    [HideInInspector]
     public Vector3 moveInfo;
 
     PlayerAnimreceiver playerAnimreceiver;
+    private Vector3 moveInput;
 
     private void Awake()
     {
@@ -105,7 +107,7 @@ public class Player : MonoBehaviour {
             return;
 
         // get move-related input
-        Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0).normalized;
+        //Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0).normalized;
         moveInfo = moveInput;
 
         if (curState == PlayerState.Normal || curState == PlayerState.Invincible || curState == PlayerState.Attacking)
@@ -130,145 +132,6 @@ public class Player : MonoBehaviour {
             // change animation depending on speed
             anim.SetFloat("Speed", moveInput.magnitude * stat.speed);
         }
-
-        /**
-        * Input Handling
-        */
-
-        // Attack Input
-        if (Input.GetButtonDown("Fire1") && curState != PlayerState.Attacking)
-        {
-            // update weapon state
-            anim.SetInteger("WpnState", equipment[0].itemType);
-
-            // change animation to attack
-            anim.SetTrigger("Attack");
-            
-            // update current state to attacking
-            curState = PlayerState.Attacking;
-
-            //// cannot move - freeze
-            //rig.velocity = Vector2.zero;
-
-            // play effect
-            if (equipment[0].itemType == 1)
-            {
-                wpnColl.Attack(equipment[0].effectName);
-            }
-
-            else if (equipment[0].itemType == 3)
-                staff.Attack(equipment[0].effectName);
-            
-            // 활 공격은 애니메이션 이벤트에서 행해짐
-
-            // TODO - 공격 sound => 이상하면 고쳐야 함
-            switch (equipment[0].effectName)
-            {
-                case "NormalSlash":
-                case "NormalSlash2":
-                    SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Normal);
-                    break;
-                
-                case "ElectricSlash":
-                    SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Electric);
-                    break;
-                
-                case "FireSlash":
-                    SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Fire);
-                    break;
-            }
-        }
-        
-        // test debugging skill cool-time
-        if (Input.GetButtonDown("Fire2"))
-        {
-            print("remaining skill cool : " + remainCool);
-        }
-
-        // test skill input
-        if (Input.GetButtonDown("Fire2") && remainCool <= 0.0f && curState != PlayerState.Attacking)
-        {
-            // update weapon state
-            anim.SetInteger("WpnState", equipment[0].itemType);
-
-            // change animation to skill
-            if (equipment[0].skillName == "RapidArrow")
-            {
-                anim.SetTrigger("BowGroundSkill");
-                
-                // 쿨타임 적용
-                SkillCoolDown.Instance.TriggerSkill();
-            }
-            else
-                anim.SetTrigger("Skill");
-
-            // update current state to attacking
-            curState = PlayerState.Attacking;
-
-            // 스킬 관련 구현
-            SkillCoolDown.Instance.TriggerSkill();
-
-            if (equipment[0] != null)
-            {
-                // 근접 무기 스킬
-                if (equipment[0].itemType == 1)
-                {
-                    SkillCoolDown.Instance.TriggerSkill();
-                    SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
-                }
-
-                // 활 스킬은 애니메이션 delegate 쪽에서 호출 - onBowSkillStart 참조
-
-                //스태프 스킬
-                else if (equipment[0].itemType == 3)
-                    staff.Attack(equipment[0].skillName, false);
-            }
-        }
-        
-        // dash input
-        if (Input.GetKeyDown(KeyCode.LeftShift) && dashCool <= 0.0f && moveInput.magnitude != 0 && curState == PlayerState.Normal)
-            StartCoroutine(Dash());
-
-        if (Input.GetKeyDown(KeyCode.Alpha8)) // bow
-            Equip(ItemManager.Instance.GetItem(31));
-        // test code - change equipments
-        if (Input.GetKeyDown(KeyCode.Alpha9)) // bow
-            Equip(ItemManager.Instance.GetItem(59));
-        if (Input.GetKeyDown(KeyCode.Alpha0)) // staff
-            Equip(ItemManager.Instance.GetItem(60));
-        if (Input.GetKeyDown(KeyCode.Alpha1)) // 1 - sword1
-            Equip(ItemManager.Instance.GetItem(1));
-        if (Input.GetKeyDown(KeyCode.Alpha2)) // 2 - sword2
-            Equip(ItemManager.Instance.GetItem(2));
-        if (Input.GetKeyDown(KeyCode.Alpha3)) // 3 - sword6
-            Equip(ItemManager.Instance.GetItem(3));
-        if (Input.GetKeyDown(KeyCode.Alpha4)) // 4 - sword8
-            Equip(ItemManager.Instance.GetItem(4));
-        if (Input.GetKeyDown(KeyCode.Alpha5)) // 5 - sword3 (rare)
-            Equip(ItemManager.Instance.GetItem(21));
-        if (Input.GetKeyDown(KeyCode.Alpha6)) // 6 - Cheat Weapon
-            Equip(ItemManager.Instance.GetItem(89));
-        if (Input.GetKeyDown(KeyCode.Equals))
-            stat.hp = stat.maxHp;
-        
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            print("MaxHP : " + stat.maxHp + "\nHP : " + stat.hp + "\nAttackPower : " + stat.damage
-               + "\nAttackRange : " + stat.range + "\nSkillPower : " + stat.skillDamage
-               + "\nSpeed : " + stat.speed + "\nKnockBackForce : " + stat.knockBackForce 
-               + "\nCoolTime : " + stat.coolTime + "\nGameScore : " + GameManager.Instance.score);
-        }
-
-        // 상호작용
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (this._interact == null)
-            {
-                return;
-            }
-
-            this._interact.InteractEvent();
-        }
     }
     
     // -------------------------------------------------------------
@@ -277,7 +140,7 @@ public class Player : MonoBehaviour {
     public void AnimEventInit()
     {
         // 사망 시
-        playerAnimreceiver.onDieComplete = () =>
+        playerAnimreceiver.onDieStart = () =>
         {
             // hide character
             //gameObject.SetActive(false);
@@ -313,11 +176,8 @@ public class Player : MonoBehaviour {
             //// disable attack collider
             //wpnColl.poly.enabled = false;
 
-            // reset elasped skill cool-time
-            //remainCool = equipment[0].stat.coolTime;
-
             // !!!!!!!! 테스트용 코드 - 스킬 쿨타임 0 !!!!!!!!!
-            remainCool = 0;
+            //remainCool = 0;
         };
 
         // 스턴 종료
@@ -334,17 +194,25 @@ public class Player : MonoBehaviour {
         };
         
         // 활 스킬 시작해야 할 때
-        anim.GetComponent<PlayerAnimreceiver>().onBowSkillStart = () =>
+        playerAnimreceiver.onBowSkillStart = () =>
         {
             SkillCoolDown.Instance.TriggerSkill();
             SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
         };
         
         // 활 스킬 중에서 화살 쏴야 할 때
-        anim.GetComponent<PlayerAnimreceiver>().onSkillArrowShoot = () =>
+        playerAnimreceiver.onSkillArrowShoot = () =>
         {
             anim.SetBool("SkillFinished", false);
             SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
+        };
+        
+        // 움직이기 시작할 때 
+        // 화살 쏘고 나서 가끔 Attacking으로 남아있는 버그 존재해서 추가한 코드
+        playerAnimreceiver.onMoveStart = () =>
+        {
+            if (curState == PlayerState.Attacking)
+                curState = PlayerState.Normal;
         };
     }
 
@@ -354,9 +222,9 @@ public class Player : MonoBehaviour {
     public void EquipInit()
     {
         equipment = new List<Item> { ItemManager.Instance.GetItem(1), // weapon
-                                     ItemManager.Instance.GetItem(6), // helmet
-                                     ItemManager.Instance.GetItem(9), // armor
-                                     ItemManager.Instance.GetItem(14), // pants
+                                     ItemManager.Instance.GetItem(2), // helmet
+                                     ItemManager.Instance.GetItem(3), // armor
+                                     ItemManager.Instance.GetItem(4), // pants
                                      ItemManager.Instance.GetItem(0)  // shield
                                     };
         for (int i = 0; i < equipment.Count; i++)
@@ -514,9 +382,11 @@ public class Player : MonoBehaviour {
     {
         if (curState == PlayerState.Invincible || curState == PlayerState.Stunned || curState == PlayerState.Dead || curState == PlayerState.Dashing)
             return;
-
+        
+        // 피격당했음
+        curState = PlayerState.Stunned;
         stat.Damaged(damage);
-
+        
         // trigger die if health is below 0
         if (stat.hp == 0)
             Die();
@@ -526,10 +396,7 @@ public class Player : MonoBehaviour {
 
             // change animation to stunned
             anim.SetTrigger("Hit");
-
-            // 피격당했음
-            curState = PlayerState.Stunned;
-
+            
             // 넉백
             StartCoroutine(KnockBack(knockBackForce, direction));
         }
@@ -546,7 +413,10 @@ public class Player : MonoBehaviour {
         
         // TODO Death 사운드 적용
         
-        // BestScore 저장 - TODO 온라인 연동 기능 추가
+        // BestScore 저장
+        GameObject.Find("MainCanvas").SetActive(false);
+        GameObject.Find("MobileCanvas").SetActive(false);
+        GameObject.Find("DynamicCanvas(Clone)").SetActive(false);
         Instantiate(Resources.Load<GameObject>("Prefabs/UI/ScoreCanvas"));
 
         // change animation to death
@@ -585,9 +455,9 @@ public class Player : MonoBehaviour {
                 
         // 같은 위치 혹은 그 옆에 생성
         if (beside)
-            GO.transform.position = this.gameObject.transform.position;
-        else
             GO.transform.position = this.gameObject.transform.position + new Vector3(2f, 0, 0);
+        else
+            GO.transform.position = this.gameObject.transform.position;
         
         GO.GetComponent<DroppedItem>().Set(item);
     }
@@ -610,7 +480,7 @@ public class Player : MonoBehaviour {
         // 속도가 0일 때까지 0.05초마다 힘 가해서 감속
         // TODO 버그 존재
         while (((orig.x > 0 && rig.velocity.x > 0) || (orig.x < 0 && rig.velocity.x < 0))
-               && ((orig.y > 0 && rig.velocity.y > 0) || (orig.y < 0 && rig.velocity.y < 0)))
+                && ((orig.y > 0 && rig.velocity.y > 0) || (orig.y < 0 && rig.velocity.y < 0)))
         {
             rig.AddForce(-7 * direction * knockBackForce, ForceMode2D.Force);
             yield return GameManager.Instance.Setwfs(5);
@@ -666,5 +536,131 @@ public class Player : MonoBehaviour {
         {
             Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<CapsuleCollider2D>());
         }
+    }
+    
+    // -------------------------------------------------------------
+    public void SetAngle(Vector2 Dir)
+    {
+        moveInput = Dir;
+    }
+
+    public void DashBtn()
+    {
+        if(dashCool <= 0.0f && moveInput.magnitude != 0 && curState == PlayerState.Normal)
+        {
+            //print(123);
+            StartCoroutine(Dash());
+        }
+    }
+
+    public void SkillBtn()
+    {
+        if (remainCool <= 0.0f && (curState == PlayerState.Normal || curState == PlayerState.Invincible))
+        {
+            // reset elasped skill cool-time
+            remainCool = equipment[0].stat.coolTime;
+            
+            // update weapon state
+            anim.SetInteger("WpnState", equipment[0].itemType);
+
+            // change animation to skill
+            if (equipment[0].skillName == "RapidArrow")
+            {
+                anim.SetTrigger("BowGroundSkill");
+                
+                // 쿨타임 적용
+                SkillCoolDown.Instance.TriggerSkill();
+            }
+            else
+                anim.SetTrigger("Skill");
+
+            // update current state to attacking
+            curState = PlayerState.Attacking;
+
+            // 스킬 관련 구현
+            SkillCoolDown.Instance.TriggerSkill();
+
+            if (equipment[0] != null)
+            {
+                // 근접 무기 스킬
+                if (equipment[0].itemType == 1)
+                {
+                    SkillCoolDown.Instance.TriggerSkill();
+                    SkillManager.Instance.InstantiateSkill(equipment[0].skillName);
+                }
+
+                // 활 스킬은 애니메이션 delegate 쪽에서 호출 - onBowSkillStart 참조
+
+                //스태프 스킬
+                else if (equipment[0].itemType == 3)
+                    staff.Attack(equipment[0].skillName, false);
+            }
+            
+            // TODO - 스킬 sound
+            switch (equipment[0].skillName)
+            {
+            }
+        }
+    }
+
+    public void AttackBtn()
+    {
+        if (this._interact != null)
+        {
+            this._interact.InteractEvent();
+        }
+        else
+        {
+            if (curState == PlayerState.Normal || curState == PlayerState.Invincible)
+            {
+                // update weapon state
+                anim.SetInteger("WpnState", equipment[0].itemType);
+
+                // change animation to attack
+                anim.SetTrigger("Attack");
+
+                // update current state to attacking
+                curState = PlayerState.Attacking;
+
+                //// cannot move - freeze
+                //rig.velocity = Vector2.zero;
+
+                // play effect
+                if (equipment[0].itemType == 1)
+                {
+                    wpnColl.Attack(equipment[0].effectName);
+                }
+
+                else if (equipment[0].itemType == 3)
+                    staff.Attack(equipment[0].effectName);
+
+                // 활 공격은 애니메이션 이벤트에서 행해짐
+
+                // 공격 사운드 
+                switch (equipment[0].effectName)
+                {
+                    case "NormalSlash":
+                    case "NormalSlash2":
+                    case "NormalSlash3":
+                        SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Normal);
+                        break;
+
+                    case "ElectricSlash":
+                    case "ElectricSlash2": 
+                    case "ElectricSlash3":
+                    case "ElectricClaw":
+                        SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Electric);
+                        break;
+
+                    case "FireSlash":
+                    case "FireSlash2":
+                    case "FireSlash3":
+                    case "FireClaw":
+                        SoundManager.Instance.SoundPlay(SoundType.PlayerAttack_Fire);
+                        break;
+                }
+            }
+        }
+
     }
 }
