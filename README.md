@@ -17,7 +17,7 @@ Please refer to this [link](https://pastebin.com/8J2DbHeU).
 Please understand for not sharing asset files itself because there are serveral paid assets.
 
 ## Play Store
-The game is now being reviewed by Google after uploading. We will provide the link right after it ends.
+Please refer to this [link](https://play.google.com/store/apps/details?id=com.GPS.DunZombie).
 
 ## Gameplay Video
 Please refer to this [link](https://youtu.be/ikwG28ECvrQ).
