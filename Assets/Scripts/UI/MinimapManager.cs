@@ -18,6 +18,10 @@ public class MinimapManager : MonoBehaviour
     public int mapSize;
     public int posY;
     public int posX;
+    private int bossRoomX;
+    private int bossRoomY;
+    private int shopRoomX;
+    private int shopRoomY;
     void Start()
     {
         instance = this;
@@ -39,11 +43,20 @@ public class MinimapManager : MonoBehaviour
         {
             for (int j = 0; j < size; j++)
             {
-                if (minimap[j, i]==shopIdx)
-                    minimap[j, i] = 3;
-                else if(minimap[j, i]==bossIdx)
-                    minimap[j, i] = 4;
-                else if (minimap[j, i] != 0)
+                if (minimap[j, i] == shopIdx)
+                {
+                    shopRoomY = j;
+                    shopRoomX = i;
+                    print("shop "+shopRoomY + " " + shopRoomX);
+                }
+                else if (minimap[j, i] == bossIdx)
+                {
+                    bossRoomY = j;
+                    bossRoomX = i;
+                    print("boss " + bossRoomY + " " + bossRoomX);
+                }
+                
+                if (minimap[j, i] != 0)
                     minimap[j, i] = 1;
             }
         }
@@ -69,7 +82,18 @@ public class MinimapManager : MonoBehaviour
             posY--;
         if(dir == 3)
             posX--;
-        minimap[posX, posY] = 2;
+        if (posX == bossRoomY && posY == bossRoomX)
+        {
+            minimap[posX, posY] = 4;
+        }
+        else if (posX == shopRoomY && posY == shopRoomX)
+        {
+            minimap[posX, posY] = 3;
+        }
+        else
+        {
+            minimap[posX, posY] = 2;
+        }
     }
 
     public void DrawMinimap()
